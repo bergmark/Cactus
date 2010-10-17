@@ -221,6 +221,7 @@ module.exports = {
   },
 
   // TODO: Refactor to expresso async tests.
+  // Github issue #1.
   /*
   // wait.
   tc.addTest(new Test(function () {
