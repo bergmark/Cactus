@@ -14,9 +14,9 @@ module.exports = (function () {
       for (i = 0; i < 5; i++) {
         assert.ok(a[i] > 900, i + " occured " + a[i] +" times");
       }
-    }
+    },
 
-    , "middle" : function (assert) {
+    "middle" : function (assert) {
       var a = [1, 2, 3];
       var middle = math.middle.apply.bind(math.middle).bind(null, null);
 

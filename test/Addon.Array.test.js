@@ -22,10 +22,10 @@ module.exports = (function () {
       assert.ok(ca.remove(b, 1, true) !== -1);
       assert.eql(2, b.length);
       assert.eql("2,3", b.join(","));
-    }
+    },
 
     // The arrays should be different objects but contain the same elements.
-    , "clone" : function (assert) {
+    "clone" : function (assert) {
       var a = ["a", "b", "c"];
       assert.eql(3, a.length);
       var b = ca.clone(a);
@@ -35,9 +35,9 @@ module.exports = (function () {
         assert.eql(a[i], b[i]);
       }
       assert.ok(a !== b);
-    }
+    },
 
-    , "no deep cloning" : function (assert) {
+    "no deep cloning" : function (assert) {
       var a = [{}, {}, {}];
       assert.eql(3, a.length);
       var b = ca.clone(a);
@@ -47,9 +47,9 @@ module.exports = (function () {
         assert.eql(a[i], b[i]);
         }
       assert.ok(a !== b);
-    }
+    },
 
-    , "unique" : function (assert) {
+    "unique" : function (assert) {
       var a = [1, 2, 3, 1, 2];
       var o = {};
       var b = [o, {}, o];
