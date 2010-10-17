@@ -1,0 +1,3 @@
+Addition to built-in types, such as Array, String and Function. These
+packages should not have any dependencies on other packages, not even
+other Addons.
