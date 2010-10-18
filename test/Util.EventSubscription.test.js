@@ -68,12 +68,12 @@ module.exports = (function () {
     "no interference" : function (assert) {
       var c = new C();
       var s = new S();
-        var test = this;
+      var test = this;
 
       c.subscribe("Foo", s);
       c.subscribe("Bar", s);
 
-        var triggeredFoo = false;
+      var triggeredFoo = false;
       var triggeredBar = false;
       s.onFooTriggered = function () {
         triggeredFoo = true;
@@ -170,7 +170,7 @@ module.exports = (function () {
 
     "adding to a single instance" : function (assert) {
       var o = {};
-      EventSubscription.addToInstance (o);
+      EventSubscription.addToInstance(o);
       assert.ok("subscribe" in o);
     },
 
@@ -182,16 +182,16 @@ module.exports = (function () {
       c.subscribe("Foo", function (object, arg1, arg2) {
         args = arguments;
       });
-      c.onFoo ("bar", "baz");
-      assert.eql(c, args [0]);
-      assert.eql("bar", args [1]);
-      assert.eql("baz", args [2]);
+      c.onFoo("bar", "baz");
+      assert.eql(c, args[0]);
+      assert.eql("bar", args[1]);
+      assert.eql("baz", args[2]);
     },
 
     "throw errors for undefined events" : function (assert) {
       var c = new C();
-      assert.ok(!c.implementsEvent ("Bax"));
-      assert.ok(c.implementsEvent ("Foo"));
+      assert.ok(!c.implementsEvent("Bax"));
+      assert.ok(c.implementsEvent("Foo"));
         Assertion.assertException(assert, Error,
                                   c.subscribe.bind(null, "Bax", Function.empty));
     },
@@ -200,14 +200,14 @@ module.exports = (function () {
     "hasSubscriber" : function (assert) {
       var c = new C();
       var o = {};
-      assert.ok(!c.hasSubscriber (o, "Foo"),
+      assert.ok(!c.hasSubscriber(o, "Foo"),
                 "hasSubscriber false positive");
       c.subscribe("Foo", o);
-      assert.ok(c.hasSubscriber (o, "Foo"),
+      assert.ok(c.hasSubscriber(o, "Foo"),
                 "hasSubscriber false negative");
 
-      c.removeSubscriber (o, "Foo");
-      assert.ok(!c.hasSubscriber (o, "Foo"),
+      c.removeSubscriber(o, "Foo");
+      assert.ok(!c.hasSubscriber(o, "Foo"),
                 "hasSubscriber false positive after removal");
     },
 
