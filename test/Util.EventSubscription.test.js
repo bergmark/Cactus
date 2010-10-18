@@ -1,6 +1,6 @@
 var Joose = require('Joose');
-require('../lib/Util/EventSubscription');
-var Assertion = require('../lib/Dev/Assertion');
+require('Util/EventSubscription');
+var Assertion = require('Dev/Assertion');
 
 module.exports = (function () {
   var EventSubscription = CactusJuice.Util.EventSubscription;
