@@ -4,12 +4,13 @@ module.exports = (function () {
   var EventSubscription = CactusJuice.Util.EventSubscription;
   var Assertion = CactusJuice.Dev.Assertion;
 
-  function C() {
-  } C.prototype = {
-    onFoo : Function.empty,
-    onBar : Function.empty
-  };
-  EventSubscription.implement(C);
+  Joose.Class("C", {
+    does : EventSubscription,
+    methods : {
+      onFoo : Function.empty,
+      onBar : Function.empty
+    }
+  });
 
   function S() {
   } S.prototype = {
@@ -22,8 +23,6 @@ module.exports = (function () {
       var c = new C();
 
       c.onFoo();
-      assert.eql(Function.empty, c.onFoo,
-                 "onFoo is not the empty function");
 
       assert.ok(!c._hasEvent("Foo"));
       assert.ok(!c._hasEvent("onFoo"));
@@ -167,12 +166,6 @@ module.exports = (function () {
       assert.eql(1, triggers);
     },
 
-    "adding to a single instance" : function (assert) {
-      var o = {};
-      EventSubscription.addToInstance(o);
-      assert.ok("subscribe" in o);
-    },
-
     // Make sure all arguments passed to the event by the observable
     // are passed along to the subscribers.
     "pass along args to subscribers" : function (assert) {
@@ -222,7 +215,6 @@ module.exports = (function () {
     implementsInterface : function (assert) {
       var p = EventSubscription.implementsInterface;
       assert.ok(p(new C()));
-      assert.ok(p(new EventSubscription));
       assert.ok(!p({}));
     },
 
@@ -254,6 +246,31 @@ module.exports = (function () {
       c.onFoo();
       c.onBar();
       assert.eql(2, eventsTriggered);
+    },
+
+    // Should work properly with Joose classes.
+    "joose compat" : function (assert) {
+      Class("Foo", {
+        does : EventSubscription,
+        has : {
+          val : {
+            is : "ro",
+            init : function () { return []; }
+          }
+        },
+        methods : {
+          onBar : Function.empty
+        }
+      });
+      // This breaks if we just copy the prototype.
+      assert.ok((new Foo()).getVal() instanceof Array);
+      var foo = new Foo();
+      var triggered = false;
+      foo.subscribe("Bar", function () {
+        triggered = true;
+      });
+      foo.onBar();
+      assert.ok(triggered);
     }
   };
 })();
