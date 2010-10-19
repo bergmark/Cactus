@@ -1,4 +1,3 @@
-var Joose = require('Joose');
 require('../CactusJuice.js');
 
 module.exports = (function () {

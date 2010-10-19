@@ -7,6 +7,7 @@ require('./lib/Addon/String');
 require('./lib/Data/Collection');
 require('./lib/Data/CountMap');
 require('./lib/Data/ObjectMap');
+require('./lib/Data/Pair');
 require('./lib/Data/Range');
 require('./lib/Data/Set');
 require('./lib/Data/StrictHash');
