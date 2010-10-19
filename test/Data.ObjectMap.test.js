@@ -1,12 +1,12 @@
 var Joose = require('Joose');
-require('Data/ObjectMap');
-var Assertion = require('Dev/Assertion');
+require('../CactusJuice.js');
 
 module.exports = (function () {
   var ObjectMap = CactusJuice.Data.ObjectMap;
+  var Assertion = CactusJuice.Dev.Assertion;
   return {
     "test" : function (assert) {
-      var assertException = Assertion.assertException.bind(Assertion, assert);
+      var assertException = Assertion.exception.bind(Assertion, assert);
 
       var om = new ObjectMap();
 

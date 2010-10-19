@@ -1,6 +1,5 @@
 var Joose = require('Joose');
-require('Addon/Array');
-require('Addon/Function');
+require('../CactusJuice.js');
 
 module.exports = (function () {
   var ca = CactusJuice.Addon.Array;

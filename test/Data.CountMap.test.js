@@ -1,11 +1,10 @@
 var Joose = require('Joose');
-require('Addon/Object');
-require('Data/CountMap');
-var Assertion = require('Dev/Assertion');
+require('../CactusJuice.js');
 
 module.exports = (function () {
   var CountMap = CactusJuice.Data.CountMap;
   var object = CactusJuice.Addon.Object;
+  var Assertion = CactusJuice.Dev.Assertion;
   return {
     CountMap : function (assert) {
       var cm = new CountMap();
@@ -27,10 +26,10 @@ module.exports = (function () {
       assert.eql(0, cm.get("key1"));
 
       // Cannot dec if value is 0.
-      Assertion.assertException(assert, /:dec:.+value is 0/i, object.bound(cm, "dec", "key1"));
+      Assertion.exception(assert, /:dec:.+value is 0/i, object.bound(cm, "dec", "key1"));
 
       // Cannot dec if key is undefined.
-      Assertion.assertException(assert, /:dec:.+undefined key/i, object.bound(cm, "dec", "undefined key"));
+      Assertion.exception(assert, /:dec:.+undefined key/i, object.bound(cm, "dec", "undefined key"));
     }
   };
 })();

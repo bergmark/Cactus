@@ -1,5 +1,5 @@
 var Joose = require('Joose');
-require('Addon/Math');
+require('../CactusJuice.js');
 
 module.exports = (function () {
   var math = CactusJuice.Addon.Math;

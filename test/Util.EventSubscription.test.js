@@ -1,9 +1,8 @@
-var Joose = require('Joose');
-require('Util/EventSubscription');
-var Assertion = require('Dev/Assertion');
+require('../CactusJuice.js');
 
 module.exports = (function () {
   var EventSubscription = CactusJuice.Util.EventSubscription;
+  var Assertion = CactusJuice.Dev.Assertion;
 
   function C() {
   } C.prototype = {
@@ -192,8 +191,8 @@ module.exports = (function () {
       var c = new C();
       assert.ok(!c.implementsEvent("Bax"));
       assert.ok(c.implementsEvent("Foo"));
-        Assertion.assertException(assert, Error,
-                                  c.subscribe.bind(null, "Bax", Function.empty));
+        Assertion.exception(assert, Error,
+                            c.subscribe.bind(null, "Bax", Function.empty));
     },
 
     // Test hasSubscriber method.

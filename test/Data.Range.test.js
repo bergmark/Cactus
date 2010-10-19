@@ -1,5 +1,5 @@
 var Joose = require('Joose');
-require('Data/Range');
+require('../CactusJuice.js');
 
 module.exports = (function () {
   var Range = CactusJuice.Data.Range;

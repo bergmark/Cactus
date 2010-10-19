@@ -1,5 +1,5 @@
 var Joose = require('Joose');
-require('Addon/String');
+require('../CactusJuice.js');
 
 module.exports = {
   "capitalize" : function (assert) {

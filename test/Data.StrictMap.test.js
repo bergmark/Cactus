@@ -1,9 +1,9 @@
 var Joose = require('Joose');
-require('Data/StrictMap');
-var assertException = require('Dev/Assertion').assertException;
+require('../CactusJuice.js');
 
 module.exports = (function () {
   var StrictMap = CactusJuice.Data.StrictMap;
+  var assertException = CactusJuice.Dev.Assertion.exception;
   return {
     StrictMap : function (assert) {
       var sh = new StrictMap();

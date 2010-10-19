@@ -1,9 +1,8 @@
-var Joose = require('Joose');
-var Assertion = require('Dev/Assertion');
-require('Util/EventPool');
+require('../CactusJuice.js');
 
 module.exports = (function () {
   var EventPool = CactusJuice.Util.EventPool;
+  var Assertion = CactusJuice.Dev.Assertion;
   return {
     // Create a new event, subscribe, trigger.
     newEvent : function (assert) {
@@ -22,7 +21,7 @@ module.exports = (function () {
     "existing event" : function (assert) {
       var pool = new EventPool();
       pool.createEvent("Foo");
-      Assertion.assertException(assert, /EventPool.+Foo.+exists/, pool.createEvent.bind(pool, "Foo"));
+      Assertion.exception(assert, /EventPool.+Foo.+exists/, pool.createEvent.bind(pool, "Foo"));
     },
 
     // Object owning event should get the onEventName function.

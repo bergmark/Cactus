@@ -1,5 +1,5 @@
 var Joose = require('Joose');
-require('Addon/Function');
+require('../CactusJuice.js');
 
 module.exports = {
   "bind" : function (assert) {

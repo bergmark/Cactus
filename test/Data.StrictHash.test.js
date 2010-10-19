@@ -1,9 +1,9 @@
 var Joose = require('Joose');
-require('Data/StrictHash');
-var assertException = require('Dev/Assertion').assertException;
+require('../CactusJuice.js');
 
 module.exports = (function () {
   var StrictHash = CactusJuice.Data.StrictHash;
+  var assertException = CactusJuice.Dev.Assertion.exception;
   return {
     StrictHash : function (assert) {
       var sh = new StrictHash({ keys : ["x", "y"] });
