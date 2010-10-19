@@ -2,7 +2,7 @@ var Joose = require('Joose');
 require('Addon/Math');
 
 module.exports = (function () {
-  var math = new CactusJuice.Addon.Math({});
+  var math = CactusJuice.Addon.Math;
   return {
     "rand" : function (assert) {
       var a = [0, 0, 0, 0, 0];

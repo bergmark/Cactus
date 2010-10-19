@@ -3,7 +3,7 @@ require('Data/Collection');
 require('Data/Range');
 
 module.exports = (function () {
-  var Coll = new CactusJuice.Data.Collection({});
+  var Coll = CactusJuice.Data.Collection;
   var Range = CactusJuice.Data.Range;
   return {
     coerce : function (assert) {

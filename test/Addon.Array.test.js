@@ -1,8 +1,9 @@
 var Joose = require('Joose');
 require('Addon/Array');
+require('Addon/Function');
 
 module.exports = (function () {
-  var ca = new CactusJuice.Addon.Array({});
+  var ca = CactusJuice.Addon.Array;
   return {
     "empty/remove" : function (assert) {
       var a = [1,2,3];

@@ -3,8 +3,8 @@ require('Addon/Object');
 require('Data/Collection');
 
 module.exports = (function () {
-  var object = new CactusJuice.Addon.Object({});
-  var collection = new CactusJuice.Data.Collection({});
+  var object = CactusJuice.Addon.Object;
+  var collection = CactusJuice.Data.Collection;
   return {
     isEmpty : function (assert) {
       assert.ok(object.isEmpty({}));

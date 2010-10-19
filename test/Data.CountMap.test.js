@@ -5,7 +5,7 @@ var Assertion = require('Dev/Assertion');
 
 module.exports = (function () {
   var CountMap = CactusJuice.Data.CountMap;
-  var object = new CactusJuice.Addon.Object();
+  var object = CactusJuice.Addon.Object;
   return {
     CountMap : function (assert) {
       var cm = new CountMap();
