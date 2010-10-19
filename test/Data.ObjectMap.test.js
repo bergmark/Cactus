@@ -1,13 +1,14 @@
 var Joose = require('Joose');
 require('Data/ObjectMap');
-var assertException = require('Dev/Assertion').assertException;
+var Assertion = require('Dev/Assertion');
 
 module.exports = (function () {
   var ObjectMap = CactusJuice.Data.ObjectMap;
   return {
     "test" : function (assert) {
-      var om = new ObjectMap();
+      var assertException = Assertion.assertException.bind(Assertion, assert);
 
+      var om = new ObjectMap();
 
       var o = {};
       var p = {};
@@ -24,6 +25,10 @@ module.exports = (function () {
 
       om.remove(o);
       assert.ok(!om.has(o));
+
+      // Errors.
+      assertException(/ObjectMap:get:.+undefined key/i, om.get.bind(om, o));
+      assertException(/ObjectMap:remove:.+undefined key/i, om.remove.bind(om, o));
     }
   };
 })();
