@@ -351,5 +351,19 @@ module.exports = {
     assert.eql(1, triggers);
     assert.eql("foo", f.exec()());
     assert.eql(3, triggers);
+  },
+
+  "partial" : function (assert) {
+    var scope;
+    var got;
+    var f = function () {
+      scope = this;
+      got = arguments;
+    };
+    var o = {};
+    f.partial(o, 0, undefined, 2)(1,3,4);
+    assert.eql("0,1,2,3,4", Array.prototype.join.call(got, ","));
+    assert.ok(o === scope);
+    f.partial(o, 0, undefined)(1,2);
   }
 };
