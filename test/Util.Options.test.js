@@ -33,18 +33,18 @@ module.exports = (function () {
       jsoneq(assert, [1, 2], o.parse([1, 2]));
       jsoneq(assert, [], o.parse([]));
       exception(/^Options: Error: Expected \[\{"type":"number"\}\], but got "string"$/i, o.parse.bind(o, "a"));
-      exception(/error in property "0.": expected "number", but got "string"/i, o.parse.bind(o, ["a"]));
-      exception(/error in property "1.": expected "number", but got "boolean"/i, o.parse.bind(o, [1, true]));
-      exception(/error in property "0.": expected "number", but got "string"[\s\S]+error in property "1.": expected "number", but got "boolean"/i, o.parse.bind(o, ["a", true]));
+      exception(/error in property "0": expected "number", but got "string"/i, o.parse.bind(o, ["a"]));
+      exception(/error in property "1": expected "number", but got "boolean"/i, o.parse.bind(o, [1, true]));
+      exception(/error in property "0": expected "number", but got "string"[\s\S]+error in property "1": expected "number", but got "boolean"/i, o.parse.bind(o, ["a", true]));
 
       // Nesting of arrays.
       o = new Options({
         type : [{ type : [{ type : "number" }] }]
       });
       jsoneq(assert, [[1, 2]], o.parse([[1, 2]]));
-      exception(/^Options: Error in property "0.": expected \[\{"type":"number"\}\], but got "number"$/i,
+      exception(/^Options: Error in property "0": expected \[\{"type":"number"\}\], but got "number"$/i,
                 o.parse.bind(o, [1, [2, 3]]));
-      exception(/^Options: Error in property "1.1.": expected "number", but got "boolean"$/i,
+      exception(/^Options: Error in property "1.1": expected "number", but got "boolean"$/i,
                 o.parse.bind(o, [[1], [2, true]]));
       jsoneq(assert, [[]], o.parse([[]]));
       jsoneq(assert, [], o.parse([]));
@@ -59,9 +59,9 @@ module.exports = (function () {
       jsoneq(assert, { a : 1, b : true }, o.parse({ a : 1, b : true }));
       exception(/^Options: Error: Expected \{"a":\{"type":"number"\},"b":\{"type":"boolean"\}\}, but got "number"/i,
                 o.parse.bind(o, 1));
-      exception(/^Options: Error in property "a.": expected "number", but got "string"$/i,
+      exception(/^Options: Error in property "a": expected "number", but got "string"$/i,
                 o.parse.bind(o, { a : "2", b : true }));
-      exception(/^Options: Error in property "a.": expected "number", but got "string"[\s\S]Options: Error in property "b.": expected "boolean", but got "string"$/i,
+      exception(/^Options: Error in property "a": expected "number", but got "string"[\s\S]Options: Error in property "b": expected "boolean", but got "string"$/i,
                 o.parse.bind(o, { a : "2", b : "2" }));
       exception(/^Options: Error in property "b": Missing property$/,
                 o.parse.bind(o, { a : 1 }));
@@ -75,7 +75,7 @@ module.exports = (function () {
         type : "number"
       });
       jsoneq(assert, { a : 1, b : 1 }, o.parse({ a : 1, b : 1}));
-      exception(/^Options: Error in property "b.": Expected "number", but got "boolean"$/,
+      exception(/^Options: Error in property "b": Expected "number", but got "boolean"$/,
                 o.parse.bind(o, { a : 1, b : false }));
     }
   };
