@@ -63,6 +63,10 @@ module.exports = (function () {
                 o.parse.bind(o, { a : "2", b : true }));
       exception(/^Options: Error in property "a.": expected "number", but got "string"[\s\S]Options: Error in property "b.": expected "boolean", but got "string"$/i,
                 o.parse.bind(o, { a : "2", b : "2" }));
+      exception(/^Options: Error in property "b": Missing property$/,
+                o.parse.bind(o, { a : 1 }));
+      exception(/^Options: Error in property "c": Property lacks definition$/i,
+                o.parse.bind(o, { a : 1, b : true, c : "1" }));
     }
   };
 })();
