@@ -67,6 +67,16 @@ module.exports = (function () {
                 o.parse.bind(o, { a : 1 }));
       exception(/^Options: Error in property "c": Property lacks definition$/i,
                 o.parse.bind(o, { a : 1, b : true, c : "1" }));
+    },
+    map : function (assert) {
+      var exception = assertException.curry(assert);
+      var o = new Options({
+        map : true,
+        type : "number"
+      });
+      jsoneq(assert, { a : 1, b : 1 }, o.parse({ a : 1, b : 1}));
+      exception(/^Options: Error in property "b.": Expected "number", but got "boolean"$/,
+                o.parse.bind(o, { a : 1, b : false }));
     }
   };
 })();
