@@ -48,6 +48,21 @@ module.exports = (function () {
                 o.parse.bind(o, [[1], [2, true]]));
       jsoneq(assert, [[]], o.parse([[]]));
       jsoneq(assert, [], o.parse([]));
+
+      // Hashes.
+      o = new Options({
+        type : {
+          a : { type : "number" },
+          b : { type : "boolean" }
+        }
+      });
+      jsoneq(assert, { a : 1, b : true }, o.parse({ a : 1, b : true }));
+      exception(/^Options: Error: Expected \{"a":\{"type":"number"\},"b":\{"type":"boolean"\}\}, but got "number"/i,
+                o.parse.bind(o, 1));
+      exception(/^Options: Error in property "a.": expected "number", but got "string"$/i,
+                o.parse.bind(o, { a : "2", b : true }));
+      exception(/^Options: Error in property "a.": expected "number", but got "string"[\s\S]Options: Error in property "b.": expected "boolean", but got "string"$/i,
+                o.parse.bind(o, { a : "2", b : "2" }));
     }
   };
 })();
