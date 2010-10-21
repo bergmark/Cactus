@@ -4,6 +4,7 @@ require('../CactusJuice.js');
 module.exports = (function () {
   var Coll = CactusJuice.Data.Collection;
   var Range = CactusJuice.Data.Range;
+  var assertException = CactusJuice.Dev.Assertion.exception;
   return {
     coerce : function (assert) {
       var a = [1,2,3];
@@ -238,6 +239,20 @@ module.exports = (function () {
       assert.ok(!Coll.equal([1, 2], [1, 2, 3]));
       assert.ok(!Coll.equal([1, 2, 3], [1, 2]));
       assert.ok(Coll.equal([1, 2], { 0 : 1, 1 : 2, length : 2 }));
+    },
+
+    randElement : function (assert) {
+      assertException(assert, /:randElement:.+empty collection/i, Coll.randElement.bind(Coll, []));
+      var a = [0,1,2];
+      var count = [0,0,0];
+      var v;
+      // Should improbable that one element gets picked less than 900 times.
+      for (var i = 0; i < 3000; i++) {
+        count[Coll.randElement(a)]++;
+      }
+      assert.ok(count[0] > 900, count[0]);
+      assert.ok(count[1] > 900, count[1]);
+      assert.ok(count[2] > 900, count[2]);
     }
   };
 })();
