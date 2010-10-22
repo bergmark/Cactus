@@ -130,6 +130,16 @@ module.exports = (function () {
                 o.parse.bind(o, 1));
       exception(/^Options: Error: Expected "Anonymous constructor", but got "Anonymous constructor"$/,
                 o.parse.bind(o, new H()));
+    },
+    "null and undefined" : function (assert) {
+      var exception = assertException.curry(assert);
+      var o = new Options({
+        type : "number"
+      });
+      exception(/^Options: Error: Expected "number", but got "undefined"$/,
+                o.parse.bind(o, undefined));
+      exception(/^Options: Error: Expected "number", but got "null"$/,
+                o.parse.bind(o, null));
     }
   };
 })();
