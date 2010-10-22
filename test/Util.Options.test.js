@@ -168,6 +168,29 @@ module.exports = (function () {
       assert.ok(object.isEmpty(h));
       h = o.parse({});
       assert.ok(object.isEmpty(h));
+    },
+    "default value" : function (assert) {
+      var o = new Options({
+        type : "number",
+        defaultValue : 3
+      });
+      assert.eql(3, o.parse(null));
+      assert.eql(3, o.parse(undefined));
+      assert.eql(4, o.parse(4));
+
+      o = new Options({
+        type : {
+          a : {
+            type : "number",
+            defaultValue : 1
+          }
+        }
+      });
+      var h = o.parse({ a : 2 });
+      assert.eql(2, o.parse({ a : 2}).a);
+      assert.eql(1, o.parse({ a : null }).a);
+      assert.eql(1, o.parse({ a : undefined }).a);
+      assert.eql(1, o.parse({}).a);
     }
   };
 })();
