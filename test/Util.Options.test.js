@@ -6,6 +6,7 @@ module.exports = (function () {
   var assertException = Assertion.exception.bind(Assertion);
   var JSON = CactusJuice.Util.JSON;
   var stringify = JSON.stringify;
+  var object = CactusJuice.Addon.Object;
 
   var jsoneq = function (assert, a, b) {
     return assert.eql(JSON.stringify(a), JSON.stringify(b));
@@ -140,6 +141,33 @@ module.exports = (function () {
                 o.parse.bind(o, undefined));
       exception(/^Options: Error: Expected "number", but got "null"$/,
                 o.parse.bind(o, null));
+    },
+    "required values" : function (assert) {
+      var o = new Options({
+        required : false,
+        type : "boolean"
+      });
+      o.parse(true);
+      o.parse(undefined);
+      o.parse(null);
+
+      // Hash with non-required properties.
+      o = new Options({
+        type : {
+          a : { type : "number", required : false },
+          b : { type : "boolean", required : false }
+        }
+      });
+      jsoneq(assert, { a : 1, b : false },
+             o.parse({ a : 1, b : false }));
+      var h = o.parse({ a : 1, b : undefined });
+      assert.ok(!("b" in h));
+      h = o.parse({ a : 1, b : null });
+      assert.eql(null, h.b);
+      h = o.parse({ a : undefined, b : undefined });
+      assert.ok(object.isEmpty(h));
+      h = o.parse({});
+      assert.ok(object.isEmpty(h));
     }
   };
 })();
