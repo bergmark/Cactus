@@ -77,6 +77,59 @@ module.exports = (function () {
       jsoneq(assert, { a : 1, b : 1 }, o.parse({ a : 1, b : 1}));
       exception(/^Options: Error in property "b": Expected "number", but got "boolean"$/,
                 o.parse.bind(o, { a : 1, b : false }));
+    },
+    "instanceof checks" : function (assert) {
+      var exception = assertException.curry(assert);
+      var Foo = Class("Foo", {});
+      Class("Bar", {
+        isa : Foo
+      });
+      var o = new Options({
+        type : Foo
+      });
+      o.parse(new Foo());
+      o.parse(new Bar());
+      exception(/^Options: Error: Expected "Foo", but got "number"$/,
+                o.parse.bind(o, 1));
+      Class("Baz");
+      exception(/^Options: Error: Expected "Foo", but got "Baz"$/,
+                o.parse.bind(o, new Baz()));
+
+      // Non-Joose classes.
+      function Bax() {
+
+      }
+      function Qux () {
+
+      }
+      Qux.extend(Bax);
+      o = new Options({
+        type : Bax
+      });
+      o.parse(new Bax());
+      o.parse(new Qux());
+      function Qax() {
+
+      }
+      exception(/^Options: Error: Expected "Bax", but got "number"$/,
+                o.parse.bind(o, 1));
+      exception(/^Options: Error: Expected "Bax", but got "Qax"$/,
+                o.parse.bind(o, new Qax()));
+
+      // Anonymous classes.
+      var F = function () {};
+      var G = function () {};
+      o = new Options({
+        type : F
+      });
+      G.extend(F);
+      o.parse(new F());
+      o.parse(new G());
+      var H = function () {};
+      exception(/^Options: Error: Expected "Anonymous constructor", but got "number"$/,
+                o.parse.bind(o, 1));
+      exception(/^Options: Error: Expected "Anonymous constructor", but got "Anonymous constructor"$/,
+                o.parse.bind(o, new H()));
     }
   };
 })();
