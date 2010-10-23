@@ -200,8 +200,8 @@ module.exports = (function () {
       o.parse(1);
       o.parse(2);
       o.parse(3);
-      exception(/^Options: Error: Expected a value in 1,2,3, but got 0$/, o.parse.bind(o, 0));
-      exception(/^Options: Error: Expected a value in 1,2,3, but got 4$/, o.parse.bind(o, 4));
+      exception(/^Options: Error: Expected a value in \[1,2,3\], but got 0$/, o.parse.bind(o, 0));
+      exception(/^Options: Error: Expected a value in \[1,2,3\], but got 4$/, o.parse.bind(o, 4));
     }
   };
 })();
