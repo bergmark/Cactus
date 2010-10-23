@@ -24,22 +24,21 @@ module.exports = (function () {
       object.copy(o, p);
       assert.eql(2, p.a);
       assert.eql(4, p.b);
-    }
+    },
 
-    ,map : function (assert) {
+    map : function (assert) {
       var o = {
         a : 1,
         b : 2,
         c : 3
       };
-      var a = object.map(o, function (p, v) {
+      var h = object.map(o, function (p, v) {
         return p + v;
       });
 
-      assert.eql(3, a.length);
-      assert.ok(collection.hasValue(a, "a1"));
-      assert.ok(collection.hasValue(a, "b2"));
-      assert.ok(collection.hasValue(a, "c3"));
+      assert.eql("a1", h.a);
+      assert.eql("b2", h.b);
+      assert.eql("c3", h.c);
     },
 
     bound : function (assert) {
