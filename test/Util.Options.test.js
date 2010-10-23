@@ -192,10 +192,10 @@ module.exports = (function () {
       assert.eql(1, o.parse({ a : undefined }).a);
       assert.eql(1, o.parse({}).a);
     },
-    "fixed value types" : function (assert) {
+    "enums" : function (assert) {
       var exception = assertException.curry(assert);
       var o = new Options({
-        values : [1,2,3]
+        enumerable : [1,2,3]
       });
       o.parse(1);
       o.parse(2);
