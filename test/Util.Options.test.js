@@ -202,6 +202,28 @@ module.exports = (function () {
       o.parse(3);
       exception(/^Options: Error: Expected a value in \[1,2,3\], but got 0$/, o.parse.bind(o, 0));
       exception(/^Options: Error: Expected a value in \[1,2,3\], but got 4$/, o.parse.bind(o, 4));
+    },
+    "validators" : function (assert) {
+      var exception = assertException.curry(assert);
+      var o = new Options({
+        validator : function (v) {
+          return v > 0;
+        }
+      });
+      o.parse(1);
+      exception(/^Options: Error: Validation failed, got 0. $/,
+               o.parse.bind(o, 0));
+
+      // Validation error message.
+      o = new Options({
+        validator : function (v) {
+          return v > 0;
+        },
+        validationMessage : "Expected positive number."
+      });
+      o.parse(1);
+      exception(/^Options: Error: Validation failed, got 0. Expected positive number.$/,
+                o.parse.bind(o, 0));
     }
   };
 })();
