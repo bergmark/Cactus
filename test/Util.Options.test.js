@@ -7,12 +7,77 @@ module.exports = (function () {
   var JSON = CactusJuice.Util.JSON;
   var stringify = JSON.stringify;
   var object = CactusJuice.Addon.Object;
+  var collection = CactusJuice.Data.Collection;
 
   var jsoneq = function (assert, a, b) {
     return assert.eql(JSON.stringify(a), JSON.stringify(b));
   };
 
   return {
+    "recursive definition" : function (assert) {
+      var exception = assertException.curry(assert);
+      var o = new Options({
+        type : {
+          type : {
+            required : false,
+            validator : function (v) {
+              if (typeof v === "string") {
+                return collection.hasValue(["string", "number", "object", "function", "boolean"],
+                                           v);
+              } else if (v instanceof Array) {
+                return v.length === 1;
+              }
+              return false;
+            }
+          },
+          required : {
+            required : false,
+            type : "boolean"
+          },
+          defaultValue : {
+            required : false,
+            // Hack to allow any value until mixed values are implemented.
+            // Will then be `type : "mixed"` instead.
+            validator : function (v) {
+              return true;
+            }
+          },
+          validator : {
+            required : false,
+            type : Function
+          }
+        }
+      });
+      o.parse({
+        type : "string"
+      });
+      o.parse({
+        type : "number"
+      });
+      o.parse({
+        required : false,
+        type : "number"
+      });
+      o.parse({
+        defaultValue : 3,
+        type : "number"
+      });
+      o.parse({
+        defaultValue : true,
+        type : "boolean"
+      });
+      o.parse({
+        type : [{ type : "string" }]
+      });
+      o.parse({
+        validator : Function.empty
+      });
+
+      // Fails until properties can constrain each other.
+      // exception(/./i,
+      //           o.parse.bind(o, {}));
+    },
+
     a : function (assert) {
       var exception = assertException.curry(assert);
       var o = new Options({
