@@ -19,6 +19,7 @@ module.exports = (function () {
       sh = sh.map(function (v) {
         return v * 10;
       });
+      assert.ok(sh instanceof StrictHash, "Did not get StrictHash instance.");
       assert.eql(10, sh.get("x"));
       assert.eql(20, sh.get("y"));
     }
