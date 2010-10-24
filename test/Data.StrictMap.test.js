@@ -25,10 +25,10 @@ module.exports = (function () {
       sh.set("x", 4);
       assert.eql(4, sh.get("x"));
 
-      assertException(assert, regs.badMap, function () { new StrictMap({ map : null }); });
-      assertException(assert, regs.badMap, function () { new StrictMap({ map : 1 }); });
+      assertException(assert, regs.badMap, function () { new StrictMap(null); });
+      assertException(assert, regs.badMap, function () { new StrictMap(1); });
 
-      sh = new StrictMap({ map : { x : 1 } });
+      sh = new StrictMap({ x : 1 });
       assertException(assert, regs.getY, sh.get.bind(sh, "y"));
       assertException(assert, regs.setY, sh.set.bind(sh, "y", 2));
       assertException(assert, regs.define, sh.define.bind(sh, "x", 2));
