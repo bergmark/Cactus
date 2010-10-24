@@ -37,6 +37,17 @@ module.exports = (function () {
       sh.define("y",3);
       assert.eql(2, sh.get("x"));
       assert.eql(3, sh.get("y"));
+    },
+    map : function (assert) {
+      var sm = new StrictMap();
+      sm.define("x", 1);
+      sm.define("y", 2);
+      var sm2 = sm.map(function (v) {
+        return v * 10;
+      });
+      assert.ok(sm !== sm2);
+      assert.eql(10, sm2.get("x"));
+      assert.eql(20, sm2.get("y"));
     }
   };
 })();
