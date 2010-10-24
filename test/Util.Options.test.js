@@ -143,12 +143,15 @@ module.exports = (function () {
                 o.parse.bind(o, null));
     },
     "required values" : function (assert) {
+      var exception = assertException.curry(assert);
       var o = new Options({
         required : false,
         type : "boolean"
       });
       o.parse(true);
-      o.parse(undefined);
+      // undefined not allowed for atomic values.
+      exception(/Options: Error: undefined is not an allowed atomic value./i,
+                o.parse.bind(o, undefined));
       o.parse(null);
 
       // Hash with non-required properties.
@@ -175,7 +178,6 @@ module.exports = (function () {
         defaultValue : 3
       });
       assert.eql(3, o.parse(null));
-      assert.eql(3, o.parse(undefined));
       assert.eql(4, o.parse(4));
 
       o = new Options({
@@ -189,7 +191,6 @@ module.exports = (function () {
       var h = o.parse({ a : 2 });
       assert.eql(2, o.parse({ a : 2}).a);
       assert.eql(1, o.parse({ a : null }).a);
-      assert.eql(1, o.parse({ a : undefined }).a);
       assert.eql(1, o.parse({}).a);
     },
     "enums" : function (assert) {
