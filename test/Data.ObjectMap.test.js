@@ -29,6 +29,17 @@ module.exports = (function () {
       // Errors.
       assertException(/ObjectMap:get:.+undefined key/i, om.get.bind(om, o));
       assertException(/ObjectMap:remove:.+undefined key/i, om.remove.bind(om, o));
+    },
+    map : function (assert) {
+      var om = new ObjectMap();
+      om.set(1, 10);
+      om.set(2, 20);
+      var om2 = om.map(function (v) {
+        return v * 10;
+      });
+      assert.ok(om !== om2);
+      assert.eql(100, om2.get(1));
+      assert.eql(200, om2.get(2));
     }
   };
 })();
