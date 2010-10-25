@@ -18,6 +18,12 @@ module.exports = (function () {
       assert.eql(1, p.getFirst());
       p.changeSecond(4);
       assert.eql(2, p.getSecond());
+    },
+    toHash : function (assert) {
+      var p = new Pair(1, 2);
+      var h = p.toHash();
+      assert.eql(1, h.first);
+      assert.eql(2, h.second);
     }
   };
 })();
