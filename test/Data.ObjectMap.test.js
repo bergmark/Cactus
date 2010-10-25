@@ -40,6 +40,14 @@ module.exports = (function () {
       assert.ok(om !== om2);
       assert.eql(100, om2.get(1));
       assert.eql(200, om2.get(2));
+    },
+    toHash : function (assert) {
+      var om = new ObjectMap();
+      om.set("a", 1);
+      om.set("b", 2);
+      var h = om.toHash();
+      assert.eql(h.a, 1);
+      assert.eql(h.b, 2);
     }
   };
 })();
