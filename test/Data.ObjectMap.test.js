@@ -52,6 +52,14 @@ module.exports = (function () {
       assert.eql(1, h[aIndex][1]);
       assert.eql("b", h[bIndex][0]);
       assert.eql(2, h[bIndex][1]);
+
+      // Call serialize on key/val if it exists.
+      om = new ObjectMap();
+      om.set({ serialize : Function.returning(1) },
+             { serialize : Function.returning(2) });
+      h = om.toHash();
+      assert.eql(1, h[0][0]);
+      assert.eql(2, h[0][1]);
     }
   };
 })();
