@@ -41,13 +41,17 @@ module.exports = (function () {
       assert.eql(100, om2.get(1));
       assert.eql(200, om2.get(2));
     },
-    toHash : function (assert) {
+    toJson : function (assert) {
       var om = new ObjectMap();
       om.set("a", 1);
       om.set("b", 2);
       var h = om.toHash();
-      assert.eql(h.a, 1);
-      assert.eql(h.b, 2);
+      var aIndex = h[0][0] === "a" ? 0 : 1;
+      var bIndex = aIndex === 0 ? 1 : 0;
+      assert.eql("a", h[aIndex][0]);
+      assert.eql(1, h[aIndex][1]);
+      assert.eql("b", h[bIndex][0]);
+      assert.eql(2, h[bIndex][1]);
     }
   };
 })();
