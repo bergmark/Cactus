@@ -19,3 +19,5 @@ require('./lib/Util/JSON');
 require('./lib/Util/EventSubscription');
 require('./lib/Util/EventPool');
 require('./lib/Util/Options');
+
+require('./lib/Data/KeyValueCoding');
