@@ -1,7 +1,7 @@
 <!-- Loads CactusJuice along with Joose. Assumes joose is available under /jsan. -->
 <html>
   <head>
-    <script src="/jsan/Task/Joose/Core.js"></script>
+    <script src="/.local/lib/node/.jsan/Task/Joose/Core.js"></script>
     <script>
       require = function (path) {
         if (!/^\.\//.test(path)) {
@@ -12,5 +12,6 @@
       };
     </script>
     <script src="CactusJuice.js"></script>
+    <script src="CactusJuiceWeb.js"></script>
   </head>
 </html>
