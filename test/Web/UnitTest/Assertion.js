@@ -12,7 +12,7 @@ Cactus.Dev.UnitTest.Assertion = (function () {
    * @param boolean success
    * @param string message
    */
-  function Assertion (success, message) {
+  function Assertion(success, message) {
     this.success = success;
     this.message = message;
   } Assertion.prototype = {

@@ -9,9 +9,9 @@ Cactus.Dev.UnitTest.TestSuite = (function () {
   var EventIterator = Cactus.Util.EventIterator;
   var EventSubscription  = CactusJuice.Util.EventSubscription;
 
-  function TestSuite () {
+  function TestSuite() {
   } TestSuite.prototype = {
-    // Events
+    // Events.
     /**
      * Triggered when all testcases have finished running.
      */
@@ -31,7 +31,7 @@ Cactus.Dev.UnitTest.TestSuite = (function () {
      * @param TestCase testCase
      */
     addTestCase : function (testCase) {
-        this.testCases.push (testCase);
+        this.testCases.push(testCase);
     },
     /**
      * Accessor for testCases, clones testCases before returning.
@@ -40,13 +40,13 @@ Cactus.Dev.UnitTest.TestSuite = (function () {
      *   A shallow copy of the collection of test cases.
      */
     getTestCases : function () {
-        return Array.clone (this.testCases);
+        return Array.clone(this.testCases);
     },
     /**
      * Runs every attached test case.
      */
     run : function () {
-        var ei = new EventIterator (this.testCases, "run", "Finish");
+        var ei = new EventIterator(this.testCases, "run", "Finish");
         // Call onfinish for the suite when all testcases have been iterated
         // through.
         ei.subscribe("Finish", function (ei) {

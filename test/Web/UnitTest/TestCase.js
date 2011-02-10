@@ -75,7 +75,7 @@ Cactus.Dev.UnitTest.TestCase = (function () {
        */
       getSuccess : function () {
         if (this.success === null) {
-          throw new Error ("Called getSuccess before testCase ran");
+          throw new Error("Called getSuccess before testCase ran");
         }
         return this.success;
       },
@@ -97,9 +97,9 @@ Cactus.Dev.UnitTest.TestCase = (function () {
        */
       add : function (test) {
         if (test instanceof Function) {
-          this.tests.push (new Test (null, test));
+          this.tests.push(new Test(null, test));
         } else {
-          this.tests.push (test);
+          this.tests.push(test);
         }
       },
       /**
@@ -110,7 +110,7 @@ Cactus.Dev.UnitTest.TestCase = (function () {
        */
       addTests : function () {
         for (var i = 0; i < arguments.length; i++) {
-          this.add (arguments [i]);
+          this.add(arguments [i]);
         }
       },
       /**
@@ -127,7 +127,7 @@ Cactus.Dev.UnitTest.TestCase = (function () {
        * before a test is executed, and teardown afterwards.
        */
       run : function () {
-        var ei = new EventIterator (this.tests, "run", "TestFinish");
+        var ei = new EventIterator(this.tests, "run", "TestFinish");
         ei.subscribe("Finish", this);
         ei.setBeforeProcessing(this.setup);
         ei.setAfterProcessing(this.teardown);
@@ -144,7 +144,7 @@ Cactus.Dev.UnitTest.TestCase = (function () {
           this.success = true;
         }
 
-        ei.removeSubscriber (this, "Finish");
+        ei.removeSubscriber(this, "Finish");
         this.onFinish();
       }
     }

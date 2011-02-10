@@ -4,7 +4,7 @@ Cactus.UnitTest.DOM.Events = function () {
   var Events = CactusJuice.Web.DOM.Events;
   var tag = CactusJuice.Web.DOM.tag;
 
-  var tc = new UT.TestCase ("DOM.Events");
+  var tc = new UT.TestCase("DOM.Events");
   tc.setup = function () {
     this.o = {};
     this.oFunc = function () { };
@@ -103,8 +103,8 @@ Cactus.UnitTest.DOM.Events = function () {
     });
 
     o.onclick();
-    this.assert (triggeredClick);
-    this.assertFalse (triggeredFoo);
+    this.assert(triggeredClick);
+    this.assertFalse(triggeredFoo);
 
     triggeredClick = false;
     o.onfoo();
@@ -126,11 +126,11 @@ Cactus.UnitTest.DOM.Events = function () {
     // order and we don't want to enforce ordering?
     var hTriggered = false;
     var lastTrigger = "";
-    function g () {
+    function g() {
       lastTrigger = "g";
       return false;
     }
-    function h () {
+    function h() {
       lastTrigger = "h";
       hTriggered = true;
     }
@@ -148,7 +148,7 @@ Cactus.UnitTest.DOM.Events = function () {
     var fooTriggered = false;
     Events.add(o, "foo", function () {
       fooTriggered = true;
-      test.assertEqual (o, this);
+      test.assertEqual(o, this);
     });
 
     o.onfoo();
@@ -176,7 +176,7 @@ Cactus.UnitTest.DOM.Events = function () {
   // Trying to remove a non-existing event should throw an error.
   tc.add(function () {
     var o = {};
-    this.assertException (Error, function () {
+    this.assertException(Error, function () {
       Events.del(o, "click", "foo");
       });
     });

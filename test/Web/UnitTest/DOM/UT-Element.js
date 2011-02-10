@@ -19,76 +19,76 @@ Cactus.UnitTest.DOM.Element = function () {
   };
 
   // test setValue
-  tc.add (function () {
-    var div = tag ("div", {}, "foo");
-    this.assertEqual ("foo", div.innerHTML);
+  tc.add(function () {
+    var div = tag("div", {}, "foo");
+    this.assertEqual("foo", div.innerHTML);
 
     // setValue(element)
-    Element.setValue (div, "bar");
-    this.assertEqual ("bar", div.innerHTML);
+    Element.setValue(div, "bar");
+    this.assertEqual("bar", div.innerHTML);
 
-    // setValue (ul/ol)
-    var ul = tag ("ul");
+    // setValue(ul/ol)
+    var ul = tag("ul");
     for (var i = 0; i < 5; i++) {
-      ul.appendChild (tag("li", {}, String (i)));
+      ul.appendChild(tag("li", {}, String(i)));
     }
 
     var values = ["a", "b", "c", "d"];
-    Element.setValue (ul, values);
+    Element.setValue(ul, values);
 
-    var lis = $ ("li", ul);
-    var textArray = Collection.map (lis, function (v) {
+    var lis = $("li", ul);
+    var textArray = Collection.map(lis, function (v) {
       return v.innerHTML;
     });
-    this.assertEqual ("a,b,c,d", textArray.join(","));
+    this.assertEqual("a,b,c,d", textArray.join(","));
 
 
-    // setValue (a, string)
-    var a = tag ("a", null, "foo");
+    // setValue(a, string)
+    var a = tag("a", null, "foo");
     var URL = "http://www.example.com/";
-    Element.setValue (a, URL);
-    this.assertEqual (URL, a.href);
-    this.assertEqual ("foo", a.firstChild.nodeValue);
+    Element.setValue(a, URL);
+    this.assertEqual(URL, a.href);
+    this.assertEqual("foo", a.firstChild.nodeValue);
 
-    // setValue (a, Hash)
-    var a = tag ("a", null, "foo");
+    // setValue(a, Hash)
+    var a = tag("a", null, "foo");
     var URL = "http://www.example.com/";
-    Element.setValue (a, { url : URL, text : "bar" });
-    this.assertEqual (URL, a.href);
-    this.assertEqual ("bar", a.innerHTML);
+    Element.setValue(a, { url : URL, text : "bar" });
+    this.assertEqual(URL, a.href);
+    this.assertEqual("bar", a.innerHTML);
 
-    // setValue (img)
-    var img = tag ("img");
+    // setValue(img)
+    var img = tag("img");
     Element.setValue(img, URL);
     this.assertEqual(URL, img.src);
   });
 
   // test getValue
-  tc.add (function () {
+  tc.add(function () {
     var imgURL = "http://www.example.com/image.gif";
-    this.assertEqual (imgURL, Element.getValue (tag ("img", {
+    this.assertEqual(imgURL, Element.getValue(tag("img", {
       src : imgURL
     })));
 
     var text = "hello world!";
-    this.assertEqual (text, Element.getValue (tag ("span", null, text)));
+    this.assertEqual(text, Element.getValue(tag("span", null, text)));
 
-    var ul = tag ("ul", null, [
-      tag ("li", null, "1"),
-      tag ("li", null, "2"),
-      tag ("li", null, "3")
+    var ul = tag("ul", null, [
+      tag("li", null, "1"),
+      tag("li", null, "2"),
+      tag("li", null, "3")
     ]);
 
-    this.assertEqual ("1,2,3", Element.getValue (ul).join (","));
+    this.assertEqual("1,2,3", Element.getValue(ul).join(","));
 
-    var a = tag ("a", { href : imgURL }, "foo");
-    this.assertEqual (imgURL, Element.getValue (a).url);
-    this.assertEqual ("foo", Element.getValue (a).text);
+    var a = tag("a", { href : imgURL }, "foo");
+    this.assertEqual(imgURL, Element.getValue(a).url);
+    this.assertEqual("foo", Element.getValue(a).text);
 
   });
 
-  // setValue (input:radio)
-  tc.add (function () {
+  // setValue(input:radio)
+  tc.add(function () {
     var a = tag("input", { type : "radio", name : "foo", value : "a" });
     var b = tag("input", { type : "radio", name : "foo", value : "b" });
     var form = tag("form", null, [a, b]);
@@ -114,91 +114,91 @@ Cactus.UnitTest.DOM.Element = function () {
     this.assert(b.checked);
   });
 
-  // getValue (input:radio)
-  tc.add (function () {
-    var a = tag ("input", {
+  // getValue(input:radio)
+  tc.add(function () {
+    var a = tag("input", {
       type : "radio",
       name : "foo",
       value : "a"
     });
-    var b = tag ("input", {
+    var b = tag("input", {
       type : "radio",
       name : "foo",
       value : "b"
     });
-    var form = tag ("form", null, [a, b]);
+    var form = tag("form", null, [a, b]);
 
     a.checked = true;
 
-    this.assertEqual ("a", Element.getValue (a));
-    this.assertEqual ("a", Element.getValue (b));
+    this.assertEqual("a", Element.getValue(a));
+    this.assertEqual("a", Element.getValue(b));
 
     a.checked = false;
-    this.assertEqual (null, Element.getValue (a));
+    this.assertEqual(null, Element.getValue(a));
   });
 
-  // setValue (input:checkbox)
-  tc.add (function () {
-    var a = tag ("input", {
+  // setValue(input:checkbox)
+  tc.add(function () {
+    var a = tag("input", {
       type : "checkbox",
       name : "foo",
       value : "bar"
     });
 
-    this.assertFalse (a.checked);
+    this.assertFalse(a.checked);
 
     // Check by providing the value attributes value.
-    Element.setValue (a, "bar");
-    this.assert (a.checked, "a should be checked");
+    Element.setValue(a, "bar");
+    this.assert(a.checked, "a should be checked");
 
     a.checked = false;
     // Check by passing a bool.
-    Element.setValue (a, true);
-    this.assert (a.checked, "a should be checked after setValue(true)");
+    Element.setValue(a, true);
+    this.assert(a.checked, "a should be checked after setValue(true)");
 
     // Should break on bad arguments.
     a.checked = false;
-    this.assertException (Error, Element.setValue.bind (null, a, {}));
+    this.assertException(Error, Element.setValue.bind(null, a, {}));
 
     // Should be checked if value attribute is in array.
     a.checked = false;
-    Element.setValue (a, ["bax", "bar"]);
-    this.assert (a.checked, "a should be checked after setValue (array)")
+    Element.setValue(a, ["bax", "bar"]);
+    this.assert(a.checked, "a should be checked after setValue (array)")
   });
 
-  // setValue (input:checkbox) with associated form
-  tc.add (function () {
-    var a = tag ("input", { type : "checkbox", name : "foo", value : "a" });
-    var b = tag ("input", { type : "checkbox", name : "foo", value : "b" });
-    var form = tag ("form", null, [a, b]);
+  // setValue(input:checkbox) with associated form
+  tc.add(function () {
+    var a = tag("input", { type : "checkbox", name : "foo", value : "a" });
+    var b = tag("input", { type : "checkbox", name : "foo", value : "b" });
+    var form = tag("form", null, [a, b]);
 
-    this.assertFalse (a.checked);
-    this.assertFalse (b.checked);
+    this.assertFalse(a.checked);
+    this.assertFalse(b.checked);
 
-    Element.setValue (a, true);
+    Element.setValue(a, true);
 
-    this.assert (a.checked);
-    this.assertFalse (b.checked);
+    this.assert(a.checked);
+    this.assertFalse(b.checked);
 
-    Element.setValue (b, true);
-    this.assert (a.checked);
-    this.assert (b.checked);
+    Element.setValue(b, true);
+    this.assert(a.checked);
+    this.assert(b.checked);
 
-    Element.setValue (a, []);
-    this.assertFalse (a.checked, "a is checked");
-    this.assertFalse (b.checked, "b is checked");
+    Element.setValue(a, []);
+    this.assertFalse(a.checked, "a is checked");
+    this.assertFalse(b.checked, "b is checked");
 
-    Element.setValue (a, ["a", "b"]);
-    this.assert (a.checked);
-    this.assert (b.checked);
+    Element.setValue(a, ["a", "b"]);
+    this.assert(a.checked);
+    this.assert(b.checked);
 
-    Element.setValue (a, ["b"]);
-    this.assertFalse (a.checked);
-    this.assert (b.checked);
+    Element.setValue(a, ["b"]);
+    this.assertFalse(a.checked);
+    this.assert(b.checked);
   });
 
-  // getValue (input:checkbox)
-  tc.add (function () {
+  // getValue(input:checkbox)
+  tc.add(function () {
     var a = tag("input", {
       type : "checkbox",
       name : "foo",
@@ -222,38 +222,38 @@ Cactus.UnitTest.DOM.Element = function () {
     this.assertEqual("bar", result[0]);
   });
 
-  // getValue (input:checkbox) with associated checkboxes
-  tc.add (function () {
-    var a = tag ("input", { type : "checkbox", name : "foo", value : "a" });
-    var b = tag ("input", { type : "checkbox", name : "foo", value : "b" });
+  // getValue(input:checkbox) with associated checkboxes
+  tc.add(function () {
+    var a = tag("input", { type : "checkbox", name : "foo", value : "a" });
+    var b = tag("input", { type : "checkbox", name : "foo", value : "b" });
 
-    var form = tag ("form", null, [a, b]);
+    var form = tag("form", null, [a, b]);
 
     a.checked = true;
     b.checked = false;
 
-    this.assertEqual ("a", Element.getValue (a).join (""));
-    this.assertEqual ("a", Element.getValue (b).join (""));
+    this.assertEqual("a", Element.getValue(a).join(""));
+    this.assertEqual("a", Element.getValue(b).join(""));
 
     a.checked = true;
     b.checked = true;
 
-    this.assertEqual ("ab", Element.getValue (a).join (""));
+    this.assertEqual("ab", Element.getValue(a).join(""));
   });
 
-  // getValue (select)
-  tc.add (function () {
-    var select = tag ("select", null, [
-      tag ("option", { value : "1" }, "a"),
-      tag ("option", { value : "2", selected : "selected" }, "b"),
-      tag ("option", { value : "2" }, "c")
+  // getValue(select)
+  tc.add(function () {
+    var select = tag("select", null, [
+      tag("option", { value : "1" }, "a"),
+      tag("option", { value : "2", selected : "selected" }, "b"),
+      tag("option", { value : "2" }, "c")
     ]);
 
-    this.assertEqual ("2", Element.getValue (select));
+    this.assertEqual("2", Element.getValue(select));
   });
 
-  // setValue (select, atom)
-  tc.add (function () {
+  // setValue(select, atom)
+  tc.add(function () {
       var select = tag("select", null, [
         tag("option", { value : "foo", selected : true }, "a"),
         tag("option", { value : "bar" }, "b")
@@ -272,14 +272,14 @@ Cactus.UnitTest.DOM.Element = function () {
     this.assertEqual("2", Element.getValue(select));
   });
 
-  // getValue (select:multiple)
-  tc.add (function () {
+  // getValue(select:multiple)
+  tc.add(function () {
     var div = tag("div");
     div.innerHTML = '<select multiple="multiple">\
-<option value="foo" selected="selected">a</option>\
-<option value="bar">b</option>\
-<option value="baz" selected="selected">c</option>\
-</select>';
+                       <option value="foo" selected="selected">a</option>\
+                       <option value="bar">b</option>\
+                       <option value="baz" selected="selected">c</option>\
+                     </select>';
     this.assertEqual("foo baz",
                      Element.getValue($f("select", div)).join(" "));
   });
@@ -287,47 +287,47 @@ Cactus.UnitTest.DOM.Element = function () {
   tc.add(function () {
     var div = tag("div");
     div.innerHTML = '<select multiple="multiple">\
-<option value="foo">a</option>\
-<option value="bar">b</option>\
-<option value="baz" selected="selected">c</option>\
-</select>';
+                       <option value="foo">a</option>\
+                       <option value="bar">b</option>\
+                       <option value="baz" selected="selected">c</option>\
+                     </select>';
     var select = $f("select", div);
     Element.setValue(select, ["foo", "baz"]);
     this.assertEqual("foo baz",
                      Element.getValue($f("select", div)).join(" "));
   });
 
-  // setValue (input)
-  // getValue (input)
-  tc.add (function () {
-    var input = tag ("input", { type : "text", value : "foo" });
-    Element.setValue (input, "bar");
-    this.assertEqual ("bar", input.value);
-    this.assertEqual ("bar", Element.getValue (input));
+  // setValue(input)
+  // getValue(input)
+  tc.add(function () {
+    var input = tag("input", { type : "text", value : "foo" });
+    Element.setValue(input, "bar");
+    this.assertEqual("bar", input.value);
+    this.assertEqual("bar", Element.getValue(input));
   });
 
-  // setValue (textarea)
-  // getValue (textarea)
-  tc.add (function () {
-    var textarea = tag ("textarea", { value : "foo" });
+  // setValue(textarea)
+  // getValue(textarea)
+  tc.add(function () {
+    var textarea = tag("textarea", { value : "foo" });
 
-    this.assertEqual ("foo", Element.getValue (textarea));
+    this.assertEqual("foo", Element.getValue(textarea));
 
-    Element.setValue (textarea, "foobar");
-    this.assertEqual ("foobar", Element.getValue (textarea));
+    Element.setValue(textarea, "foobar");
+    this.assertEqual("foobar", Element.getValue(textarea));
 
-    Element.setValue (textarea, "foo\nbar");
-    this.assertEqual ("foo\nbar", Element.getValue (textarea));
+    Element.setValue(textarea, "foo\nbar");
+    this.assertEqual("foo\nbar", Element.getValue(textarea));
   });
 
-  // setValue (input:password)
-  // getValue (input:password)
-  tc.add (function () {
-    var p = tag ("input", { type : "password", name : "x", value : "a" });
+  // setValue(input:password)
+  // getValue(input:password)
+  tc.add(function () {
+    var p = tag("input", { type : "password", name : "x", value : "a" });
 
-    this.assertEqual ("a", Element.getValue (p));
-    Element.setValue (p, "b");
-    this.assertEqual ("b", Element.getValue (p));
+    this.assertEqual("a", Element.getValue(p));
+    Element.setValue(p, "b");
+    this.assertEqual("b", Element.getValue(p));
   });
 
   // setValue(option)

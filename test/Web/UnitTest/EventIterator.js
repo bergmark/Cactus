@@ -174,7 +174,7 @@ Cactus.Util.EventIterator = (function () {
        */
       _start : function () {
         if (this.running) {
-          throw new Error ("Iteration already started");
+          throw new Error("Iteration already started");
         }
         this._next();
       },
@@ -208,7 +208,7 @@ Cactus.Util.EventIterator = (function () {
           this.___id = this.currentItem.subscribe(this.finishedEvent,
                                                   this, true);
           this.onBeforeItemProcess(this.currentItem);
-          this.beforeProcessing.call (this.currentItem);
+          this.beforeProcessing.call(this.currentItem);
           // Push the call down to the run loop to clear the call stack.
           setTimeout(this.currentItem[this.methodName].bind(
             this.currentItem), 0);

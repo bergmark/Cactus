@@ -39,9 +39,9 @@ Cactus.Dev.UnitTest.Test = (function () {
    * @return string
    *   The name of the function.
    */
-  function getFunctionName (func) {
+  function getFunctionName(func) {
     return func.name ||
-      func.toString().match (/\s(\S+)\s*?\(/i)[1];
+      func.toString().match(/\s(\S+)\s*?\(/i)[1];
   }
   /*
    * The testPerformer used if none is specified.
@@ -104,9 +104,9 @@ Cactus.Dev.UnitTest.Test = (function () {
        */
       getSuccess : function () {
         if (this.success === null) {
-          throw new Error ("Test:getSuccess:"
-                           + "Tried to get value of success before test "
-                           + "was performed");
+          throw new Error("Test:getSuccess:"
+                          + "Tried to get value of success before test "
+                          + "was performed");
         }
         return this.success;
       },
@@ -115,8 +115,8 @@ Cactus.Dev.UnitTest.Test = (function () {
        */
       getMessage : function () {
         if (this.message === null) {
-          throw new Error
-          ("Tried to get value of message before test was performed");
+          throw new Error(
+            "Tried to get value of message before test was performed");
         }
         return this.message;
       },
@@ -170,7 +170,7 @@ Cactus.Dev.UnitTest.Test = (function () {
         }
         this._ranResultProcessor = true;
         try {
-          this.resultProcessor.apply (this, arguments);
+          this.resultProcessor.apply(this, arguments);
         } catch (e) {
           // The last assertion failed, so it was the cause of
           // the error.
@@ -214,10 +214,10 @@ Cactus.Dev.UnitTest.Test = (function () {
         this.assertions++;
         message = message ? message + "<br> " : "";
         message += "expected: +true+, but got: +" + expression + "+";
-        this.lastAssertion = new Assertion (expression === true,
-                                            message);
+        this.lastAssertion = new Assertion(expression === true,
+                                           message);
         if (this.lastAssertion.failed()) {
-          throw new Error ("Assertion failed ");
+          throw new Error("Assertion failed ");
         }
       },
       /**
@@ -232,7 +232,7 @@ Cactus.Dev.UnitTest.Test = (function () {
       assertFalse : function (expression, message) {
         message = message ||
           "expected +false+, but got: +" + expression + "+";
-        this.assert (expression === false, message);
+        this.assert(expression === false, message);
       },
       /**
        * Asserts that two values are identical without type coercing.
@@ -244,7 +244,7 @@ Cactus.Dev.UnitTest.Test = (function () {
       assertEquals : function (expectedResult, expression, message) {
         message = (message ? message + "<br> " : "") + "expected: +" + expectedResult + "+," +
           " but got: +" + expression + "+";
-        this.assert (expectedResult === expression, message);
+        this.assert(expectedResult === expression, message);
       },
       /**
        * Asserts that a given exception is thrown when executing the given
@@ -276,7 +276,7 @@ Cactus.Dev.UnitTest.Test = (function () {
                 "<br>Function return value: +" + returnValue + "+";
             } else {
               message = "expected to catch +" +
-                getFunctionName (expectedException)  + "+," +
+                getFunctionName(expectedException)  + "+," +
                 " but no exception was thrown." +
                 "<br>Function return value: +" + returnValue + "+";
             }
@@ -332,7 +332,7 @@ Cactus.Dev.UnitTest.Test = (function () {
             "expected an object of type +" + type +
             "+, but got one of type +" + actualType + "+";
 
-          this.assert (actualType === type, message);
+          this.assert(actualType === type, message);
         } else {
           // otherwise we want to check if the object is an instance of
           // the type (constructor)
@@ -342,7 +342,7 @@ Cactus.Dev.UnitTest.Test = (function () {
              type.name : typeof type) +
 
           "+, but got one of type +" + object.constructor.name + "+";
-          this.assert (object instanceof type, message);
+          this.assert(object instanceof type, message);
         }
       },
       /**
@@ -355,7 +355,7 @@ Cactus.Dev.UnitTest.Test = (function () {
        */
       assertEquality : function (a, b, message) {
         message = message || "Expected: " + a + ", but got: " + b;
-        this.assert (a.equals(b), message);
+        this.assert(a.equals(b), message);
       },
       /**
        * Compares two values using their JSON representation.

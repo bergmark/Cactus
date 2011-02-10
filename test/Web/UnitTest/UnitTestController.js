@@ -14,7 +14,7 @@ Cactus.Dev.UnitTest.UnitTestController = (function () {
   /**
    * @param TestSuite testSuite  the testSuite to display
    */
-  function UnitTestController (testSuite) {
+  function UnitTestController(testSuite) {
     this.testSuite = testSuite;
     testSuite.subscribe("TestCaseFinished",
                         this.printResults.bind(this));
@@ -24,10 +24,10 @@ Cactus.Dev.UnitTest.UnitTestController = (function () {
 
   } UnitTestController.prototype = {
     constructHTML : function () {
-      this.sandbox = tag ("div", { id : "sandbox" });
-      document.body.appendChild (this.sandbox);
-      this.testResults = tag ("div", { id : "test-results" });
-      document.body.appendChild (this.testResults);
+      this.sandbox = tag("div", { id : "sandbox" });
+      document.body.appendChild(this.sandbox);
+      this.testResults = tag("div", { id : "test-results" });
+      document.body.appendChild(this.testResults);
     },
     runTests : function () {
       this.testSuite.run();
@@ -61,14 +61,14 @@ Cactus.Dev.UnitTest.UnitTestController = (function () {
       // Remove the "running" message.
       this.testResults.removeChild(this.testResults.lastChild);
 
-      div = document.createElement ("div");
+      div = document.createElement("div");
       div.className = "testCase";
       div.className += " " + (testCase.getSuccess() ?
                               "succeeded" : "failed");
-      h3 = document.createElement ("h5");
+      h3 = document.createElement("h5");
       h3.className = "title";
       h3.appendChild(this._testCaseLink(testCase));
-      tests = document.createElement ("ul");
+      tests = document.createElement("ul");
       tests.className = "tests";
 
       for (var j = 0, testColl = testCase.getTests();
@@ -76,34 +76,34 @@ Cactus.Dev.UnitTest.UnitTestController = (function () {
 
         test = document.createElement("li");
         test.className = "testAssertions";
-        test.appendChild (
-          document.createTextNode (String (
+        test.appendChild(
+          document.createTextNode(String(
             testColl [j].getAssertions())));
         if (!testColl [j].getSuccess()) {
-          messagesArray.push (testColl [j].getMessage());
+          messagesArray.push(testColl [j].getMessage());
         }
-        tests.appendChild (test);
+        tests.appendChild(test);
       }
 
-      messagesUL = document.createElement ("ul");
+      messagesUL = document.createElement("ul");
       messagesUL.className = "messages";
       for (var j = 0; j < messagesArray.length; j++) {
-        messageLI = document.createElement ("li");
+        messageLI = document.createElement("li");
         messageLI.innerHTML += messagesArray [j];
-        messagesUL.appendChild (messageLI);
+        messagesUL.appendChild(messageLI);
       }
 
-      assertions = document.createElement ("div");
+      assertions = document.createElement("div");
       assertions.className = "assertions";
       assertions.appendChild(
-        document.createTextNode ("Assertions: " +
-                                 testCase.getAssertions()));
+        document.createTextNode("Assertions: " +
+                                testCase.getAssertions()));
 
-      div.appendChild (h3);
-      div.appendChild (tests);
-      div.appendChild (assertions);
-      div.appendChild (messagesUL);
-      this.testResults.appendChild (div);
+      div.appendChild(h3);
+      div.appendChild(tests);
+      div.appendChild(assertions);
+      div.appendChild(messagesUL);
+      this.testResults.appendChild(div);
     }
   };
 
