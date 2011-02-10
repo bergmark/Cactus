@@ -39,216 +39,216 @@ require('Task/Joose/NodeJS');
  * the current item sends out its "finished" event.
  */
 Cactus.Util.EventIterator = (function () {
-    var EventSubscription = CactusJuice.Util.EventSubscription;
+  var EventSubscription = CactusJuice.Util.EventSubscription;
 
-    /**
-     * @param Array[Object] array
-     *   The list to iterate through.
-     * @param string methodName
-     *   The name of the method to call on every item in the list.
-     * @param string finishedEvent
-     *   The event each list item sends when their action has finished.
-     */
-    Joose.Class("EventIterator", {
-        does : EventSubscription,
-        has : {
-        /**
-         * @type Array
-         *   The array of objects to iterate through.
-         */
-        array : [],
-        /**
-         * @type String
-         *   The name of the method to perform on each item in the collection.
-         */
-        methodName : "",
-        /**
-         * @type string
-         *   The event that each item sends out when their operation is
-         *   finished.
-         */
-        finishedEvent : null,
-        /**
-         * @type integer
-         *   The current index for the iteration.
-         */
-        i : null,
-        /**
-         * @type Object
-         *   The corrent item for the iteration.
-         */
-        currentItem : null,
-        /**
-         * @type boolean
-         *   If the iteration is forward or backwards.
-         */
-        forward : true,
-        /**
-         * @type boolean
-         *   If the object is iterating.
-         */
-        running : false,
-        /**
-         * @type boolean
-         *   If true, it signalizes that the iteration should/will stop asap.
-         */
-        shouldStop : false
+  /**
+   * @param Array[Object] array
+   *   The list to iterate through.
+   * @param string methodName
+   *   The name of the method to call on every item in the list.
+   * @param string finishedEvent
+   *   The event each list item sends when their action has finished.
+   */
+  Joose.Class("EventIterator", {
+    does : EventSubscription,
+    has : {
+      /**
+       * @type Array
+       *   The array of objects to iterate through.
+       */
+      array : [],
+      /**
+       * @type String
+       *   The name of the method to perform on each item in the collection.
+       */
+      methodName : "",
+      /**
+       * @type string
+       *   The event that each item sends out when their operation is
+       *   finished.
+       */
+      finishedEvent : null,
+      /**
+       * @type integer
+       *   The current index for the iteration.
+       */
+      i : null,
+      /**
+       * @type Object
+       *   The corrent item for the iteration.
+       */
+      currentItem : null,
+      /**
+       * @type boolean
+       *   If the iteration is forward or backwards.
+       */
+      forward : true,
+      /**
+       * @type boolean
+       *   If the object is iterating.
+       */
+      running : false,
+      /**
+       * @type boolean
+       *   If true, it signalizes that the iteration should/will stop asap.
+       */
+      shouldStop : false
 
-        },
-        methods : {
-            BUILD : function (array, methodName, finishedEvent) {
-                this.array = array;
-                this.methodName = methodName;
-                this.finishedEvent = finishedEvent;
-                this["on" + finishedEvent + "Triggered"] = this._finishEventTriggered;
-            },
-        // Events
-        /**
-         * Triggered when the iteration is completed.
-         */
-        onFinish : Function.empty,
-        /**
-         *
-         * Triggered when the iteration is stopped prematurely using stop().
-         */
-        onStop : Function.empty,
-        /**
-         * Triggers before every item is processed, and before beforeProcessing
-         * is called.
-         *
-         * @param Object currentItem
-         */
-        onBeforeItemProcess : Function.empty,
-        /**
-         * Triggered after each afterProcessing call, meaning after the
-         * current item has finished, and after afterProcessing.
-         */
-        onItemProcessed : Function.empty,
+    },
+    methods : {
+      BUILD : function (array, methodName, finishedEvent) {
+        this.array = array;
+        this.methodName = methodName;
+        this.finishedEvent = finishedEvent;
+        this["on" + finishedEvent + "Triggered"] = this._finishEventTriggered;
+      },
+      // Events
+      /**
+       * Triggered when the iteration is completed.
+       */
+      onFinish : Function.empty,
+      /**
+       *
+       * Triggered when the iteration is stopped prematurely using stop().
+       */
+      onStop : Function.empty,
+      /**
+       * Triggers before every item is processed, and before beforeProcessing
+       * is called.
+       *
+       * @param Object currentItem
+       */
+      onBeforeItemProcess : Function.empty,
+      /**
+       * Triggered after each afterProcessing call, meaning after the
+       * current item has finished, and after afterProcessing.
+       */
+      onItemProcessed : Function.empty,
 
-        /**
-         * @type Function
-         *   Executed in the scope of the current item, before func is called.
-         */
-        beforeProcessing : Function.empty,
-        /**
-         * @type Function
-         *   Executed in the scope of the current item, after func is called.
-         */
-        afterProcessing : Function.empty,
-        /**
-         * @return Object
-         */
-        getCurrentItem : function () {
-            return this.currentItem;
-        },
-        /**
-         * @param Function beforeProcessing
-         */
-        setBeforeProcessing : function (beforeProcessing) {
-            this.beforeProcessing = beforeProcessing;
-        },
-        /**
-         * @pram Function afterProcessing
-         */
-        setAfterProcessing : function (afterProcessing) {
-            this.afterProcessing = afterProcessing;
-        },
-        /**
-         * Iterates through the list going forward (0->N)
-         */
-        startForward  : function () {
-            this.forward = true;
-            this.i = -1;
-            this._start();
-        },
-        /**
-         * Iterates through the list going backward (N->0)
-         */
-        startBackward : function () {
-            this.forward = false;
-            this.i = this.array.length;
-            this._start();
-        },
-        /**
-         * Starts the iteration. The iteration may not be running already.
-         */
-        _start : function () {
-            if (this.running) {
-                throw new Error ("Iteration already started");
-            }
-            this._next();
-        },
-        /**
-         * Fetches the next item for the iteration.
-         */
-        _setItem : function () {
-            if (this.forward) {
-                this.i++;
-            } else {
-                this.i--;
-            }
-            // > This is a temporary fix for a possible removeOnTrigger bug
-            // in EventSubscription.
-            if (this.currentItem) {
-                this.currentItem.removeSubscriber(this.___id,
-                                                  this.finishedEvent);
-            }
-            this.currentItem = this.array [this.i];
-        },
-        /**
-         * Gets the next item in the array, and sets up observers and processes
-         * it.
-         */
-        _next : function () {
-            this._setItem();
-
-            if (this.currentItem !== undefined) {
-                // > This is a temporary fix for a possible removeOnTrigger bug
-                // in EventSubscription.
-                this.___id = this.currentItem.subscribe(this.finishedEvent,
-                                                        this, true);
-                this.onBeforeItemProcess(this.currentItem);
-                this.beforeProcessing.call (this.currentItem);
-                 // Push the call down to the run loop to clear the call stack.
-                setTimeout(this.currentItem[this.methodName].bind(
-                    this.currentItem), 0);
-            } else {
-                // Done.
-                this._finished();
-            }
-        },
-        /**
-         * Stops the iteration.
-         */
-        stop : function () {
-            this.shouldStop = true;
-        },
-        /**
-         * Called when the iteration is finished.
-         */
-        _finished : function () {
-            this.running = false;
-            this.onFinish();
-        },
-        /**
-         * Called when an item in the array is finished.
-         * If shouldStop is set, the next item will not be processed.
-         *
-         * @param Object object
-         *   The current item
-         */
-        _finishEventTriggered : function (object) {
-            this.afterProcessing.call(this.currentItem);
-            this.onItemProcessed(this.currentItem);
-            if (this.shouldStop) {
-                this.shouldStop = false;
-                this.onStop();
-            } else {
-                this._next();
-            }
+      /**
+       * @type Function
+       *   Executed in the scope of the current item, before func is called.
+       */
+      beforeProcessing : Function.empty,
+      /**
+       * @type Function
+       *   Executed in the scope of the current item, after func is called.
+       */
+      afterProcessing : Function.empty,
+      /**
+       * @return Object
+       */
+      getCurrentItem : function () {
+        return this.currentItem;
+      },
+      /**
+       * @param Function beforeProcessing
+       */
+      setBeforeProcessing : function (beforeProcessing) {
+        this.beforeProcessing = beforeProcessing;
+      },
+      /**
+       * @pram Function afterProcessing
+       */
+      setAfterProcessing : function (afterProcessing) {
+        this.afterProcessing = afterProcessing;
+      },
+      /**
+       * Iterates through the list going forward (0->N)
+       */
+      startForward  : function () {
+        this.forward = true;
+        this.i = -1;
+        this._start();
+      },
+      /**
+       * Iterates through the list going backward (N->0)
+       */
+      startBackward : function () {
+        this.forward = false;
+        this.i = this.array.length;
+        this._start();
+      },
+      /**
+       * Starts the iteration. The iteration may not be running already.
+       */
+      _start : function () {
+        if (this.running) {
+          throw new Error ("Iteration already started");
         }
+        this._next();
+      },
+      /**
+       * Fetches the next item for the iteration.
+       */
+      _setItem : function () {
+        if (this.forward) {
+          this.i++;
+        } else {
+          this.i--;
         }
-    });
+        // > This is a temporary fix for a possible removeOnTrigger bug
+        // in EventSubscription.
+        if (this.currentItem) {
+          this.currentItem.removeSubscriber(this.___id,
+                                            this.finishedEvent);
+        }
+        this.currentItem = this.array [this.i];
+      },
+      /**
+       * Gets the next item in the array, and sets up observers and processes
+       * it.
+       */
+      _next : function () {
+        this._setItem();
 
-    return EventIterator;
+        if (this.currentItem !== undefined) {
+          // > This is a temporary fix for a possible removeOnTrigger bug
+          // in EventSubscription.
+          this.___id = this.currentItem.subscribe(this.finishedEvent,
+                                                  this, true);
+          this.onBeforeItemProcess(this.currentItem);
+          this.beforeProcessing.call (this.currentItem);
+          // Push the call down to the run loop to clear the call stack.
+          setTimeout(this.currentItem[this.methodName].bind(
+            this.currentItem), 0);
+        } else {
+          // Done.
+          this._finished();
+        }
+      },
+      /**
+       * Stops the iteration.
+       */
+      stop : function () {
+        this.shouldStop = true;
+      },
+      /**
+       * Called when the iteration is finished.
+       */
+      _finished : function () {
+        this.running = false;
+        this.onFinish();
+      },
+      /**
+       * Called when an item in the array is finished.
+       * If shouldStop is set, the next item will not be processed.
+       *
+       * @param Object object
+       *   The current item
+       */
+      _finishEventTriggered : function (object) {
+        this.afterProcessing.call(this.currentItem);
+        this.onItemProcessed(this.currentItem);
+        if (this.shouldStop) {
+          this.shouldStop = false;
+          this.onStop();
+        } else {
+          this._next();
+        }
+      }
+    }
+  });
+
+  return EventIterator;
 })();
