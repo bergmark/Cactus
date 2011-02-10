@@ -6,9 +6,9 @@ module.exports = (function () {
   var Range = CactusJuice.Data.Range;
   var assertException = CactusJuice.Dev.Assertion.exception;
   return {
-    coerce : function (assert) {
+    toArray : function (assert) {
       var a = [1,2,3];
-      var b = Coll.coerce(a);
+      var b = Coll.toArray(a);
 
       assert.ok(b instanceof Array);
       assert.eql("1,2,3", b.join(","));

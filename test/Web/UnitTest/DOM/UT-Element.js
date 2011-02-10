@@ -106,7 +106,7 @@ Cactus.UnitTest.DOM.Element = function () {
     this.assertFalse(b.checked, "b was checked.");
     this.assert(a.checked, "a was not checked.");
 
-    // Coerce the value into a string automatically.
+    // Corece the value into a string automatically.
     a.value = "1";
     b.value = "2";
     Element.setValue(b, 2);
