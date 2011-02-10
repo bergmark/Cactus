@@ -365,5 +365,11 @@ module.exports = {
     assert.eql("0,1,2,3,4", Array.prototype.join.call(got, ","));
     assert.ok(o === scope);
     f.partial(o, 0, undefined)(1,2);
+  },
+
+  "id" : function (assert) {
+    assert.eql(1, Function.id(1));
+    var o = {};
+    assert.eql(o, Function.id({}));
   }
 };
