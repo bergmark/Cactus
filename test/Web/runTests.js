@@ -5,8 +5,6 @@
   var UnitTestController = UT.UnitTestController;
   var Events = CactusJuice.Web.DOM.Events;
 
-  require('UnitTest/DOM/UT-Events');
-
   var tests = [
     "DOM/Events",
     "DOM/Element",
@@ -26,7 +24,7 @@
     for (var i = 0; i < tests.length; i++) {
         var file = tests [i];
         var split = file.split ("/");
-        var utFile = "./UnitTest/" +
+        var utFile = "./test/Web/UnitTest/" +
             split.slice (0, split.length - 1).join ("/") +
             "/UT-" + split.slice (split.length - 1);
         require(utFile);

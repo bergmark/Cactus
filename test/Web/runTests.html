@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Cactus JS Test Suite</title>
-    <style type="text/css">@import "../css/Reset.css";</style>
+    <style type="text/css">@import "Reset.css";</style>
     <style type="text/css">@import "UnitTest.css";</style>
     <script src="/jsan/Task/Joose/Core.js"></script>
     <script>
@@ -10,12 +10,12 @@
         if (!/^\.\//.test(path)) {
           return;
         }
-        path = path.replace(/^\.\//, "").replace(/$/, ".js");
+        path = "../../" + path.replace(/^\.\//, "").replace(/$/, ".js");
         document.write("<script src=\"" + path + "\"></script\>");
       };
     </script>
-    <script src="CactusJuice.js"></script>
-    <script src="CactusJuiceWeb.js"></script>
+    <script src="../../CactusJuice.js"></script>
+    <script src="../../CactusJuiceWeb.js"></script>
     <script>
       Cactus = { Dev : { UnitTest : {} }, Util : {}, UnitTest : { DOM : {} } };
     </script>
