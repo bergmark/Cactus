@@ -7,10 +7,7 @@ module.exports = (function () {
     "main" : function (assert) {
       var start = 3;
       var end = 8;
-      var r = new Range({
-        start : 3,
-        end : 8
-      });
+      var r = new Range(3, 8);
 
       assert.eql("3..8", r.toString());
       assert.eql(3, r.getStart());
@@ -22,10 +19,7 @@ module.exports = (function () {
       assert.ok(!r.includes(2));
       assert.ok(!r.includes(9));
 
-      r = new Range({
-        start : -5,
-        end : 3
-      });
+      r = new Range(-5, 3);
       assert.eql("-5..3", r.toString());
       assert.ok(r.includes(-5));
       assert.ok(r.includes(0));
