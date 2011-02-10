@@ -85,9 +85,9 @@ module.exports = {
   },
 
   "extend instanceof" : function (assert) {
-    function A () { }
-    function B () { }
-    B.extend (A);
+    function A() { }
+    function B() { }
+    B.extend(A);
     assert.ok(new A() instanceof A);
     assert.ok(new B() instanceof B);
     assert.ok(new B() instanceof A);
@@ -159,7 +159,7 @@ module.exports = {
       assert.eql(1, a);
       assert.eql(2, b);
       assert.eql(3, c);
-    }).returning (4)(1, 2, 3));
+    }).returning(4)(1, 2, 3));
   },
 
   // Should call the inner function in the scope of the outer.
@@ -177,27 +177,27 @@ module.exports = {
       called = true;
     }
 
-    f.filter (1)(1);
+    f.filter(1)(1);
     assert.ok(called, "filter(1)(1) did not call f");
 
     called = false;
-    f.filter (2)(3);
+    f.filter(2)(3);
     assert.ok(!called, "filter(2)(3) called f");
 
     called = false;
-    f.filter (4, 5)(4, 5);
+    f.filter(4, 5)(4, 5);
     assert.ok(called, "(4,5)(4,5) did not call f");
 
     called = false;
-    f.filter (6, 7)(6);
+    f.filter(6, 7)(6);
     assert.ok(!called, "67 6 called f");
 
     called = false;
-    f.filter (8)(8, 9);
+    f.filter(8)(8, 9);
     assert.ok(called, "8 89 did not call f");
 
     called = false;
-    f.filter ([])([]);
+    f.filter([])([]);
     assert.ok(!called, "[] [] called f");
 
     called = false;

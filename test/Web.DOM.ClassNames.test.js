@@ -1,6 +1,6 @@
 var Joose = require('Joose');
 require('../CactusJuice.js');
-require('../CactusJuiceWeb.js');
+require('../CactusJuiceWebTestable.js');
 
 module.exports = (function () {
   var CN = CactusJuice.Web.DOM.ClassNames;

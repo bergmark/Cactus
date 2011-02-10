@@ -22,7 +22,7 @@ module.exports = (function () {
       assert.ok(!r.includes(2));
       assert.ok(!r.includes(9));
 
-      r = new Range ({
+      r = new Range({
         start : -5,
         end : 3
       });

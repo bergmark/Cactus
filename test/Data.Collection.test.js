@@ -125,7 +125,7 @@ module.exports = (function () {
 
     "reject" : function (assert) {
       var a = [1, 2, 3, 4, 5, 6];
-      function isEven (n) {
+      function isEven(n) {
         return (n % 2) === 0;
       }
       var b = Coll.reject(a, isEven); // remove all even numbers

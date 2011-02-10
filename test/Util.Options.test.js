@@ -165,7 +165,7 @@ module.exports = (function () {
       function Bax() {
 
       }
-      function Qux () {
+      function Qux() {
 
       }
       Qux.extend(Bax);
