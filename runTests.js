@@ -1,15 +1,21 @@
 (function () {
-    var UT = Cactus.Dev.UnitTest;
-    var TestCase = UT.TestCase;
-    var TestSuite = UT.TestSuite;
-    var UnitTestController = UT.UnitTestController;
-    var Events = CactusJuice.Web.DOM.Events;
+  var UT = Cactus.Dev.UnitTest;
+  var TestCase = UT.TestCase;
+  var TestSuite = UT.TestSuite;
+  var UnitTestController = UT.UnitTestController;
+  var Events = CactusJuice.Web.DOM.Events;
 
-    require('UnitTest/DOM/UT-Events');
+  require('UnitTest/DOM/UT-Events');
 
-    var tests = [
-        "DOM/Events"
-    ];
+  var tests = [
+    "DOM/Events",
+    "DOM/Element",
+    "DOM/Event",
+    "DOM/Events",
+    "DOM/select",
+    "DOM/selectFirst",
+    "DOM/tag"
+  ];
 
     // If GET parameters are specified, only those tests are run.
     if (location.search) {
