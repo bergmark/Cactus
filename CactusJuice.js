@@ -21,5 +21,6 @@ require('./lib/Util/EventPool');
 require('./lib/Util/Options');
 
 require('./lib/Data/KeyValueCoding');
+require('./lib/Util/generateComparator');
 require('./lib/Data/ArrayController');
 require('./lib/Data/ArrayControllerDecorator');
