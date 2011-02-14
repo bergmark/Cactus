@@ -1,8 +1,7 @@
 module.exports = (function () {
   var AC = CactusJuice.Data.ArrayController;
   var assertException = CactusJuice.Dev.Assertion.exception;
-  // var JSON = Cactus.Util.JSON;
-  // var stringify = JSON.stringify;
+
   return {
     "instantiate with empty array" : function (assert) {
       var a = new AC([]);
@@ -70,6 +69,11 @@ module.exports = (function () {
       ac.subscribe("ObjectSwap", onSwap);
       ac.swap(2, 1);
       assert.ok(swapTriggered);
+    },
+    "swap: throw error on invalid indices" : function (assert) {
+      var ac = new AC(["a", "b", "c"]);
+      assertException(assert, /swap:.+Index out of bounds.+indexA.+3/i, ac.swap.bind(ac, 3, 0));
+      assertException(assert, /swap:.+Index out of bounds.+indexB.+4/i, ac.swap.bind(ac, 0, 4));
     },
     addAtIndex : function (assert) {
       var ac = new AC([1, 2, 3]);
