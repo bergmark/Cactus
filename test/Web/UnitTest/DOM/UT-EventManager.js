@@ -41,7 +41,8 @@ Cactus.UnitTest.DOM.EventManager = function () {
   // Also support EventSubscription.
   tc.add(function() {
     var em = new EventManager();
-    var es = new EventSubscription();
+    var ES = Joose.Class("ES", { does : EventSubscription });
+    var es = new ES();
     es.onFoo = Function.empty;
     var fooTriggered = false;
     em.add(es, "Foo", function () {

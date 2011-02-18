@@ -12,7 +12,8 @@
     "DOM/Events",
     "DOM/select",
     "DOM/selectFirst",
-    "DOM/tag"
+    "DOM/tag",
+    "DOM/EventManager"
   ];
 
   // If GET parameters are specified, only those tests are run.
