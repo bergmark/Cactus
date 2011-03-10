@@ -2,7 +2,9 @@ var Joose = require('Joose');
 require('../CactusJuice.js');
 
 module.exports = (function () {
+  var assertException = CactusJuice.Dev.Assertion.exception;
   var Tree = CactusJuice.Data.Tree;
+  var CObject = CactusJuice.Addon.Object;
 
   return {
     structural : function (assert) {
@@ -29,6 +31,18 @@ module.exports = (function () {
       assert.strictEqual("root", root.getValue());
       root.setValue("new val");
       assert.strictEqual("new val", root.getValue());
+    },
+    traversal : function (assert) {
+      var root = new Tree();
+      var childA = new Tree();
+      var childB = new Tree();
+      root.addChild(childA);
+      root.addChild(childB);
+      assert.strictEqual(childA, root.getChild(0));
+      assert.strictEqual(childB, root.getChild(1));
+      assertException(assert, /Tree:getChild:.+index out of bounds/i, CObject.bound(root, "getChild", 2));
+      assertException(assert, /Tree:getChild:.+index out of bounds/i, CObject.bound(root, "getChild", -1));
+      assertException(assert, /Tree:getChild:.+index out of bounds/i, CObject.bound(childA, "getChild", 0));
     }
   };
 })();
