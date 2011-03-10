@@ -32,7 +32,7 @@ module.exports = (function () {
       root.setValue("new val");
       assert.strictEqual("new val", root.getValue());
     },
-    traversal : function (assert) {
+    getChild : function (assert) {
       var root = new Tree();
       var childA = new Tree();
       var childB = new Tree();
@@ -43,6 +43,43 @@ module.exports = (function () {
       assertException(assert, /Tree:getChild:.+index out of bounds/i, CObject.bound(root, "getChild", 2));
       assertException(assert, /Tree:getChild:.+index out of bounds/i, CObject.bound(root, "getChild", -1));
       assertException(assert, /Tree:getChild:.+index out of bounds/i, CObject.bound(childA, "getChild", 0));
+    },
+    hasChild : function (assert) {
+      var root = new Tree();
+      var childA = new Tree();
+      var childB = new Tree();
+      root.addChild(childA);
+      root.addChild(childB);
+      assert.ok(root.hasChild(childA));
+      assert.ok(root.hasChild(childB));
+      assert.ok(!root.hasChild(root));
+      assert.ok(!childA.hasChild(root));
+    },
+    removeChild : function (assert) {
+      var root = new Tree();
+      var childA = new Tree();
+      var childB = new Tree();
+      root.addChild(childA);
+      root.addChild(childB);
+      assert.strictEqual(2, root.childCount());
+      root.removeChild(childA);
+      assert.strictEqual(1, root.childCount());
+      root.removeChild(childB);
+      assert.strictEqual(0, root.childCount());
+
+      assertException(assert, /Tree:removeChild: Node does not have child/i,
+                      CObject.bound(root, "removeChild", childA));
+    },
+    removeChildByIndex : function (assert) {
+      var root = new Tree();
+      var childA = new Tree();
+      var childB = new Tree();
+      root.addChild(childA);
+      root.addChild(childB);
+      root.removeChildByIndex(1);
+      root.removeChildByIndex(0);
+      assertException(assert, /Tree:removeChildByIndex:.+index out of bounds./i,
+                      CObject.bound(root, "removeChildByIndex", 0));
     }
   };
 })();
