@@ -1,3 +1,4 @@
+require('../CactusJuice.js')
 module.exports = (function () {
   var EventPool = CactusJuice.Util.EventPool;
   var assertException = CactusJuice.Dev.Assertion.exception;

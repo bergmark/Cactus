@@ -1,4 +1,3 @@
-require('Task/Joose/NodeJS');
 require('../CactusJuice.js');
 
 module.exports = {
