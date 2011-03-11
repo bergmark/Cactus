@@ -1,5 +1,3 @@
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var Pair = CactusJuice.Data.Pair;
   var assertException = CactusJuice.Dev.Assertion.exception;

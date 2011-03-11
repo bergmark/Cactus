@@ -1,6 +1,3 @@
-var Joose = require('Joose');
-require('../CactusJuice.js');
-
 module.exports = {
   "bind" : function (assert) {
     var t = this;

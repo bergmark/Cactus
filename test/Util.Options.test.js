@@ -1,5 +1,3 @@
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var Options = CactusJuice.Util.Options;
   var Assertion = CactusJuice.Dev.Assertion;

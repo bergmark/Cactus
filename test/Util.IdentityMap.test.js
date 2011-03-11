@@ -1,6 +1,3 @@
-var Joose = require('Joose');
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var IdentityMap = CactusJuice.Util.IdentityMap;
   var assertException = CactusJuice.Dev.Assertion.exception;

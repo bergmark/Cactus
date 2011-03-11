@@ -1,5 +1,3 @@
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var EventSubscription = CactusJuice.Util.EventSubscription;
   var Assertion = CactusJuice.Dev.Assertion;

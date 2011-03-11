@@ -1,6 +1,3 @@
-require('Task/Joose/NodeJS');
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var KVC = CactusJuice.Data.KeyValueCoding;
   var assertException = CactusJuice.Dev.Assertion.exception;

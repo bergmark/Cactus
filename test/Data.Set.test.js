@@ -1,6 +1,3 @@
-var Joose = require('Joose');
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var Set = CactusJuice.Data.Set;
   return {

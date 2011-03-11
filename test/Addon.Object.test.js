@@ -1,6 +1,3 @@
-var Joose = require('Joose');
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var object = CactusJuice.Addon.Object;
   var collection = CactusJuice.Data.Collection;

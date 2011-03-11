@@ -1,5 +1,3 @@
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var StrictHash = CactusJuice.Data.StrictHash;
   var assertException = CactusJuice.Dev.Assertion.exception;

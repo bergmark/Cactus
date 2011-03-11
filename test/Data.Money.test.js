@@ -1,6 +1,3 @@
-var Joose = require('Joose');
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var Money = CactusJuice.Data.Money;
   var stringify = CactusJuice.Util.JSON.stringify;

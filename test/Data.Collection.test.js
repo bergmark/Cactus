@@ -1,6 +1,3 @@
-var Joose = require('Joose');
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var Coll = CactusJuice.Data.Collection;
   var Range = CactusJuice.Data.Range;

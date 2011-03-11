@@ -1,6 +1,3 @@
-var Joose = require('Task/Joose/NodeJS');
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var AC = CactusJuice.Data.ArrayController;
   var ACD = CactusJuice.Data.ArrayControllerDecorator;

@@ -1,5 +1,3 @@
-var Joose = require('Joose');
-require('../CactusJuice.js');
 require('../CactusJuiceWebTestable.js');
 
 module.exports = (function () {

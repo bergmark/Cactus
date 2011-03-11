@@ -1,6 +1,3 @@
-var Joose = require('Joose');
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var ObjectMap = CactusJuice.Data.ObjectMap;
   var Assertion = CactusJuice.Dev.Assertion;

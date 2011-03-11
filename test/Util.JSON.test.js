@@ -1,5 +1,3 @@
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var JSON = CactusJuice.Util.JSON;
   return {

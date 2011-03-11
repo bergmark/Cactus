@@ -1,6 +1,3 @@
-var Joose = require('Joose');
-require('../CactusJuice.js');
-
 module.exports = (function () {
   var StrictMap = CactusJuice.Data.StrictMap;
   var assertException = CactusJuice.Dev.Assertion.exception;
