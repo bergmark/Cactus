@@ -57,6 +57,17 @@ module.exports = (function () {
       assert.throws(function () {
         set.get(2);
       });
+    },
+
+    map : function () {
+      var s = new Set();
+      s.add(1);
+      s.add(3);
+      s.add(5);
+      var s2 = s.map(function (v) {
+        return v + 1;
+      });
+      assert.strictEqual("2,4,6", s2.collection.sort().join(","));
     }
   };
 })();
