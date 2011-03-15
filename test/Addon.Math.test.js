@@ -41,6 +41,13 @@ module.exports = (function () {
       eq2();
       a = [2, 2, 1];
       eq2();
+    },
+
+    "odd and even" : function () {
+      assert.ok(math.even(0));
+      assert.ok(!math.odd(0));
+      assert.ok(!math.even(1));
+      assert.ok(math.odd(1));
     }
   };
 })();

@@ -1,5 +1,6 @@
 module.exports = (function () {
   var Set = CactusJuice.Data.Set;
+  var CMath = CactusJuice.Addon.Math;
   return {
     "add/remove" : function () {
       var set = new Set();
@@ -73,6 +74,11 @@ module.exports = (function () {
     arrayConversion : function () {
       var s = Set.fromArray([1, 2, 3]);
       assert.strictEqual("1,2,3", s.toArray().sort().join(","));
+    },
+
+    select : function () {
+      var s = Set.fromArray([1, 2, 3]);
+      assert.strictEqual("1,3", Set.fromArray([1,2,3]).select(CMath.odd.bind(CMath)).toArray().sort().join(","));
     }
   };
 })();
