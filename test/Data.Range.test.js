@@ -1,7 +1,7 @@
 module.exports = (function () {
   var Range = CactusJuice.Data.Range;
   return {
-    "main" : function (assert) {
+    "main" : function () {
       var start = 3;
       var end = 8;
       var r = new Range(3, 8);

@@ -2,7 +2,7 @@ module.exports = (function () {
   var StrictHash = CactusJuice.Data.StrictHash;
   var assertException = CactusJuice.Dev.Assertion.exception;
   return {
-    StrictHash : function (assert) {
+    StrictHash : function () {
       var sh = new StrictHash(["x", "y"]);
       assert.ok(!("define" in sh));
       sh.set("x", 1);
@@ -10,7 +10,7 @@ module.exports = (function () {
       sh.set("y", 2);
       assertException(assert, /StrictHash:.+?undefined/i, sh.set.bind(sh, "z"));
     },
-    map : function (assert) {
+    map : function () {
       var sh = new StrictHash(["x", "y"]);
       sh.set("x", 1);
       sh.set("y", 2);

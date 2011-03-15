@@ -17,7 +17,7 @@ module.exports = (function () {
   };
 
   return {
-    init : function (assert) {
+    init : function () {
       var c = new C();
 
       c.onFoo();
@@ -29,7 +29,7 @@ module.exports = (function () {
     },
 
     // Whitebox.
-    "_createEvent and _hasEvent." : function (assert) {
+    "_createEvent and _hasEvent." : function () {
       var c = new C();
 
       assert.ok(!c._hasEvent("Foo"));
@@ -41,7 +41,7 @@ module.exports = (function () {
       assert.ok(!c._hasEvent("onFoo"));
     },
 
-    subscribe : function (assert) {
+    subscribe : function () {
       var c = new C();
       var s = new S();
       var test = this;
@@ -61,7 +61,7 @@ module.exports = (function () {
     },
 
     // Make sure different events don't interfere with each other.
-    "no interference" : function (assert) {
+    "no interference" : function () {
       var c = new C();
       var s = new S();
       var test = this;
@@ -87,7 +87,7 @@ module.exports = (function () {
       assert.ok(triggeredBar, "bar was not triggered");
     },
 
-    "notify observers" : function (assert) {
+    "notify observers" : function () {
       var c = new C();
       var s1 = new S();
       var s2 = new S();
@@ -109,7 +109,7 @@ module.exports = (function () {
     },
 
     // Test subscribing with a function.
-    "function subscription" : function (assert) {
+    "function subscription" : function () {
       var c = new C();
 
       var triggered = false;
@@ -120,7 +120,7 @@ module.exports = (function () {
       assert.ok(triggered, "subscriber function was not triggered");
     },
 
-    "automatic subscription removal" : function (assert) {
+    "automatic subscription removal" : function () {
       var c = new C();
       var o = { onFooTriggered : Function.empty };
       var p = { onFooTriggered : Function.empty };
@@ -166,7 +166,7 @@ module.exports = (function () {
 
     // Make sure all arguments passed to the event by the observable
     // are passed along to the subscribers.
-    "pass along args to subscribers" : function (assert) {
+    "pass along args to subscribers" : function () {
       var c = new C();
       var args;
       c.subscribe("Foo", function (object, arg1, arg2) {
@@ -178,7 +178,7 @@ module.exports = (function () {
       assert.eql("baz", args[2]);
     },
 
-    "throw errors for undefined events" : function (assert) {
+    "throw errors for undefined events" : function () {
       var c = new C();
       assert.ok(!c.implementsEvent("Bax"));
       assert.ok(c.implementsEvent("Foo"));
@@ -187,7 +187,7 @@ module.exports = (function () {
     },
 
     // Test hasSubscriber method.
-    "hasSubscriber" : function (assert) {
+    "hasSubscriber" : function () {
       var c = new C();
       var o = {};
       assert.ok(!c.hasSubscriber(o, "Foo"),
@@ -202,7 +202,7 @@ module.exports = (function () {
     },
 
     // subscribe should return the subscription ID.
-    "subscribe return id" : function (assert) {
+    "subscribe return id" : function () {
       var c = new C();
       var id1 = c.subscribe("Foo", {});
       var id2 = c.subscribe("Foo", {});
@@ -210,14 +210,14 @@ module.exports = (function () {
                 "ID's were equal (%s)".format(id1));
     },
 
-    implementsInterface : function (assert) {
+    implementsInterface : function () {
       var p = EventSubscription.implementsInterface;
       assert.ok(p(new C()));
       assert.ok(!p({}));
     },
 
     // Allow a client to subscribe to all events sent out.
-    subscribeAll : function (assert) {
+    subscribeAll : function () {
       var c = new C();
       var s = new S();
 
@@ -247,8 +247,8 @@ module.exports = (function () {
     },
 
     // Should work properly with Joose classes.
-    "joose compat" : function (assert) {
-      Class("Foo", {
+    "joose compat" : function () {
+      var Foo = Class("Foo", {
         does : EventSubscription,
         has : {
           val : {

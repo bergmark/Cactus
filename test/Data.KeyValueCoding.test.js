@@ -4,7 +4,7 @@ module.exports = (function () {
   return {
     // Test setting and getting values for simple key paths. Reading
     // values right of the properties and using accessor methods.
-    a : function (assert) {
+    a : function () {
       var o = new KVC();
       o.a = 1;
 
@@ -25,7 +25,7 @@ module.exports = (function () {
       assert.eql(-8, o.getValue("x"));
     },
 
-    "nested paths" : function (assert) {
+    "nested paths" : function () {
       var o = new KVC();
       o.p = new KVC();
       o.p.q = new KVC();
@@ -45,7 +45,7 @@ module.exports = (function () {
       assert.eql(5, o.getValue("p.b"));
       assert.eql(6, o.getValue("p.q.c"));
     },
-    "b" : function (assert) {
+    "b" : function () {
       var o   = new KVC();
       o.p     = new KVC();
       o.p.q   = new KVC();
@@ -68,7 +68,7 @@ module.exports = (function () {
       assert.ok(!o.hasKeyPath("q.p"));
     },
 
-    "onValueChanged" : function (assert) {
+    "onValueChanged" : function () {
       var o = new KVC();
       o.p = null;
       o.setValue("p", new KVC());
@@ -94,7 +94,7 @@ module.exports = (function () {
 
     // Throw an error if trying to set/get value of KP "value" or
     // checking if "value" exists as a KP.
-    "c" : function (assert) {
+    "c" : function () {
       var o = new KVC();
 
       assertException(assert, /(?:)/, function () {
@@ -106,7 +106,7 @@ module.exports = (function () {
     },
 
     // Naming a property "isX" should not interfere with properties named "X".
-    e : function (assert) {
+    e : function () {
       var o = new KVC();
       o.isX = 3;
       o.x = 2;
@@ -116,7 +116,7 @@ module.exports = (function () {
 
     // A root should listen to its aggregates for changes, so that
     // onValueChanged can be triggered for it (along with compounds).
-    f : function (assert) {
+    f : function () {
       var O = Joose.Class("O", {
         does : KVC,
         has : {
@@ -131,7 +131,7 @@ module.exports = (function () {
         }
       });
 
-      Joose.Class("P", {
+      var P = Joose.Class("P", {
         does : KVC,
         has : {
           q : null
@@ -174,8 +174,8 @@ module.exports = (function () {
     },
 
     // Setters should not prevent events from occurring.
-    g : function (assert) {
-      Joose.Class("O", {
+    g : function () {
+      Joose.Class("Q", {
         does : KVC,
         has : {
           y : {
@@ -191,7 +191,7 @@ module.exports = (function () {
           }
         }
       });
-      var o = new O();
+      var o = new Q();
 
       var valueChanges = {};
       o.subscribe("ValueChanged", function (_, keyPath) {
@@ -208,15 +208,15 @@ module.exports = (function () {
 
     // Should not trigger onValueChanged if a value is set to the same
     // as an old value.
-    h : function (assert) {
+    h : function () {
 
-      Joose.Class("O", {
+      var R = Joose.Class("R", {
         has : {
           x : null
         },
         does : KVC
       });
-      var o = new O();
+      var o = new R();
       var changes = [];
       o.subscribe("ValueChanged", function (o, kp) {
         changes.push([kp, o.getValue(kp)]);
@@ -229,7 +229,7 @@ module.exports = (function () {
       assert.eql(2, changes.length,
                        "Triggered event when value did not change.");
 
-      var o = new KVC();
+      o = new KVC();
       o.p = new KVC();
       o.p.q = 1;
       changes = [];
@@ -241,7 +241,7 @@ module.exports = (function () {
     },
 
     // get should concatenate its arguments into a keypath.
-    i : function (assert) {
+    i : function () {
       var o = new KVC();
       o.p = new KVC();
       o.p.q = new KVC();

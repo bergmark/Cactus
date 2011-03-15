@@ -12,7 +12,7 @@ module.exports = (function () {
   };
 
   return {
-    "recursive definition" : function (assert) {
+    "recursive definition" : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
         type : {
@@ -76,7 +76,7 @@ module.exports = (function () {
       //           o.parse.bind(o, {}));
     },
 
-    a : function (assert) {
+    a : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
         type : "string"
@@ -132,7 +132,7 @@ module.exports = (function () {
       exception(/^Options: Error in property "c": Property lacks definition$/i,
                 o.parse.bind(o, { a : 1, b : true, c : "1" }));
     },
-    map : function (assert) {
+    map : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
         map : true,
@@ -142,21 +142,21 @@ module.exports = (function () {
       exception(/^Options: Error in property "b": Expected "number", but got "boolean"$/,
                 o.parse.bind(o, { a : 1, b : false }));
     },
-    "instanceof checks" : function (assert) {
+    "instanceof checks" : function () {
       var exception = assertException.curry(assert);
-      var Foo = Class("Foo", {});
+      var Foo2 = Class("Foo2", {});
       Class("Bar", {
-        isa : Foo
+        isa : Foo2
       });
       var o = new Options({
-        type : Foo
+        type : Foo2
       });
-      o.parse(new Foo());
+      o.parse(new Foo2());
       o.parse(new Bar());
-      exception(/^Options: Error: Expected "Foo", but got "number"$/,
+      exception(/^Options: Error: Expected "Foo2", but got "number"$/,
                 o.parse.bind(o, 1));
       Class("Baz");
-      exception(/^Options: Error: Expected "Foo", but got "Baz"$/,
+      exception(/^Options: Error: Expected "Foo2", but got "Baz"$/,
                 o.parse.bind(o, new Baz()));
 
       // Non-Joose classes.
@@ -195,7 +195,7 @@ module.exports = (function () {
       exception(/^Options: Error: Expected "Anonymous constructor", but got "Anonymous constructor"$/,
                 o.parse.bind(o, new H()));
     },
-    "null and undefined" : function (assert) {
+    "null and undefined" : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
         type : "number"
@@ -205,7 +205,7 @@ module.exports = (function () {
       exception(/^Options: Error: Expected "number", but got "null"$/,
                 o.parse.bind(o, null));
     },
-    "required values" : function (assert) {
+    "required values" : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
         required : false,
@@ -235,7 +235,7 @@ module.exports = (function () {
       h = o.parse({});
       assert.ok(object.isEmpty(h));
     },
-    "default value" : function (assert) {
+    "default value" : function () {
       var o = new Options({
         type : "number",
         defaultValue : 3
@@ -256,7 +256,7 @@ module.exports = (function () {
       assert.eql(1, o.parse({ a : null }).a);
       assert.eql(1, o.parse({}).a);
     },
-    "enums" : function (assert) {
+    "enums" : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
         enumerable : [1,2,3]
@@ -267,7 +267,7 @@ module.exports = (function () {
       exception(/^Options: Error: Expected a value in \[1,2,3\], but got 0$/, o.parse.bind(o, 0));
       exception(/^Options: Error: Expected a value in \[1,2,3\], but got 4$/, o.parse.bind(o, 4));
     },
-    "validators" : function (assert) {
+    "validators" : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
         validator : function (v) {

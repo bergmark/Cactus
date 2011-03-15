@@ -3,11 +3,11 @@ module.exports = (function () {
   var assertException = CactusJuice.Dev.Assertion.exception;
 
   return {
-    "instantiate with empty array" : function (assert) {
+    "instantiate with empty array" : function () {
       var a = new AC([]);
       assert.eql("", a.getRange().join(","));
     },
-    a : function (assert) {
+    a : function () {
       var test = this;
       var a = [1, 2, 3];
       var ac = new AC(a);
@@ -31,7 +31,7 @@ module.exports = (function () {
       ac.add(5);
       assert.ok(addedTriggered, "added was not triggered");
     },
-    c : function (assert) {
+    c : function () {
       var test = this;
       var ac = new AC([1, 2, 3]);
 
@@ -50,7 +50,7 @@ module.exports = (function () {
       assert.ok(removedTriggered, "removed was not triggered");
       assert.eql("1", ac.getRange().join(","));
     },
-    swap : function (assert) {
+    swap : function () {
       var test = this;
       var ac = new AC([1, 2, 3]);
 
@@ -70,12 +70,12 @@ module.exports = (function () {
       ac.swap(2, 1);
       assert.ok(swapTriggered);
     },
-    "swap: throw error on invalid indices" : function (assert) {
+    "swap: throw error on invalid indices" : function () {
       var ac = new AC(["a", "b", "c"]);
       assertException(assert, /swap:.+Index out of bounds.+indexA.+3/i, ac.swap.bind(ac, 3, 0));
       assertException(assert, /swap:.+Index out of bounds.+indexB.+4/i, ac.swap.bind(ac, 0, 4));
     },
-    addAtIndex : function (assert) {
+    addAtIndex : function () {
       var ac = new AC([1, 2, 3]);
 
       // Add as the first element.
@@ -95,7 +95,7 @@ module.exports = (function () {
       ac.addAtIndex(3, "q");
       assert.eql("x12q3zy", ac.getRange().join(""));
     },
-    replace : function (assert) {
+    replace : function () {
       var test = this;
       var ac = new AC([1, 2, 3]);
 
@@ -129,7 +129,7 @@ module.exports = (function () {
       assert.eql("746", ac.getRange().join(""));
       assert.ok(triggered, "ObjectReplaced did not trigger");
     },
-    "clear" : function (assert) {
+    "clear" : function () {
       var ac = new AC([1,2,3]);
       ac.clear();
       assert.eql(0, ac.count());

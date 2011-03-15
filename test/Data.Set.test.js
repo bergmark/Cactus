@@ -1,7 +1,7 @@
 module.exports = (function () {
   var Set = CactusJuice.Data.Set;
   return {
-    "add/remove" : function (assert) {
+    "add/remove" : function () {
       var set = new Set();
       assert.ok(set instanceof Set);
 
@@ -29,19 +29,19 @@ module.exports = (function () {
 
     // Pass the "shallow" argument to compare all objects by value instead of
     // identity.
-      "shallow" : function (assert) {
-        var set = new Set({
-          elementType : "shallow"
-        });
-        set.add({ a : 1 });
-        set.add({ a : 2 });
-        assert.eql(2, set.size());
-        set.add({ a : 1 });
-        assert.eql(2, set.size());
-      },
+    "shallow" : function () {
+      var set = new Set({
+        elementType : "shallow"
+      });
+      set.add({ a : 1 });
+      set.add({ a : 2 });
+      assert.eql(2, set.size());
+      set.add({ a : 1 });
+      assert.eql(2, set.size());
+    },
 
     // Getting an element by a non existant index should throw an error.
-    "bad index" : function (assert) {
+    "bad index" : function () {
       var set = new Set();
 
       assert.throws(function () {

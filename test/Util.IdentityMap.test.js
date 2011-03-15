@@ -3,7 +3,7 @@ module.exports = (function () {
   var assertException = CactusJuice.Dev.Assertion.exception;
 
   return {
-    "core" : function (assert) {
+    "core" : function () {
       var map = new IdentityMap();
 
       // Add.
@@ -25,7 +25,7 @@ module.exports = (function () {
     },
 
     // OnAdd when an abject is added to the ID map.
-    "OnAdd" : function (assert) {
+    "OnAdd" : function () {
 
       var triggered = false;
       var map = new IdentityMap();
@@ -42,7 +42,7 @@ module.exports = (function () {
     },
 
     // OnRemove when an object is removed from the ID map.
-    "OnRemove" : function (assert) {
+    "OnRemove" : function () {
 
       var triggered = false;
       var map = new IdentityMap();
@@ -57,7 +57,7 @@ module.exports = (function () {
     },
 
     // Should be able to fetch all objects.
-    "fetch" : function (assert) {
+    "fetch" : function () {
       var map = new IdentityMap();
       map.add(1, "a");
       map.add(2, "b");

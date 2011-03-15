@@ -4,7 +4,7 @@ module.exports = (function () {
   var assertException = CactusJuice.Dev.Assertion.exception;
 
   return {
-    "test everything" : function (assert) {
+    "test everything" : function () {
       var m = new Money(12, 34);
       assert.strictEqual(12, m.getDollars());
       assert.strictEqual(34, m.getCents());

@@ -7,7 +7,7 @@ module.exports = (function () {
   }
 
   return {
-    "init" : function (assert) {
+    "init" : function () {
       var ac = new AC([1,2,3]);
       var acd = new ACD(ac);
       assert.ok(acd instanceof ACD);
@@ -20,7 +20,7 @@ module.exports = (function () {
       assert.strictEqual(ac, acd2.getRootComponent());
     },
 
-    "object propagation" : function (assert) {
+    "object propagation" : function () {
       var ac = new AC([1, 2, 3]);
       var acd = new ACD(ac);
 
@@ -53,7 +53,7 @@ module.exports = (function () {
       assert.strictEqual("145", acd.getRange().join(""));
     },
 
-    "chain of responsibility" : function (assert) {
+    "chain of responsibility" : function () {
       var ac = new AC([1, 2, 3]);
       var acd = new ACD(ac);
       var triggered = false;
@@ -94,7 +94,7 @@ module.exports = (function () {
       assert.strictEqual("i", acd2.i());
     },
 
-    "replace" : function (assert) {
+    "replace" : function () {
       var ac = new AC([1, 2]);
       var acd = new ACD(ac);
 
@@ -109,7 +109,7 @@ module.exports = (function () {
       assert.strictEqual("52", acd.getRange().join(""));
     },
 
-    "addAtIndex" : function (assert) {
+    "addAtIndex" : function () {
       var ac = new AC([1, 2]);
       var acd = new ACD(ac);
 

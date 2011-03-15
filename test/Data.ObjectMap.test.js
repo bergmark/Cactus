@@ -2,7 +2,7 @@ module.exports = (function () {
   var ObjectMap = CactusJuice.Data.ObjectMap;
   var Assertion = CactusJuice.Dev.Assertion;
   return {
-    "test" : function (assert) {
+    "test" : function () {
       var assertException = Assertion.exception.bind(Assertion, assert);
 
       var om = new ObjectMap();
@@ -27,7 +27,7 @@ module.exports = (function () {
       assertException(/ObjectMap:get:.+undefined key/i, om.get.bind(om, o));
       assertException(/ObjectMap:remove:.+undefined key/i, om.remove.bind(om, o));
     },
-    map : function (assert) {
+    map : function () {
       var om = new ObjectMap();
       om.set(1, 10);
       om.set(2, 20);
@@ -38,7 +38,7 @@ module.exports = (function () {
       assert.eql(100, om2.get(1));
       assert.eql(200, om2.get(2));
     },
-    toJson : function (assert) {
+    toJson : function () {
       var om = new ObjectMap();
       om.set("a", 1);
       om.set("b", 2);

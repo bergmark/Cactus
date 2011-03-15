@@ -1,7 +1,7 @@
 module.exports = (function () {
   var math = CactusJuice.Addon.Math;
   return {
-    "rand" : function (assert) {
+    "rand" : function () {
       var a = [0, 0, 0, 0, 0];
       for (var i = 0; i < 5000; i++) {
         a[math.rand(0, 4)]++;
@@ -13,11 +13,11 @@ module.exports = (function () {
       }
     },
 
-    "middle" : function (assert) {
+    "middle" : function () {
       var a = [1, 2, 3];
       var middle = math.middle.apply.bind(math.middle).bind(null, null);
 
-      var eq = assert.eql.bind(assert);
+      var eq = assert.eql.bind();
       function eq2() {
         var m = middle(a);
         assert.eql(2, m, "middle(" + a.join(",") + ")=" + m);

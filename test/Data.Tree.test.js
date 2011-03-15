@@ -4,7 +4,7 @@ module.exports = (function () {
   var CObject = CactusJuice.Addon.Object;
 
   return {
-    structural : function (assert) {
+    structural : function () {
       var root = new Tree();
       assert.ok(root.isRoot());
       var childA = new Tree();
@@ -23,13 +23,13 @@ module.exports = (function () {
       assert.ok(!childA.isLeaf());
       assert.ok(childAA.isLeaf());
     },
-    values : function (assert) {
+    values : function () {
       var root = new Tree("root");
       assert.strictEqual("root", root.getValue());
       root.setValue("new val");
       assert.strictEqual("new val", root.getValue());
     },
-    getChild : function (assert) {
+    getChild : function () {
       var root = new Tree();
       var childA = new Tree();
       var childB = new Tree();
@@ -41,7 +41,7 @@ module.exports = (function () {
       assertException(assert, /Tree:getChild:.+index out of bounds/i, CObject.bound(root, "getChild", -1));
       assertException(assert, /Tree:getChild:.+index out of bounds/i, CObject.bound(childA, "getChild", 0));
     },
-    hasChild : function (assert) {
+    hasChild : function () {
       var root = new Tree();
       var childA = new Tree();
       var childB = new Tree();
@@ -52,7 +52,7 @@ module.exports = (function () {
       assert.ok(!root.hasChild(root));
       assert.ok(!childA.hasChild(root));
     },
-    removeChild : function (assert) {
+    removeChild : function () {
       var root = new Tree();
       var childA = new Tree();
       var childB = new Tree();
@@ -67,7 +67,7 @@ module.exports = (function () {
       assertException(assert, /Tree:removeChild: Node does not have child/i,
                       CObject.bound(root, "removeChild", childA));
     },
-    removeChildByIndex : function (assert) {
+    removeChildByIndex : function () {
       var root = new Tree();
       var childA = new Tree();
       var childB = new Tree();

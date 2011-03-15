@@ -21,7 +21,7 @@ module.exports = (function () {
 
   return {
     // Generate a comparator for a single key path.
-    "single key path" : function (assert) {
+    "single key path" : function () {
       var beck = new Book("Beck");
       var fowler = new Book("Fowler");
 
@@ -33,7 +33,7 @@ module.exports = (function () {
     },
 
     // Generate for multiple key paths.
-    "multiple key paths" : function (assert) {
+    "multiple key paths" : function () {
       var beckTDD = new Book("Beck", "TDD by Example");
       var beckXP = new Book("Beck", "XP explained");
       var fowlerPoEAA = new Book("Fowler", "PoEAA");

@@ -4,7 +4,7 @@ module.exports = (function () {
   var assertException = CactusJuice.Dev.Assertion.exception;
 
   return {
-    "create new event, subscribe, trigger" : function (assert) {
+    "create new event, subscribe, trigger" : function () {
       var pool = new EventPool();
       pool.createEvent("Foo");
       var triggered = false;
@@ -15,12 +15,12 @@ module.exports = (function () {
       pool.onFoo();
       assert.ok(triggered);
     },
-    "Shall not be able to create an evente that already exists." : function (assert) {
+    "Shall not be able to create an evente that already exists." : function () {
       var pool = new EventPool();
       pool.createEvent("Foo");
       assertException(assert, /EventPool.+Foo.+exists/, pool.createEvent.bind(pool, "Foo"));
     },
-    "Object owning event should get the onEventName function." : function (assert) {
+    "Object owning event should get the onEventName function." : function () {
       var pool = new EventPool();
       var o = {};
       pool.createEvent("Foo", o);

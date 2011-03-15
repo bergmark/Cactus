@@ -2,7 +2,7 @@ module.exports = (function () {
   var object = CactusJuice.Addon.Object;
   var collection = CactusJuice.Data.Collection;
   return {
-    isEmpty : function (assert) {
+    isEmpty : function () {
       assert.ok(object.isEmpty({}));
       assert.ok(!object.isEmpty({ a : undefined }));
       assert.ok(!object.isEmpty({ a : null }));
@@ -12,7 +12,7 @@ module.exports = (function () {
       assert.ok(!object.isEmpty(true));
     },
 
-    "copy" : function (assert) {
+    "copy" : function () {
       var o = {};
       assert.ok(o !== object.copy(o));
       o.a = 2;
@@ -23,7 +23,7 @@ module.exports = (function () {
       assert.eql(4, p.b);
     },
 
-    map : function (assert) {
+    map : function () {
       var o = {
         a : 1,
         b : 2,
@@ -38,7 +38,7 @@ module.exports = (function () {
       assert.eql("c3", h.c);
     },
 
-    bound : function (assert) {
+    bound : function () {
       var o = {
         x : function () {
           return this;
