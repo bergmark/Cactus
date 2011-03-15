@@ -68,6 +68,11 @@ module.exports = (function () {
         return v + 1;
       });
       assert.strictEqual("2,4,6", s2.collection.sort().join(","));
+    },
+
+    arrayConversion : function () {
+      var s = Set.fromArray([1, 2, 3]);
+      assert.strictEqual("1,2,3", s.toArray().sort().join(","));
     }
   };
 })();
