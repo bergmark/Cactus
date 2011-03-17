@@ -2,7 +2,7 @@ module.exports = (function () {
   var Pair = CactusJuice.Data.Pair;
   var assertException = CactusJuice.Dev.Assertion.exception;
   return {
-    test : function (assert) {
+    test : function () {
       var p = new Pair(1, 2);
       assert.eql(1, p.getFirst());
       assert.eql(2, p.getSecond());
@@ -17,7 +17,7 @@ module.exports = (function () {
       p.changeSecond(4);
       assert.eql(2, p.getSecond());
     },
-    toHash : function (assert) {
+    toHash : function () {
       var p = new Pair(1, 2);
       var h = p.toHash();
       assert.eql(1, h.first);

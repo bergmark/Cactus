@@ -1,5 +1,5 @@
 module.exports = {
-  "bind" : function (assert) {
+  "bind" : function () {
     var t = this;
     var o = {};
     var f;
@@ -51,7 +51,7 @@ module.exports = {
     }).bind(null).call(o);
   },
 
-  "curry" : function (assert) {
+  "curry" : function () {
     var o = {};
     var test = this;
 
@@ -81,7 +81,7 @@ module.exports = {
     }).curry("a", "b")("c", "d");
   },
 
-  "extend instanceof" : function (assert) {
+  "extend instanceof" : function () {
     function A() { }
     function B() { }
     B.extend(A);
@@ -93,7 +93,7 @@ module.exports = {
   },
 
   // Test inheritance and overrides.
-  "extend" : function (assert) {
+  "extend" : function () {
     function A() { }
     A.prototype.x = 1;
     A.prototype.y = 2;
@@ -112,7 +112,7 @@ module.exports = {
   },
 
   // Classes should be able to intervene when they are subclassed.
-  "extend subclassing" : function (assert) {
+  "extend subclassing" : function () {
     function A() {}
     A.__onExtend = function (SubClass) {
       SubClass.x = 1;
@@ -136,12 +136,12 @@ module.exports = {
     assert.eql(3, D.y);
   },
 
-  "empty" : function (assert) {
+  "empty" : function () {
     assert.ok(Function.empty instanceof Function);
     Function.empty();
   },
 
-  "returning" : function (assert) {
+  "returning" : function () {
     assert.eql(2, (function () {
       return 1;
     }).returning(2)());
@@ -150,7 +150,7 @@ module.exports = {
 
   // Make sure that returning passes all arguments it gets through
   // to the inner function.
-  "returning pass to inner" : function (assert) {
+  "returning pass to inner" : function () {
     var test = this;
     assert.eql(4, (function (a, b, c) {
       assert.eql(1, a);
@@ -160,7 +160,7 @@ module.exports = {
   },
 
   // Should call the inner function in the scope of the outer.
-  "returning scope" : function (assert) {
+  "returning scope" : function () {
     var o = {};
     var test = this;
     (function () {
@@ -168,7 +168,7 @@ module.exports = {
     }).returning(0).call(o);
   },
 
-  "filter" : function (assert) {
+  "filter" : function () {
     var called = false;
     function f() {
       called = true;
@@ -202,7 +202,7 @@ module.exports = {
     assert.ok(called, "undefined 1 called f");
     },
 
-  "filter 2" : function (assert) {
+  "filter 2" : function () {
     var t = this;
     var triggered = false;
     var f = function (a, b, c) {
@@ -262,7 +262,7 @@ module.exports = {
   })();
   */
 
-  "once" : function (assert) {
+  "once" : function () {
     var executions = 0;
 
     var test = this;
@@ -280,7 +280,7 @@ module.exports = {
     assert.eql(1, executions);
   },
 
-  "skip" : function (assert) {
+  "skip" : function () {
     var test = this;
 
     // Skip one argument.
@@ -318,7 +318,7 @@ module.exports = {
     }).skip().call(o);
   },
 
-  "none" : function (assert) {
+  "none" : function () {
     var test = this;
     var o = {};
     var triggered = false;
@@ -337,7 +337,7 @@ module.exports = {
     assert.ok(triggered, "Inner function did not trigger.");
   },
 
-  "exec" : function (assert) {
+  "exec" : function () {
     var test = this;
     var triggers = 0;
     function f() {
@@ -350,7 +350,7 @@ module.exports = {
     assert.eql(3, triggers);
   },
 
-  "partial" : function (assert) {
+  "partial" : function () {
     var scope;
     var got;
     var f = function () {
@@ -364,7 +364,7 @@ module.exports = {
     f.partial(o, 0, undefined)(1,2);
   },
 
-  "id" : function (assert) {
+  "id" : function () {
     assert.eql(1, Function.id(1));
     var o = {};
     assert.eql(o, Function.id({}));

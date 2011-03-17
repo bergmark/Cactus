@@ -3,7 +3,7 @@ module.exports = (function () {
   var object = CactusJuice.Addon.Object;
   var Assertion = CactusJuice.Dev.Assertion;
   return {
-    CountMap : function (assert) {
+    CountMap : function () {
       var cm = new CountMap();
 
       assert.eql(0, cm.get("undefined key"));
@@ -28,7 +28,7 @@ module.exports = (function () {
       // Cannot dec if key is undefined.
       Assertion.exception(assert, /:dec:.+undefined key/i, object.bound(cm, "dec", "undefined key"));
     },
-    toHash : function (assert) {
+    toHash : function () {
       var cm = new CountMap();
       cm.inc("a");
       cm.inc("b");

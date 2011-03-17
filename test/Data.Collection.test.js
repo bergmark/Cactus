@@ -3,7 +3,7 @@ module.exports = (function () {
   var Range = CactusJuice.Data.Range;
   var assertException = CactusJuice.Dev.Assertion.exception;
   return {
-    toArray : function (assert) {
+    toArray : function () {
       var a = [1,2,3];
       var b = Coll.toArray(a);
 
@@ -11,7 +11,7 @@ module.exports = (function () {
       assert.eql("1,2,3", b.join(","));
     },
 
-    "intersects" : function (assert) {
+    "intersects" : function () {
       var a = [1, 2, 3];
       var b = [3, 4, 5];
       var c = [6, 5, 4];
@@ -26,7 +26,7 @@ module.exports = (function () {
       assert.ok(i(c, b));
     },
 
-    "hasValue" : function (assert) {
+    "hasValue" : function () {
       var a = [1, 2, 3];
 
       var hv = Coll.hasValue;
@@ -42,7 +42,7 @@ module.exports = (function () {
       assert.ok(!hv(a, [1]));
     },
 
-    "intersection" : function (assert) {
+    "intersection" : function () {
       var a = [1, 2, 3];
       var b = [3, 4, 5];
       var c = [6, 5, 4];
@@ -57,13 +57,13 @@ module.exports = (function () {
       assert.eql("4,5", i(c, b).sort().join(","));
     },
 
-    "last" : function (assert) {
+    "last" : function () {
       assert.eql(3, Coll.last([1,2,3]));
       assert.eql(1, Coll.last([1]));
       assert.throws(function () { Coll.last([]); });
     },
 
-    "isColl" : function (assert) {
+    "isColl" : function () {
       var glob = null;
       glob = typeof window !== "undefined" ? window : null;
       glob = typeof global !== "undefined" ? global : null;
@@ -86,7 +86,7 @@ module.exports = (function () {
       }
     },
 
-    "select" : function (assert) {
+    "select" : function () {
       var a = [1, 2, 3, 4, 5, 6];
       function isEven(n) {
         return !(n % 2);
@@ -107,7 +107,7 @@ module.exports = (function () {
       }).length);
     },
 
-    "select index argument" : function (assert) {
+    "select index argument" : function () {
       var a = [1, 2, 3, 4, 5, 6];
       function isEven(_, n) {
         return !(n % 2);
@@ -120,7 +120,7 @@ module.exports = (function () {
       assert.eql(5, b[2]);
     },
 
-    "reject" : function (assert) {
+    "reject" : function () {
       var a = [1, 2, 3, 4, 5, 6];
       function isEven(n) {
         return (n % 2) === 0;
@@ -138,7 +138,7 @@ module.exports = (function () {
       }).length);
     },
 
-    "reject index argument" : function (assert) {
+    "reject index argument" : function () {
       var a = [1, 2, 3, 4, 5, 6];
       function isEven(_, n) {
         return !(n % 2);
@@ -151,7 +151,7 @@ module.exports = (function () {
       assert.eql(6, b[2]);
     },
 
-    "each" : function (assert) {
+    "each" : function () {
       var a = [1, 2, 3];
       var b = [];
 
@@ -162,13 +162,13 @@ module.exports = (function () {
       assert.eql("123", b.join(""));
     },
 
-    "slice" : function (assert) {
+    "slice" : function () {
       var a = [0,1,2,3,4,5];
       assert.eql("0,1,2,3,4,5", Coll.slice(a, 0, 6).join(","));
       assert.eql("1,2,3,4", Coll.slice(a, 1, 5).join(","));
     },
 
-    "sliceWithRange" : function (assert) {
+    "sliceWithRange" : function () {
       var a = [0,1,2,3,4,5];
       var r = new Range({
         start : 0,
@@ -182,7 +182,7 @@ module.exports = (function () {
       assert.eql("1,2,3,4", Coll.sliceWithRange(a, r).join(","));
     },
 
-    "some" : function (assert) {
+    "some" : function () {
       assert.ok(Coll.some([1, 5, 3, 6], function (el) {
         return el > 3;
       }));
@@ -191,7 +191,7 @@ module.exports = (function () {
       }));
     },
 
-    "every" : function (assert) {
+    "every" : function () {
       assert.ok(Coll.every([1, 5, 3, 6], function (el) {
         return el > 0;
       }));
@@ -200,7 +200,7 @@ module.exports = (function () {
       }));
     },
 
-    "notAny" : function (assert) {
+    "notAny" : function () {
       assert.ok(Coll.notAny([1, 2, 3, 0], function (el) {
         return el > 3;
       }));
@@ -209,7 +209,7 @@ module.exports = (function () {
       }));
     },
 
-    "notEvery" : function (assert) {
+    "notEvery" : function () {
       assert.ok(Coll.notEvery([1, 5, 3, 6], function (el) {
         return el < 6;
       }));
@@ -218,7 +218,7 @@ module.exports = (function () {
       }));
     },
 
-    "findFirst" : function (assert) {
+    "findFirst" : function () {
       assert.eql(1, Coll.findFirst([1, 2, 3], function (v) {
         return v === 1;
       }));
@@ -231,14 +231,14 @@ module.exports = (function () {
     },
 
     // Two collections are equal if their contents are identical.
-    "equal" : function (assert) {
+    "equal" : function () {
       assert.ok(Coll.equal([1, 2], [1, 2]));
       assert.ok(!Coll.equal([1, 2], [1, 2, 3]));
       assert.ok(!Coll.equal([1, 2, 3], [1, 2]));
       assert.ok(Coll.equal([1, 2], { 0 : 1, 1 : 2, length : 2 }));
     },
 
-    randElement : function (assert) {
+    randElement : function () {
       assertException(assert, /:randElement:.+empty collection/i, Coll.randElement.bind(Coll, []));
       var a = [0,1,2];
       var count = [0,0,0];

@@ -1,7 +1,7 @@
 module.exports = (function () {
   var ca = CactusJuice.Addon.Array;
   return {
-    "empty/remove" : function (assert) {
+    "empty/remove" : function () {
       var a = [1,2,3];
       ca.empty(a);
       assert.eql(0, a.length);
@@ -22,7 +22,7 @@ module.exports = (function () {
     },
 
     // The arrays should be different objects but contain the same elements.
-    "clone" : function (assert) {
+    "clone" : function () {
       var a = ["a", "b", "c"];
       assert.eql(3, a.length);
       var b = ca.clone(a);
@@ -34,7 +34,7 @@ module.exports = (function () {
       assert.ok(a !== b);
     },
 
-    "no deep cloning" : function (assert) {
+    "no deep cloning" : function () {
       var a = [{}, {}, {}];
       assert.eql(3, a.length);
       var b = ca.clone(a);
@@ -46,7 +46,7 @@ module.exports = (function () {
       assert.ok(a !== b);
     },
 
-    "unique" : function (assert) {
+    "unique" : function () {
       var a = [1, 2, 3, 1, 2];
       var o = {};
       var b = [o, {}, o];

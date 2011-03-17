@@ -2,9 +2,10 @@ module.exports = (function () {
   var Money = CactusJuice.Data.Money;
   var stringify = CactusJuice.Util.JSON.stringify;
   var assertException = CactusJuice.Dev.Assertion.exception;
+  var Collection = CactusJuice.Data.Collection;
 
   return {
-    "test everything" : function (assert) {
+    "test everything" : function () {
       var m = new Money(12, 34);
       assert.strictEqual(12, m.getDollars());
       assert.strictEqual(34, m.getCents());
@@ -98,6 +99,19 @@ module.exports = (function () {
       assert.ok(new Money(0, 1).equals(new Money(0, -1).negate()));
 
       assert.ok(new Money(1, 2).equals(new Money(-1, 2).negate()));
+    },
+    split : function () {
+      Collection.each(new Money(1, 0).split(4), function (part) {
+        assert.ok(new Money(0, 25).equals(part));
+      });
+      var parts = new Money(1,0).split(3);
+      assert.ok(new Money(0, 34).equals(parts[0]));
+      assert.ok(new Money(0, 33).equals(parts[1]));
+      assert.ok(new Money(0, 33).equals(parts[2]));
+
+      parts = new Money(0, 1).split(2);
+      assert.ok(new Money(0, 1).equals(parts[0]));
+      assert.ok(new Money(0, 0).equals(parts[1]));
     }
   };
 })();

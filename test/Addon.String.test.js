@@ -1,29 +1,29 @@
 module.exports = (function () {
   var assertException = CactusJuice.Dev.Assertion.exception;
   return {
-    "capitalize" : function (assert) {
+    "capitalize" : function () {
       assert.eql("Foo", "Foo".capitalize());
       assert.eql("Foo", "foo".capitalize());
       assert.eql("FOO", "fOO".capitalize());
       assert.eql("", "".capitalize());
     },
 
-    camelCase : function (assert) {
+    camelCase : function () {
       assert.eql("abCdEf", "ab_cd_ef".camelCase());
       assert.eql("abcdef", "abcdef".camelCase());
     },
 
-    underscore : function (assert) {
+    underscore : function () {
       assert.eql("ab_cd_ef", "abCdEf".underscore());
       assert.eql("abcdef", "abcdef".underscore());
     },
 
-    format : function (assert) {
+    format : function () {
       assert.eql("foo", "%s".format("foo"));
       assert.eql("foo bar", "%s %s".format("foo", "bar"));
     },
 
-    hasPrefix : function (assert) {
+    hasPrefix : function () {
       assert.ok("foo".hasPrefix(""));
       assert.ok("".hasPrefix(""));
 
@@ -34,7 +34,7 @@ module.exports = (function () {
       assert.ok(!"foo".hasPrefix("fou"));
     },
 
-    hasSuffix : function (assert) {
+    hasSuffix : function () {
       assert.ok("foo".hasSuffix(""));
       assert.ok("".hasSuffix(""));
 
@@ -45,7 +45,7 @@ module.exports = (function () {
       assert.ok(!"foo".hasSuffix("fou"));
     },
 
-    hasSubstring : function (assert) {
+    hasSubstring : function () {
       assert.ok("".hasSubstring(""), 1);
       assert.ok("abc".hasSubstring(""), 2);
       assert.ok("abc".hasSubstring("ab"), 3);
@@ -55,7 +55,7 @@ module.exports = (function () {
       assert.ok(!"abc".hasSubstring("za"), 7);
     },
 
-    trim : function (assert) {
+    trim : function () {
       assert.eql("", "".trim());
       assert.eql("", " ".trim());
       assert.eql("", "  ".trim());
@@ -67,13 +67,13 @@ module.exports = (function () {
       assert.eql("a b c", " a b c ".trim());
     },
 
-    reverse : function (assert) {
+    reverse : function () {
       assert.eql("", "".reverse());
       assert.eql("abc", "abc".reverse().reverse());
       assert.eql("abc", "cba".reverse());
     },
 
-    removeLast : function (assert) {
+    removeLast : function () {
       assert.strictEqual("", "a".removeLast());
       assert.strictEqual("ab", "abc".removeLast());
       assert.throws(function () {
@@ -81,7 +81,7 @@ module.exports = (function () {
       });
     },
 
-    removeFirst : function (assert) {
+    removeFirst : function () {
       assert.strictEqual("", "a".removeFirst());
       assert.strictEqual("bc", "abc".removeFirst());
       assert.throws(function () {

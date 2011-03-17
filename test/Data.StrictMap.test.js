@@ -2,7 +2,7 @@ module.exports = (function () {
   var StrictMap = CactusJuice.Data.StrictMap;
   var assertException = CactusJuice.Dev.Assertion.exception;
   return {
-    StrictMap : function (assert) {
+    StrictMap : function () {
       var sh = new StrictMap();
 
       var regs = {
@@ -35,7 +35,7 @@ module.exports = (function () {
       assert.eql(2, sh.get("x"));
       assert.eql(3, sh.get("y"));
     },
-    map : function (assert) {
+    map : function () {
       var sm = new StrictMap();
       sm.define("x", 1);
       sm.define("y", 2);

@@ -1,7 +1,8 @@
 module.exports = (function () {
   var Set = CactusJuice.Data.Set;
+  var CMath = CactusJuice.Addon.Math;
   return {
-    "add/remove" : function (assert) {
+    "add/remove" : function () {
       var set = new Set();
       assert.ok(set instanceof Set);
 
@@ -29,19 +30,19 @@ module.exports = (function () {
 
     // Pass the "shallow" argument to compare all objects by value instead of
     // identity.
-      "shallow" : function (assert) {
-        var set = new Set({
-          elementType : "shallow"
-        });
-        set.add({ a : 1 });
-        set.add({ a : 2 });
-        assert.eql(2, set.size());
-        set.add({ a : 1 });
-        assert.eql(2, set.size());
-      },
+    "shallow" : function () {
+      var set = new Set({
+        elementType : "shallow"
+      });
+      set.add({ a : 1 });
+      set.add({ a : 2 });
+      assert.eql(2, set.size());
+      set.add({ a : 1 });
+      assert.eql(2, set.size());
+    },
 
     // Getting an element by a non existant index should throw an error.
-    "bad index" : function (assert) {
+    "bad index" : function () {
       var set = new Set();
 
       assert.throws(function () {
@@ -57,6 +58,27 @@ module.exports = (function () {
       assert.throws(function () {
         set.get(2);
       });
+    },
+
+    map : function () {
+      var s = new Set();
+      s.add(1);
+      s.add(3);
+      s.add(5);
+      var s2 = s.map(function (v) {
+        return v + 1;
+      });
+      assert.strictEqual("2,4,6", s2.collection.sort().join(","));
+    },
+
+    arrayConversion : function () {
+      var s = Set.fromArray([1, 2, 3]);
+      assert.strictEqual("1,2,3", s.toArray().sort().join(","));
+    },
+
+    select : function () {
+      var s = Set.fromArray([1, 2, 3]);
+      assert.strictEqual("1,3", Set.fromArray([1,2,3]).select(CMath.odd.bind(CMath)).toArray().sort().join(","));
     }
   };
 })();

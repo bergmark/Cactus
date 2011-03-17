@@ -4,12 +4,12 @@ module.exports = (function () {
   var CN = CactusJuice.Web.DOM.ClassNames;
 
   return {
-    initial : function (assert) {
+    initial : function () {
       var o = {};
       assert.ok(!CN.has(o, "foo"));
       CN.del(o, "foo");
     },
-    b : function (assert) {
+    b : function () {
       // First CN.
       var o = {};
       CN.add(o, "foo");
@@ -29,7 +29,7 @@ module.exports = (function () {
       assert.ok(CN.has(o, "baz"), 5);
 
     },
-    "remove" : function (assert) {
+    "remove" : function () {
       var o = {};
       CN.add(o, "foo");
       CN.add(o, "bar");
@@ -54,7 +54,7 @@ module.exports = (function () {
       assert.ok(CN.has(o, "bar"));
       assert.ok(!CN.has(o, "bax"));
     },
-    "unusual chars" : function (assert) {
+    "unusual chars" : function () {
       var o = {};
       CN.add(o, "a-b");
       CN.add(o, "c");
@@ -72,7 +72,7 @@ module.exports = (function () {
       assert.ok(!CN.has(o, "-b"));
 
     },
-    "get" : function (assert) {
+    "get" : function () {
       var o = { className : "a b c" };
       var p = { className : "" };
       var q = { className : "a" };
