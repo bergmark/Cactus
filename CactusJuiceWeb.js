@@ -7,4 +7,5 @@ require('./lib/Web/DOM/Events');
 require('./lib/Web/DOM/Event');
 require('./lib/Web/DOM/Element');
 require('./lib/Web/DOM/EventManager');
+require('./lib/Web/DOM/Ready');
 require('./lib/Web/Validation');
