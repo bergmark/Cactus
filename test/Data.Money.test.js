@@ -112,6 +112,10 @@ module.exports = (function () {
       parts = new Money(0, 1).split(2);
       assert.ok(new Money(0, 1).equals(parts[0]));
       assert.ok(new Money(0, 0).equals(parts[1]));
+    },
+    sum : function () {
+      assert.ok(new Money(3, 1).equals(Money.sum([new Money(0, 1), new Money(1, 0), new Money(2, 0)])));
+      assert.ok(new Money(0, 0).equals(Money.sum([])));
     }
   };
 })();
