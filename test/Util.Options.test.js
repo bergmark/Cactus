@@ -43,6 +43,12 @@ module.exports = (function () {
           validator : {
             required : false,
             type : Function
+          },
+          enumerable : {
+            required : false,
+            validator : function (v) {
+              return v instanceof Array;
+            }
           }
         }
       });
@@ -69,6 +75,9 @@ module.exports = (function () {
       });
       o.parse({
         validator : Function.empty
+      });
+      o.parse({
+        enumerable : [1,2,3]
       });
 
       // Fails until properties can constrain each other.
