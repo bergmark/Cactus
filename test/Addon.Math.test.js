@@ -69,6 +69,15 @@ module.exports = (function () {
 
       // Invalid inputs should throw error.
       assert.throws(math.decToHex.curry("X"), /decToHex: invalid input/i);
+    },
+
+    div : function () {
+      assert.strictEqual(1, math.div(2, 2));
+      assert.strictEqual(1, math.div(3, 2));
+      assert.strictEqual(2, math.div(4, 2));
+      assert.strictEqual(0, math.div(0, 2));
+
+      assert.ok(!isFinite(math.div(1, 0)));
     }
   };
 })();
