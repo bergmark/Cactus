@@ -48,6 +48,27 @@ module.exports = (function () {
       assert.ok(!math.odd(0));
       assert.ok(!math.even(1));
       assert.ok(math.odd(1));
+    },
+
+    "hexToDec" : function () {
+      assert.strictEqual(0, math.hexToDec("0"));
+      assert.strictEqual(10, math.hexToDec("A"));
+      assert.strictEqual(15, math.hexToDec("F"));
+      assert.strictEqual(16, math.hexToDec("10"));
+      assert.strictEqual(255, math.hexToDec("FF"));
+
+      // Invalid inputs should throw error.
+      assert.throws(math.hexToDec.curry("X"), /hexToDec: invalid input/i);
+    },
+    "decToHex" : function () {
+      assert.strictEqual("0", math.decToHex(0));
+      assert.strictEqual("a", math.decToHex(10));
+      assert.strictEqual("f", math.decToHex(15));
+      assert.strictEqual("10", math.decToHex(16));
+      assert.strictEqual("ff", math.decToHex(255));
+
+      // Invalid inputs should throw error.
+      assert.throws(math.decToHex.curry("X"), /decToHex: invalid input/i);
     }
   };
 })();
