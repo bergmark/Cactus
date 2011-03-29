@@ -1,6 +1,6 @@
 module.exports = (function () {
-  var StrictHash = CactusJuice.Data.StrictHash;
-  var assertException = CactusJuice.Dev.Assertion.exception;
+  var StrictHash = Cactus.Data.StrictHash;
+  var assertException = Cactus.Dev.Assertion.exception;
   return {
     StrictHash : function () {
       var sh = new StrictHash(["x", "y"]);

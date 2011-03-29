@@ -1,6 +1,6 @@
 module.exports = (function () {
-  var AC = CactusJuice.Data.ArrayController;
-  var assertException = CactusJuice.Dev.Assertion.exception;
+  var AC = Cactus.Data.ArrayController;
+  var assertException = Cactus.Dev.Assertion.exception;
 
   return {
     "instantiate with empty array" : function () {

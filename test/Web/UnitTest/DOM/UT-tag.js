@@ -1,8 +1,8 @@
 Cactus.UnitTest.DOM.tag = function () {
   var UT = Cactus.Dev.UnitTest;
   var Test = UT.Test;
-  var tag = CactusJuice.Web.DOM.tag;
-  var Browser = CactusJuice.Web.Browser;
+  var tag = Cactus.Web.DOM.tag;
+  var Browser = Cactus.Web.Browser;
 
   var tagTC = new UT.TestCase("DOM.tag");
   tagTC.add(new Test(function () {

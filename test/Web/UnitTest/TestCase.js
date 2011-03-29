@@ -12,10 +12,10 @@
  */
 Cactus.Dev.UnitTest.TestCase = (function () {
   var Test = Cactus.Dev.UnitTest.Test;
-  var EventSubscription = CactusJuice.Util.EventSubscription;
+  var EventSubscription = Cactus.Util.EventSubscription;
   var EventIterator = Cactus.Util.EventIterator;
   var log = Cactus.Dev.log;
-  var CArray = CactusJuice.Addon.Array;
+  var CArray = Cactus.Addon.Array;
 
   Joose.Class("TestCase", {
     does : EventSubscription,

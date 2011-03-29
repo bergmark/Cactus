@@ -1,7 +1,7 @@
-require('../CactusJuice.js')
+require('../Cactus');
 module.exports = (function () {
-  var EventPool = CactusJuice.Util.EventPool;
-  var assertException = CactusJuice.Dev.Assertion.exception;
+  var EventPool = Cactus.Util.EventPool;
+  var assertException = Cactus.Dev.Assertion.exception;
 
   return {
     "create new event, subscribe, trigger" : function () {

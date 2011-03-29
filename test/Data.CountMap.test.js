@@ -1,7 +1,7 @@
 module.exports = (function () {
-  var CountMap = CactusJuice.Data.CountMap;
-  var object = CactusJuice.Addon.Object;
-  var Assertion = CactusJuice.Dev.Assertion;
+  var CountMap = Cactus.Data.CountMap;
+  var object = Cactus.Addon.Object;
+  var Assertion = Cactus.Dev.Assertion;
   return {
     CountMap : function () {
       var cm = new CountMap();

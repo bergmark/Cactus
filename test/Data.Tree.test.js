@@ -1,7 +1,7 @@
 module.exports = (function () {
-  var assertException = CactusJuice.Dev.Assertion.exception;
-  var Tree = CactusJuice.Data.Tree;
-  var CObject = CactusJuice.Addon.Object;
+  var assertException = Cactus.Dev.Assertion.exception;
+  var Tree = Cactus.Data.Tree;
+  var CObject = Cactus.Addon.Object;
 
   return {
     structural : function () {

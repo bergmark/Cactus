@@ -1,6 +1,6 @@
 module.exports = (function () {
-  var Pair = CactusJuice.Data.Pair;
-  var assertException = CactusJuice.Dev.Assertion.exception;
+  var Pair = Cactus.Data.Pair;
+  var assertException = Cactus.Dev.Assertion.exception;
   return {
     test : function () {
       var p = new Pair(1, 2);

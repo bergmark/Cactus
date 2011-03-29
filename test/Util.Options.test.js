@@ -1,11 +1,11 @@
 module.exports = (function () {
-  var Options = CactusJuice.Util.Options;
-  var Assertion = CactusJuice.Dev.Assertion;
+  var Options = Cactus.Util.Options;
+  var Assertion = Cactus.Dev.Assertion;
   var assertException = Assertion.exception.bind(Assertion);
-  var JSON = CactusJuice.Util.JSON;
+  var JSON = Cactus.Util.JSON;
   var stringify = JSON.stringify;
-  var object = CactusJuice.Addon.Object;
-  var collection = CactusJuice.Data.Collection;
+  var object = Cactus.Addon.Object;
+  var collection = Cactus.Data.Collection;
 
   var jsoneq = function (assert, a, b) {
     return assert.eql(JSON.stringify(a), JSON.stringify(b));

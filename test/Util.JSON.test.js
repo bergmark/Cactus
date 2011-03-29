@@ -1,5 +1,5 @@
 module.exports = (function () {
-  var JSON = CactusJuice.Util.JSON;
+  var JSON = Cactus.Util.JSON;
   return {
     test : function () {
       assert.eql('"aoeu"', JSON.stringify("aoeu"));

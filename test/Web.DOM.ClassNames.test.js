@@ -1,7 +1,7 @@
-require('../CactusJuiceWebTestable.js');
+require('../CactusWebTestable');
 
 module.exports = (function () {
-  var CN = CactusJuice.Web.DOM.ClassNames;
+  var CN = Cactus.Web.DOM.ClassNames;
 
   return {
     initial : function () {

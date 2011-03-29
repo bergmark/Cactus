@@ -1,6 +1,6 @@
 module.exports = (function () {
-  var ObjectMap = CactusJuice.Data.ObjectMap;
-  var Assertion = CactusJuice.Dev.Assertion;
+  var ObjectMap = Cactus.Data.ObjectMap;
+  var Assertion = Cactus.Dev.Assertion;
   return {
     "test" : function () {
       var assertException = Assertion.exception.bind(Assertion, assert);

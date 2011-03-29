@@ -1,5 +1,5 @@
 module.exports = (function () {
-  var assertException = CactusJuice.Dev.Assertion.exception;
+  var assertException = Cactus.Dev.Assertion.exception;
   return {
     "capitalize" : function () {
       assert.eql("Foo", "Foo".capitalize());

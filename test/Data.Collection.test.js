@@ -1,7 +1,7 @@
 module.exports = (function () {
-  var Coll = CactusJuice.Data.Collection;
-  var Range = CactusJuice.Data.Range;
-  var assertException = CactusJuice.Dev.Assertion.exception;
+  var Coll = Cactus.Data.Collection;
+  var Range = Cactus.Data.Range;
+  var assertException = Cactus.Dev.Assertion.exception;
   return {
     toArray : function () {
       var a = [1,2,3];

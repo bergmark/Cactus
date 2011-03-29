@@ -1,5 +1,5 @@
 module.exports = (function () {
-  var ca = CactusJuice.Addon.Array;
+  var ca = Cactus.Addon.Array;
   return {
     "empty/remove" : function () {
       var a = [1,2,3];

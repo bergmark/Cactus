@@ -1,6 +1,6 @@
 module.exports = (function () {
-  var IdentityMap = CactusJuice.Util.IdentityMap;
-  var assertException = CactusJuice.Dev.Assertion.exception;
+  var IdentityMap = Cactus.Util.IdentityMap;
+  var assertException = Cactus.Dev.Assertion.exception;
 
   return {
     "core" : function () {

@@ -2,13 +2,13 @@
   "name": "Cactus",
   "description": "Misc utilities and data structures for node and web development",
   "version": "0.0.1",
-  "homepage": "https://github.com/Raevel/CactusJuice",
+  "homepage": "https://github.com/Raevel/Cactus",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Raevel/CactusJuice.git"
+    "url": "git://github.com/Raevel/Cactus.git"
   },
   "author": "Adam Bergmark <adam@edea.se> (http://www.edea.se)",
-  "main": "CactusJuice.js",
+  "main": "Cactus.js",
   "directories": {
     "lib": "lib"
   },

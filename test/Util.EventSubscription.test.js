@@ -1,6 +1,6 @@
 module.exports = (function () {
-  var EventSubscription = CactusJuice.Util.EventSubscription;
-  var Assertion = CactusJuice.Dev.Assertion;
+  var EventSubscription = Cactus.Util.EventSubscription;
+  var Assertion = Cactus.Dev.Assertion;
 
   Joose.Class("C", {
     does : EventSubscription,

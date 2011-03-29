@@ -1,12 +1,12 @@
 Cactus.UnitTest.DOM.Element = function () {
   var UT = Cactus.Dev.UnitTest;
   var Test = UT.Test;
-  var Element = CactusJuice.Web.DOM.Element;
-  var tag = CactusJuice.Web.DOM.tag;
-  var $ = CactusJuice.Web.DOM.select;
-  var Collection = CactusJuice.Data.Collection;
-  var $f = CactusJuice.Web.DOM.selectFirst;
-  var JSON = CactusJuice.Util.JSON;
+  var Element = Cactus.Web.DOM.Element;
+  var tag = Cactus.Web.DOM.tag;
+  var $ = Cactus.Web.DOM.select;
+  var Collection = Cactus.Data.Collection;
+  var $f = Cactus.Web.DOM.selectFirst;
+  var JSON = Cactus.Util.JSON;
 
   var tc = new UT.TestCase('DOM.Element');
 

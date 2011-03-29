@@ -1,7 +1,7 @@
 module.exports = (function () {
-  var Enumerable = CactusJuice.Data.Enumerable;
-  var Collection = CactusJuice.Data.Collection;
-  var CMath = CactusJuice.Addon.Math;
+  var Enumerable = Cactus.Data.Enumerable;
+  var Collection = Cactus.Data.Collection;
+  var CMath = Cactus.Addon.Math;
 
   Class("Coll", {
     does : Enumerable,

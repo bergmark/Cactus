@@ -1,6 +1,6 @@
 module.exports = (function () {
-  var StrictMap = CactusJuice.Data.StrictMap;
-  var assertException = CactusJuice.Dev.Assertion.exception;
+  var StrictMap = Cactus.Data.StrictMap;
+  var assertException = Cactus.Dev.Assertion.exception;
   return {
     StrictMap : function () {
       var sh = new StrictMap();

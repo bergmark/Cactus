@@ -2,9 +2,9 @@ Cactus.UnitTest.DOM.select = function () {
   var UT = Cactus.Dev.UnitTest;
   var TestCase = UT.TestCase;
   var Test = UT.Test;
-  var tag = CactusJuice.Web.DOM.tag;
-  var $ = CactusJuice.Web.DOM.select;
-  var ClassNames = CactusJuice.Web.DOM.ClassNames;
+  var tag = Cactus.Web.DOM.tag;
+  var $ = Cactus.Web.DOM.select;
+  var ClassNames = Cactus.Web.DOM.ClassNames;
 
   var selectTC = new TestCase("DOM.select");
   selectTC.setup = function () {

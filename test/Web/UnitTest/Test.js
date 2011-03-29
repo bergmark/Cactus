@@ -28,8 +28,8 @@
 
 Cactus.Dev.UnitTest.Test = (function () {
   var Assertion = Cactus.Dev.UnitTest.Assertion;
-  var EventSubscription = CactusJuice.Util.EventSubscription;
-  var JSON = CactusJuice.Util.JSON;
+  var EventSubscription = Cactus.Util.EventSubscription;
+  var JSON = Cactus.Util.JSON;
 
   /*
    * Fetches the name of a function by using toString. Ugly but necessary

@@ -1,5 +1,5 @@
 module.exports = (function () {
-  var Assertion = CactusJuice.Dev.Assertion;
+  var Assertion = Cactus.Dev.Assertion;
   return {
     // assertException, passing an Error constructor as the argument.
     "assertException constructor" : function () {

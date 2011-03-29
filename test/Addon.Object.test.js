@@ -1,6 +1,6 @@
 module.exports = (function () {
-  var object = CactusJuice.Addon.Object;
-  var collection = CactusJuice.Data.Collection;
+  var object = Cactus.Addon.Object;
+  var collection = Cactus.Data.Collection;
   return {
     isEmpty : function () {
       assert.ok(object.isEmpty({}));

@@ -1,8 +1,8 @@
 Cactus.UnitTest.DOM.Events = function () {
   var UT = Cactus.Dev.UnitTest;
   var Test = UT.Test;
-  var Events = CactusJuice.Web.DOM.Events;
-  var tag = CactusJuice.Web.DOM.tag;
+  var Events = Cactus.Web.DOM.Events;
+  var tag = Cactus.Web.DOM.tag;
 
   var tc = new UT.TestCase("DOM.Events");
   tc.setup = function () {

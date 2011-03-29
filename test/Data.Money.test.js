@@ -1,8 +1,8 @@
 module.exports = (function () {
-  var Money = CactusJuice.Data.Money;
-  var stringify = CactusJuice.Util.JSON.stringify;
-  var assertException = CactusJuice.Dev.Assertion.exception;
-  var Collection = CactusJuice.Data.Collection;
+  var Money = Cactus.Data.Money;
+  var stringify = Cactus.Util.JSON.stringify;
+  var assertException = Cactus.Dev.Assertion.exception;
+  var Collection = Cactus.Data.Collection;
 
   return {
     "test everything" : function () {

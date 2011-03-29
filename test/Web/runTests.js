@@ -3,7 +3,7 @@
   var TestCase = UT.TestCase;
   var TestSuite = UT.TestSuite;
   var UnitTestController = UT.UnitTestController;
-  var Events = CactusJuice.Web.DOM.Events;
+  var Events = Cactus.Web.DOM.Events;
 
   var tests = [
     "DOM/Events",

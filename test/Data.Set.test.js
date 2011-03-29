@@ -1,6 +1,6 @@
 module.exports = (function () {
-  var Set = CactusJuice.Data.Set;
-  var CMath = CactusJuice.Addon.Math;
+  var Set = Cactus.Data.Set;
+  var CMath = Cactus.Addon.Math;
   return {
     "add/remove" : function () {
       var set = new Set();

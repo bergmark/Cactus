@@ -1,10 +1,10 @@
 Cactus.UnitTest.DOM.EventManager = function () {
   var TestCase = Cactus.Dev.UnitTest.TestCase;
   var Test = Cactus.Dev.UnitTest.Test;
-  var EventManager = CactusJuice.Web.DOM.EventManager;
-  var Events = CactusJuice.Web.DOM.Events;
-  var tag = CactusJuice.Web.DOM.tag;
-  var EventSubscription = CactusJuice.Util.EventSubscription;
+  var EventManager = Cactus.Web.DOM.EventManager;
+  var Events = Cactus.Web.DOM.Events;
+  var tag = Cactus.Web.DOM.tag;
+  var EventSubscription = Cactus.Util.EventSubscription;
 
   var tc = new TestCase("DOM.EventManager");
 

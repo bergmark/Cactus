@@ -1,5 +1,5 @@
 module.exports = (function () {
-  var Range = CactusJuice.Data.Range;
+  var Range = Cactus.Data.Range;
   return {
     "main" : function () {
       var start = 3;

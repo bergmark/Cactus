@@ -1,5 +1,5 @@
 module.exports = (function () {
-  var math = CactusJuice.Addon.Math;
+  var math = Cactus.Addon.Math;
   return {
     "rand" : function () {
       var a = [0, 0, 0, 0, 0];

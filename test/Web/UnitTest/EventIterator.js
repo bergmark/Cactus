@@ -39,7 +39,7 @@ require('Task/Joose/NodeJS');
  * the current item sends out its "finished" event.
  */
 Cactus.Util.EventIterator = (function () {
-  var EventSubscription = CactusJuice.Util.EventSubscription;
+  var EventSubscription = Cactus.Util.EventSubscription;
 
   /**
    * @param Array[Object] array

@@ -7,7 +7,7 @@
 Cactus.Dev.UnitTest.TestSuite = (function () {
   var TestCase = Cactus.Dev.UnitTest.TestCase;
   var EventIterator = Cactus.Util.EventIterator;
-  var EventSubscription  = CactusJuice.Util.EventSubscription;
+  var EventSubscription  = Cactus.Util.EventSubscription;
 
   function TestSuite() {
   } TestSuite.prototype = {

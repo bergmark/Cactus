@@ -1,6 +1,6 @@
 module.exports = (function () {
-  var KVC = CactusJuice.Data.KeyValueCoding;
-  var assertException = CactusJuice.Dev.Assertion.exception;
+  var KVC = Cactus.Data.KeyValueCoding;
+  var assertException = Cactus.Dev.Assertion.exception;
   return {
     // Test setting and getting values for simple key paths. Reading
     // values right of the properties and using accessor methods.

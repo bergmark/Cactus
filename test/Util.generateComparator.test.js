@@ -1,7 +1,7 @@
 module.exports = (function () {
-  var generateComparator = CactusJuice.Util.generateComparator;
+  var generateComparator = Cactus.Util.generateComparator;
   var gen = generateComparator;
-  var KVC = CactusJuice.Data.KeyValueCoding;
+  var KVC = Cactus.Data.KeyValueCoding;
 
   var Book = Joose.Class("Book", {
     does : KVC,

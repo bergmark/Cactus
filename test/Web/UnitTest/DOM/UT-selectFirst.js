@@ -1,8 +1,8 @@
 Cactus.UnitTest.DOM.selectFirst = function () {
   var TestCase = Cactus.Dev.UnitTest.TestCase;
   var Test = Cactus.Dev.UnitTest.Test;
-  var $f = CactusJuice.Web.DOM.selectFirst;
-  var tag = CactusJuice.Web.DOM.tag;
+  var $f = Cactus.Web.DOM.selectFirst;
+  var tag = Cactus.Web.DOM.tag;
 
   var tc = new TestCase("DOM.selectFirst");
 

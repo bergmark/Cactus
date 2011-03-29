@@ -1,6 +1,6 @@
 module.exports = (function () {
-  var AC = CactusJuice.Data.ArrayController;
-  var ACD = CactusJuice.Data.ArrayControllerDecorator;
+  var AC = Cactus.Data.ArrayController;
+  var ACD = Cactus.Data.ArrayControllerDecorator;
 
   function objs(ac) {
     return ac.getRange().join(",");
