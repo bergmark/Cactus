@@ -2,16 +2,11 @@
 <html>
   <head>
     <script src="/jsan/Task/Joose/Core.js"></script>
+    <script src="webRequire.js"></script>
     <script>
-      require = function (path) {
-        if (!/^\.\//.test(path)) {
-          return;
-        }
-        path = path.replace(/^\.\//, "").replace(/$/, ".js");
-        document.write("<script src=\"" + path + "\"></script\>");
-      };
+      createRequire("");
     </script>
-    <script src="CactusJuice.js"></script>
-    <script src="CactusJuiceWeb.js"></script>
+    <script src="Cactus.js"></script>
+    <script src="CactusWeb.js"></script>
   </head>
 </html>
