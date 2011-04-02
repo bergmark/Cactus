@@ -16,6 +16,6 @@
     "test": "expresso"
   },
   "engines": {
-    "node": "0.4.2"
+    "node": ">=0.4.2"
   }
 }
