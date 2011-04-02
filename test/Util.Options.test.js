@@ -314,6 +314,39 @@ module.exports = (function () {
       o.parse("");
       o.parse({});
       o.parse([]);
+    },
+    "simple interface" : function () {
+      var o = Options.simple("number");
+      o.parse(1);
+      o = Options.simple(["number"]);
+      o.parse([1]);
+
+      o = Options.simple({
+        a : "number",
+        b : "boolean"
+      });
+      o.parse({
+        a : 1,
+        b : true
+      });
+
+      o = Options.simple({
+        a : ["number"]
+      });
+      o.parse({
+        a : [1]
+      });
+
+      o = Options.simple({
+        a : {
+          b : "boolean"
+        }
+      });
+      o.parse({
+        a : {
+          b : true
+        }
+      });
     }
   };
 })();
