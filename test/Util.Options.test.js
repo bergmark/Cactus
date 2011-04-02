@@ -347,6 +347,17 @@ module.exports = (function () {
           b : true
         }
       });
+
+      // Classes.
+      Class("X");
+      o = Options.simple({ _type : X });
+      o.parse(new X());
+      o = Options.simple({
+        a : { _type : X }
+      });
+      o.parse({
+        a : new X()
+      });
     }
   };
 })();
