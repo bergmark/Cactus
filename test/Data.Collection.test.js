@@ -250,6 +250,14 @@ module.exports = (function () {
       assert.ok(count[0] > 900, count[0]);
       assert.ok(count[1] > 900, count[1]);
       assert.ok(count[2] > 900, count[2]);
+    },
+
+    difference : function () {
+      var a = [1, 2, 3];
+      var b = [1, 3];
+      assert.eql([], Coll.difference([], [1]));
+      assert.eql([2], Coll.difference([1, 2, 3], [1, 3]));
     }
+
   };
 })();
