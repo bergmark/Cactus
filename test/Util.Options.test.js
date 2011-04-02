@@ -20,8 +20,7 @@ module.exports = (function () {
             required : false,
             validator : function (v) {
               if (typeof v === "string") {
-                return collection.hasValue(["string", "number", "object", "function", "boolean"],
-                                           v);
+                return collection.hasValue(["string", "number", "object", "function", "boolean", "mixed"], v);
               } else if (v instanceof Array) {
                 return v.length === 1;
               }
@@ -69,6 +68,14 @@ module.exports = (function () {
       o.parse({
         defaultValue : true,
         type : "boolean"
+      });
+      o.parse({
+        defaultValue : 4,
+        type : "mixed"
+      });
+      o.parse({
+        defaultValue : {},
+        type : "mixed"
       });
       o.parse({
         type : [{ type : "string" }]
@@ -297,6 +304,16 @@ module.exports = (function () {
       o.parse(1);
       exception(/^Options: Error: Validation failed, got 0. Expected positive number.$/,
                 o.parse.bind(o, 0));
+    },
+    "mixed values" : function () {
+      var o = new Options({
+        type : "mixed"
+      });
+      o.parse(true);
+      o.parse(null);
+      o.parse("");
+      o.parse({});
+      o.parse([]);
     }
   };
 })();
