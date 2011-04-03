@@ -18,5 +18,11 @@ module.exports = {
     assert.strictEqual(1, c.xCount());
     c.removeX(1);
     assert.ok(!c.hasX(1));
+
+    assert.ok("getX" in c);
+    c.addX(1);
+    c.addX(2);
+    assert.ok(c.getX() instanceof Array);
+    assert.ok(c.x !== c.getX());
   }
 };
