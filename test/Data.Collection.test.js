@@ -9,6 +9,9 @@ module.exports = (function () {
 
       assert.ok(b instanceof Array);
       assert.eql("1,2,3", b.join(","));
+
+      assert.throws(Coll.toArray.bind(Coll, null),
+                   /toArray:.+must be a collection./);
     },
 
     "intersects" : function () {
@@ -63,7 +66,7 @@ module.exports = (function () {
       assert.throws(function () { Coll.last([]); });
     },
 
-    "isColl" : function () {
+    "isCollection" : function () {
       var glob = null;
       glob = typeof window !== "undefined" ? window : null;
       glob = typeof global !== "undefined" ? global : null;
