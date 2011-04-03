@@ -46,5 +46,30 @@ module.exports = {
     c.addY(2);
     assert.ok(c.getYs() instanceof Set);
     assert.ok(c.y !== c.getYs());
+  },
+  accessModifiers : function () {
+    Class("C4", {});
+    CollectionAggregate.array(C4, "z", {
+      privateMethods : ["add", "remove", "has", "count", "get"]
+    });
+    var c = new C4();
+    assert.ok(!("addZ" in c));
+    assert.ok(!("removeZ" in c));
+    assert.ok(!("hasZ" in c));
+    assert.ok(!("zCount" in c));
+    assert.ok(!("getZs" in c));
+
+    assert.ok("_addZ" in c);
+    assert.ok("_removeZ" in c);
+    assert.ok("_hasZ" in c);
+    assert.ok("_zCount" in c);
+    assert.ok("_getZs" in c);
+  },
+  optionsDefinition : function () {
+    CollectionAggregate.set(Class("C5"), "x");
+    CollectionAggregate.set(Class("C6"), "x", {});
+    CollectionAggregate.set(Class("C7"), "x", { privateMethods : [] });
+    assert.throws(CollectionAggregate.set.bind(CollectionAggregate, Class("C8"), "x", { privateMethods : ["x"] }),
+                  /expected a value in/i);
   }
 };
