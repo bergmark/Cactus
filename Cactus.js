@@ -31,3 +31,4 @@ require('./lib/Data/ArrayControllerDecorator');
 
 require('./lib/Data/Money');
 require('./lib/Util/IdentityMap');
+require('./lib/Util/CollectionAggregate');
