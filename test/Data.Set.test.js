@@ -13,7 +13,7 @@ module.exports = (function () {
       assert.eql(2, set.size());
 
       // Add an element already in the set, the length should not change.
-      set.add("b");
+      assert.throws(set.add.bind(set, "b"), /element already in set/i);
       assert.eql(2, set.size());
 
       assert.eql("a", set.get(0));
@@ -37,8 +37,8 @@ module.exports = (function () {
       set.add({ a : 1 });
       set.add({ a : 2 });
       assert.eql(2, set.size());
-      set.add({ a : 1 });
-      assert.eql(2, set.size());
+      assert.throws(set.add.bind(set, { a : 1 }),
+                    /already in set/i);
     },
 
     // Getting an element by a non existant index should throw an error.
