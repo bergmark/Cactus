@@ -2,10 +2,10 @@ require("../Cactus");
 var assert = require("assert");
 var CollectionAggregate = Cactus.Util.CollectionAggregate;
 module.exports = {
-  a : function () {
+  array : function () {
     Class("C2", {
     });
-    CollectionAggregate.add(C2, "x");
+    CollectionAggregate.array(C2, "x");
     var c = new C2();
     assert.ok("addX" in c);
     assert.ok("removeX" in c);
