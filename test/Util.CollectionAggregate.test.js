@@ -19,11 +19,11 @@ module.exports = {
     c.removeX(1);
     assert.ok(!c.hasX(1));
 
-    assert.ok("getX" in c);
+    assert.ok("getXs" in c);
     c.addX(1);
     c.addX(2);
-    assert.ok(c.getX() instanceof Array);
-    assert.ok(c.x !== c.getX());
+    assert.ok(c.getXs() instanceof Array);
+    assert.ok(c.x !== c.getXs());
   },
   set : function () {
     Class("C3", {});
@@ -41,10 +41,10 @@ module.exports = {
     c.removeY(1);
     assert.ok(!c.hasY(1));
 
-    assert.ok("getY" in c);
+    assert.ok("getYs" in c);
     c.addY(1);
     c.addY(2);
-    assert.ok(c.getY() instanceof Set);
-    assert.ok(c.y !== c.getY());
+    assert.ok(c.getYs() instanceof Set);
+    assert.ok(c.y !== c.getYs());
   }
 };
