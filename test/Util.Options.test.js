@@ -33,11 +33,11 @@ module.exports = (function () {
           },
           defaultValue : {
             required : false,
-            // Hack to allow any value until mixed values are implemented.
-            // Will then be `type : "mixed"` instead.
-            validator : function (v) {
-              return true;
-            }
+            type : "mixed"
+          },
+          defaultValueFunc : {
+            required : false,
+            type : Function
           },
           validator : {
             required : false,
@@ -76,6 +76,10 @@ module.exports = (function () {
       o.parse({
         defaultValue : {},
         type : "mixed"
+      });
+      o.parse({
+        defaultValueFunc : function () { return 1; },
+        type : "number"
       });
       o.parse({
         type : [{ type : "string" }]
@@ -358,6 +362,35 @@ module.exports = (function () {
       o.parse({
         a : new X()
       });
+    },
+    defaultValueFunc : function () {
+      var o = new Options({
+        defaultValueFunc : function () { return 1; },
+        type : "number"
+      });
+      assert.strictEqual(1, o.parse(null));
+      o = new Options({
+        type : {
+          a : {
+            defaultValueFunc : function () { return 2; },
+            type : "number"
+          }
+        }
+      });
+      assert.strictEqual(2, o.parse({ a : null }).a);
+      assert.strictEqual(2, o.parse({}).a);
+
+      // defaultValueFunc return value must match type.
+      assert.throws(function () {
+        new Options({
+          type : {
+            a : {
+              defaultValueFunc : function () { return 1; },
+              type : "boolean"
+            }
+          }
+        }).parse({});
+      }, /expected "boolean", but got "number"/i);
     }
   };
 })();
