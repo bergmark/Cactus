@@ -64,6 +64,7 @@ module.exports = (function () {
       om.set("a", 1);
       om.set("b", 2);
       assert.eql(["a", "b"], om.getKeys().sort());
+      assert.ok(om.getKeys() !== om.keys);
     }
   };
 })();
