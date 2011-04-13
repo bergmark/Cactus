@@ -36,6 +36,18 @@ module.exports = (function () {
       var h = cm.toHash();
       assert.eql(h.a, 1);
       assert.eql(h.b, 2);
+    },
+    incDecBy : function () {
+      var cm = new CountMap();
+      Assertion.exception(assert, /:decBy:.+undefined key/i, object.bound(cm, "decBy", "a", 10));
+      cm.incBy("a", 10);
+      assert.strictEqual(10, cm.get("a"));
+      cm.decBy("a", 10);
+      assert.strictEqual(0, cm.get("a"));
+      Assertion.exception(assert, /:decBy:.+can not decBy to below 0/i, object.bound(cm, "decBy", "a", 1));
+      cm.incBy("a", 3);
+      Assertion.exception(assert, /:decBy:.+can not decBy to below 0/i, object.bound(cm, "decBy", "a", 4));
+      Assertion.exception(assert, /:decBy:.+can not decBy to below 0/i, object.bound(cm, "decBy", "a", 5));
     }
   };
 })();
