@@ -57,6 +57,13 @@ module.exports = (function () {
       h = om.toHash();
       assert.eql(1, h[0][0]);
       assert.eql(2, h[0][1]);
+    },
+    keys : function () {
+      var om = new ObjectMap();
+      assert.eql([], om.getKeys());
+      om.set("a", 1);
+      om.set("b", 2);
+      assert.eql(["a", "b"], om.getKeys().sort());
     }
   };
 })();
