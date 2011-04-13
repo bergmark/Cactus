@@ -260,6 +260,12 @@ module.exports = (function () {
       var b = [1, 3];
       assert.eql([], Coll.difference([], [1]));
       assert.eql([2], Coll.difference([1, 2, 3], [1, 3]));
+    },
+
+    concatMap : function () {
+      assert.eql([1,2,2,3,3,4], Coll.concatMap([1,2,3], function (v) {
+        return [v, v+1];
+      }));
     }
 
   };
