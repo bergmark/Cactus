@@ -2,6 +2,7 @@ module.exports = (function () {
   var Coll = Cactus.Data.Collection;
   var Range = Cactus.Data.Range;
   var assertException = Cactus.Dev.Assertion.exception;
+  var math = Cactus.Addon.Math;
   return {
     toArray : function () {
       var a = [1,2,3];
@@ -266,7 +267,12 @@ module.exports = (function () {
       assert.eql([1,2,2,3,3,4], Coll.concatMap([1,2,3], function (v) {
         return [v, v+1];
       }));
-    }
+    },
 
+    partition : function () {
+      var p = Coll.partition(new Range(0, 9).toArray(), math.even);
+      assert.eql([0,2,4,6,8], p.getFirst());
+      assert.eql([1,3,5,7,9], p.getSecond());
+    }
   };
 })();
