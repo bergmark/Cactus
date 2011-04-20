@@ -22,6 +22,11 @@ module.exports = (function () {
       assert.ok(r.includes(0));
       assert.ok(r.includes(3));
       assert.ok(!r.includes(5));
+    },
+    toArray : function () {
+      assert.eql([0], new Range(0, 0).toArray());
+      assert.eql([0, 1], new Range(0, 1).toArray());
+      assert.eql([0, 1, 2], new Range(0, 2).toArray());
     }
   };
 })();
