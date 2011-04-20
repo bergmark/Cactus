@@ -78,6 +78,12 @@ module.exports = (function () {
       assert.strictEqual(0, math.div(0, 2));
 
       assert.ok(!isFinite(math.div(1, 0)));
+    },
+
+    // Methods shall not have to be bound by client.
+    bound : function () {
+      var odd = math.odd;
+      assert.ok(odd(1));
     }
   };
 })();
