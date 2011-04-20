@@ -280,6 +280,13 @@ module.exports = (function () {
       assert.eql([1,2,3,4], Coll.flatten([[1,2],[3,4]]));
       assert.eql([1,2,3], Coll.flatten([[1],[2],[3]]));
       assert.eql([[1], [2]], Coll.flatten([[[1],[2]]]));
+    },
+
+    // Methods shall not have to be bound by client.
+    bound : function () {
+      var odd = math.odd;
+      var toArray = Coll.toArray;
+      assert.ok(toArray([]) instanceof Array);
     }
   };
 })();
