@@ -273,6 +273,13 @@ module.exports = (function () {
       var p = Coll.partition(new Range(0, 9).toArray(), math.even);
       assert.eql([0,2,4,6,8], p.getFirst());
       assert.eql([1,3,5,7,9], p.getSecond());
+    },
+
+    flatten : function () {
+      assert.eql([1,2], Coll.flatten([[1],[2]]));
+      assert.eql([1,2,3,4], Coll.flatten([[1,2],[3,4]]));
+      assert.eql([1,2,3], Coll.flatten([[1],[2],[3]]));
+      assert.eql([[1], [2]], Coll.flatten([[[1],[2]]]));
     }
   };
 })();
