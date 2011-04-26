@@ -8,7 +8,7 @@ module.exports = (function () {
   var collection = Cactus.Data.Collection;
 
   var jsoneq = function (assert, a, b) {
-    return assert.eql(JSON.stringify(a), JSON.stringify(b));
+    return assert.strictEqual(JSON.stringify(a), JSON.stringify(b));
   };
 
   return {
@@ -117,7 +117,8 @@ module.exports = (function () {
       jsoneq(assert, [1, 2], o.parse([1, 2]));
       jsoneq(assert, [], o.parse([]));
       exception(/^Options: Error: Expected \[\{"type":"number"\}\], but got "string"$/i, o.parse.bind(o, "a"));
-      exception(/error in property "0": expected "number", but got "string"/i, o.parse.bind(o, ["a"]));
+      assert.throws(o.parse.bind(o, ["a"]),
+                    /error in property "0": expected "number", but got "string"/i);
       exception(/error in property "1": expected "number", but got "boolean"/i, o.parse.bind(o, [1, true]));
       exception(/error in property "0": expected "number", but got "string"[\s\S]+error in property "1": expected "number", but got "boolean"/i, o.parse.bind(o, ["a", true]));
 
@@ -391,6 +392,25 @@ module.exports = (function () {
           }
         }).parse({});
       }, /expected "boolean", but got "number"/i);
+    },
+    errorHash : function () {
+      var o = Options.simple("string");
+      o.parse(1, false);
+      var errors = o.getErrors();
+      jsoneq(assert, { "" : "Expected \"string\", but got \"number\"" }, o.getErrors());
+
+      o = Options.simple({
+        a : "number",
+        b : "number"
+      });
+      o.parse({
+        a : "x",
+        b : true
+      }, false);
+      jsoneq(assert, {
+        a : "Expected \"number\", but got \"string\"",
+        b : "Expected \"number\", but got \"boolean\""
+      }, o.getErrors());
     }
   };
 })();
