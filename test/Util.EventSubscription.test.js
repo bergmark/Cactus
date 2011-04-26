@@ -2,7 +2,7 @@ module.exports = (function () {
   var EventSubscription = Cactus.Util.EventSubscription;
   var Assertion = Cactus.Dev.Assertion;
 
-  Joose.Class("C", {
+  Class("C", {
     does : EventSubscription,
     methods : {
       onFoo : Function.empty,
