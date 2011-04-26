@@ -18,14 +18,16 @@ module.exports = (function () {
         type : {
           type : {
             required : false,
-            validator : function (v) {
-              if (typeof v === "string") {
-                return collection.hasValue(["string", "number", "object", "function", "boolean", "mixed"], v);
-              } else if (v instanceof Array) {
-                return v.length === 1;
+            validators : [{
+              func : function (v) {
+                if (typeof v === "string") {
+                  return collection.hasValue(["string", "number", "object", "function", "boolean", "mixed"], v);
+                } else if (v instanceof Array) {
+                  return v.length === 1;
+                }
+                return false;
               }
-              return false;
-            }
+            }]
           },
           required : {
             required : false,
@@ -39,15 +41,22 @@ module.exports = (function () {
             required : false,
             type : Function
           },
-          validator : {
-            required : false,
-            type : Function
+          validators : {
+            type : [{
+              type : {
+                func : { type : Function },
+                message : { type : "string" }
+              }
+            }],
+            defaultValue : []
           },
           enumerable : {
             required : false,
-            validator : function (v) {
-              return v instanceof Array;
-            }
+            validators : [{
+              func : function (v) {
+                return v instanceof Array;
+              }
+            }]
           }
         }
       });
@@ -85,7 +94,10 @@ module.exports = (function () {
         type : [{ type : "string" }]
       });
       o.parse({
-        validator : Function.empty
+        validators : [{
+          func : Function.empty,
+          message : "msg"
+        }]
       });
       o.parse({
         enumerable : [1,2,3]
@@ -133,6 +145,23 @@ module.exports = (function () {
                 o.parse.bind(o, [[1], [2, true]]));
       jsoneq([[]], o.parse([[]]));
       jsoneq([], o.parse([]));
+
+      // Optional arrays.
+      new Options([{
+        defaultValue : []
+      }]).parse(null);
+
+      // Optional array in hash.
+      o = new Options({
+        type : {
+          a : {
+            type : [{
+              type : "number"
+            }],
+            defaultValue : []
+          }
+        }
+      }).parse({});
 
       // Hashes.
       o = new Options({
@@ -291,9 +320,11 @@ module.exports = (function () {
     "validators" : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
-        validator : function (v) {
-          return v > 0;
-        }
+        validators : [{
+          func : function (v) {
+            return v > 0;
+          }
+        }]
       });
       o.parse(1);
       exception(/^Options: Error: Validation failed, got 0. $/,
@@ -301,14 +332,52 @@ module.exports = (function () {
 
       // Validation error message.
       o = new Options({
-        validator : function (v) {
-          return v > 0;
-        },
-        validationMessage : "Expected positive number."
+        validators : [{
+          func : function (v) {
+            return v > 0;
+          },
+          message : "Expected positive number."
+        }]
       });
       o.parse(1);
       exception(/^Options: Error: Validation failed, got 0. Expected positive number.$/,
                 o.parse.bind(o, 0));
+
+      // Multiple ordered validators.
+      o = new Options({
+        validators : [{
+          func : function (v) {
+            return v > -1;
+          },
+          message : "Expected number bigger than -1."
+        }, {
+          func : function (v) {
+            return v < 1;
+          },
+          message : "Expected number smaller than 1."
+        }]
+      });
+      o.parse(0);
+
+      assert.throws(o.parse.bind(o, -1), /got -1\. Expected number bigger than -1/i);
+      assert.throws(o.parse.bind(o, 1), /got 1\. Expected number smaller than 1/i);
+
+      o = new Options({
+        validators : [{
+          func : function (v) {
+            return v > 0;
+          },
+          message : "Expected number bigger than 0."
+        }, {
+          func : function (v) {
+            return v > 1;
+          },
+          message : "Expected number bigger than 1."
+        }]
+      });
+      o.parse(2);
+      assert.throws(o.parse.bind(o, 0), /got 0.+ bigger than 0.+ bigger than 1./i);
+
     },
     "mixed values" : function () {
       var o = new Options({
