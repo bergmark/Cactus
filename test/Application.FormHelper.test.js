@@ -56,6 +56,34 @@ module.exports = {
     renderer.field("name");
     assert.throws(renderer.field.bind(renderer, "name"),
                   /field: Trying to render undefined or already rendered field "name"/i);
+  },
+  populate : function () {
+    var fh = new FormHelper({
+      action : "/new",
+      fields : {
+        name : { required : true },
+        email : { required : true },
+        password : { type : "string", required : true },
+        passwordConfirmation : { confirms : "password", required : false }
+      }
+    });
+    var data = fh.newData();
+    data.populate({
+      name : "test",
+      email : "test@example.com",
+      password : "pass",
+      passwordConfirmation : "pass"
+    });
+    assert.eql({
+      name : "test",
+      email : "test@example.com",
+      password : "pass",
+      passwordConfirmation : "pass"
+    }, data.get());
 
+    // Can't get if required values are missing.
+    data = fh.newData();
+    data.populate({});
+    assert.throws(data.get.bind(data), /get: Was not populated with required fields: email,name,password/);
   }
 };
