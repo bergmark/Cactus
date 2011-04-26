@@ -7,7 +7,7 @@ module.exports = (function () {
   var object = Cactus.Addon.Object;
   var collection = Cactus.Data.Collection;
 
-  var jsoneq = function (assert, a, b) {
+  var jsoneq = function (a, b) {
     return assert.strictEqual(JSON.stringify(a), JSON.stringify(b));
   };
 
@@ -114,8 +114,8 @@ module.exports = (function () {
       o = new Options({
         type : [{ type : "number"}]
       });
-      jsoneq(assert, [1, 2], o.parse([1, 2]));
-      jsoneq(assert, [], o.parse([]));
+      jsoneq([1, 2], o.parse([1, 2]));
+      jsoneq([], o.parse([]));
       exception(/^Options: Error: Expected \[\{"type":"number"\}\], but got "string"$/i, o.parse.bind(o, "a"));
       assert.throws(o.parse.bind(o, ["a"]),
                     /error in property "0": expected "number", but got "string"/i);
@@ -126,13 +126,13 @@ module.exports = (function () {
       o = new Options({
         type : [{ type : [{ type : "number" }] }]
       });
-      jsoneq(assert, [[1, 2]], o.parse([[1, 2]]));
+      jsoneq([[1, 2]], o.parse([[1, 2]]));
       exception(/^Options: Error in property "0": expected \[\{"type":"number"\}\], but got "number"$/i,
                 o.parse.bind(o, [1, [2, 3]]));
       exception(/^Options: Error in property "1.1": expected "number", but got "boolean"$/i,
                 o.parse.bind(o, [[1], [2, true]]));
-      jsoneq(assert, [[]], o.parse([[]]));
-      jsoneq(assert, [], o.parse([]));
+      jsoneq([[]], o.parse([[]]));
+      jsoneq([], o.parse([]));
 
       // Hashes.
       o = new Options({
@@ -141,7 +141,7 @@ module.exports = (function () {
           b : { type : "boolean" }
         }
       });
-      jsoneq(assert, { a : 1, b : true }, o.parse({ a : 1, b : true }));
+      jsoneq({ a : 1, b : true }, o.parse({ a : 1, b : true }));
       exception(/^Options: Error: Expected \{"a":\{"type":"number"\},"b":\{"type":"boolean"\}\}, but got "number"/i,
                 o.parse.bind(o, 1));
       exception(/^Options: Error in property "a": expected "number", but got "string"$/i,
@@ -159,7 +159,7 @@ module.exports = (function () {
         map : true,
         type : "number"
       });
-      jsoneq(assert, { a : 1, b : 1 }, o.parse({ a : 1, b : 1}));
+      jsoneq({ a : 1, b : 1 }, o.parse({ a : 1, b : 1}));
       exception(/^Options: Error in property "b": Expected "number", but got "boolean"$/,
                 o.parse.bind(o, { a : 1, b : false }));
     },
@@ -245,7 +245,7 @@ module.exports = (function () {
           b : { type : "boolean", required : false }
         }
       });
-      jsoneq(assert, { a : 1, b : false },
+      jsoneq({ a : 1, b : false },
              o.parse({ a : 1, b : false }));
       var h = o.parse({ a : 1, b : undefined });
       assert.ok(!("b" in h));
@@ -397,7 +397,7 @@ module.exports = (function () {
       var o = Options.simple("string");
       o.parse(1, false);
       var errors = o.getErrors();
-      jsoneq(assert, { "" : "Expected \"string\", but got \"number\"" }, o.getErrors());
+      jsoneq({ "" : "Expected \"string\", but got \"number\"" }, o.getErrors());
 
       o = Options.simple({
         a : "number",
@@ -407,7 +407,7 @@ module.exports = (function () {
         a : "x",
         b : true
       }, false);
-      jsoneq(assert, {
+      jsoneq({
         a : "Expected \"number\", but got \"string\"",
         b : "Expected \"number\", but got \"boolean\""
       }, o.getErrors());
