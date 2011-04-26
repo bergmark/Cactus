@@ -171,9 +171,7 @@ module.exports = {
     // Not specifying defaults.
     data = fh.newData();
     assert.strictEqual("y", data.getWithDefault("name", "y"));
-
     // Throw error on missing default.
-    data = fh.newData();
     assert.throws(data.getWithDefault.bind(data, "name"), /No default defined for field "name"/);
   }
 };
