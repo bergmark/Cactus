@@ -73,13 +73,13 @@ module.exports = {
         passwordConfirmation : { type : "string", required : false }
       }
     });
-     var data = fh.newData();
-     data.populate({
-       name : "test",
-       email : "test@example.com",
-       password : "pass",
-       passwordConfirmation : "pass"
-     });
+    var data = fh.newData();
+    data.populate({
+      name : "test",
+      email : "test@example.com",
+      password : "pass",
+      passwordConfirmation : "pass"
+    });
     jsoneq({
       name : "test",
       email : "test@example.com",
@@ -98,5 +98,16 @@ module.exports = {
       assert.ok(!/"passwordConfirmation"/.test(e.message));
       return true;
     });
+
+    // Getting values on validation errors (for view).
+    data = fh.newData();
+    data.populate({
+      name : "test",
+      passwordConfirmation : "pass"
+    });
+    var gwd = data.getWithDefault.bind(data);
+    assert.strictEqual("test", gwd("name", "foo"));
+    assert.strictEqual("pass", gwd("passwordConfirmation", "bar"));
+    assert.strictEqual("baz", gwd("password", "baz"));
   }
 };
