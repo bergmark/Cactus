@@ -173,5 +173,21 @@ module.exports = {
     assert.strictEqual("y", data.getWithDefault("name", "y"));
     // Throw error on missing default.
     assert.throws(data.getWithDefault.bind(data, "name"), /No default defined for field "name"/);
+  },
+  "validation errors" : function () {
+    var data = userfh.newData();
+    assert.ok(!data.isValid());
+    data.populate({
+      name : "",
+      email : "",
+      password : ""
+    });
+    assert.ok(data.isValid());
+    data = userfh.newData();
+    jsoneq({
+      name : "Missing property",
+      email : "Missing property",
+      password : "Missing property"
+    }, data.getErrors());
   }
 };
