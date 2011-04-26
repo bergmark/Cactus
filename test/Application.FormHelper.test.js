@@ -9,17 +9,23 @@ Class("User", {
   }
 });
 
+var jsoneq = function (a, b) {
+  return assert.strictEqual(JSON.stringify(a), JSON.stringify(b));
+};
+
 module.exports = {
   rendering : function () {
     var fh = new FormHelper({
       action : "/new",
       fields : {
-        name : { required : true, format : /[A-Z ]/i },
-        email : { required : true, format : /^[^@]+@[^@]+\.[^@]+/ },
-        password : { type : "string", required : true },
-        passwordConfirmation : { confirms : "password", required : false }
+        name : { type : "string" },
+        email : { type : "string" },
+        password : { type : "string" },
+        passwordConfirmation : { type : "string", required : false }
       }
     });
+    assert.eql(["email", "name", "password", "passwordConfirmation"], fh.getFieldNames());
+
     var renderer = fh.newRenderer();
     renderer.begin();
     renderer.field("name");
@@ -44,7 +50,7 @@ module.exports = {
     renderer = fh.newRenderer();
     renderer.begin();
     assert.throws(renderer.end.bind(renderer),
-                  /end: Missing required fields: email,name,password,passwordConfirmation/i);
+                  /end: Missing required fields: email,name,password/i);
 
     // Can't render undefined or already rendered fields.
     renderer = fh.newRenderer();
@@ -61,20 +67,20 @@ module.exports = {
     var fh = new FormHelper({
       action : "/new",
       fields : {
-        name : { required : true },
-        email : { required : true },
-        password : { type : "string", required : true },
-        passwordConfirmation : { confirms : "password", required : false }
+        name : { type : "string" },
+        email : { type : "string" },
+        password : { type : "string" },
+        passwordConfirmation : { type : "string", required : false }
       }
     });
-    var data = fh.newData();
-    data.populate({
-      name : "test",
-      email : "test@example.com",
-      password : "pass",
-      passwordConfirmation : "pass"
-    });
-    assert.eql({
+     var data = fh.newData();
+     data.populate({
+       name : "test",
+       email : "test@example.com",
+       password : "pass",
+       passwordConfirmation : "pass"
+     });
+    jsoneq({
       name : "test",
       email : "test@example.com",
       password : "pass",
@@ -84,6 +90,13 @@ module.exports = {
     // Can't get if required values are missing.
     data = fh.newData();
     data.populate({});
-    assert.throws(data.get.bind(data), /get: Was not populated with required fields: email,name,password/);
+    assert.throws(data.get.bind(data), function (e) {
+      assert.ok(/"name": Missing property/.test(e.message));
+      assert.ok(/"password": Missing property/.test(e.message));
+      assert.ok(/"email": Missing property/.test(e.message));
+      assert.ok(/"name": Missing property/.test(e.message));
+      assert.ok(!/"passwordConfirmation"/.test(e.message));
+      return true;
+    });
   }
 };
