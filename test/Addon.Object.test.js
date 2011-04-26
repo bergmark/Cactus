@@ -53,6 +53,12 @@ module.exports = (function () {
         }
       };
       assert.eql(3, object.bound(p, "y", 1, 2)());
+    },
+
+    count : function () {
+      assert.strictEqual(0, object.count({}));
+      assert.strictEqual(1, object.count({ a : 1 }));
+      assert.strictEqual(2, object.count({ a : 1, b : 2 }));
     }
   };
 })();
