@@ -167,5 +167,9 @@ module.exports = {
     var gwd = data.getWithDefault.bind(data);
     assert.strictEqual("default name", gwd("name"));
     assert.strictEqual("x", gwd("name", "x"));
+
+    // Not specifying defaults.
+    data = fh.newData();
+    assert.strictEqual("y", data.getWithDefault("name", "y"));
   }
 };
