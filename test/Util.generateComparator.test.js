@@ -3,7 +3,7 @@ module.exports = (function () {
   var gen = generateComparator;
   var KVC = Cactus.Data.KeyValueCoding;
 
-  var Book = Joose.Class("Book", {
+  var Book = Class("Book", {
     does : KVC,
     has : {
       author : null,

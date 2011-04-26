@@ -117,7 +117,7 @@ module.exports = (function () {
     // A root should listen to its aggregates for changes, so that
     // onValueChanged can be triggered for it (along with compounds).
     f : function () {
-      var O = Joose.Class("O", {
+      var O = Class("O", {
         does : KVC,
         has : {
           p : null,
@@ -131,7 +131,7 @@ module.exports = (function () {
         }
       });
 
-      var P = Joose.Class("P", {
+      var P = Class("P", {
         does : KVC,
         has : {
           q : null
@@ -175,7 +175,7 @@ module.exports = (function () {
 
     // Setters should not prevent events from occurring.
     g : function () {
-      Joose.Class("Q", {
+      Class("Q", {
         does : KVC,
         has : {
           y : {
@@ -210,7 +210,7 @@ module.exports = (function () {
     // as an old value.
     h : function () {
 
-      var R = Joose.Class("R", {
+      var R = Class("R", {
         has : {
           x : null
         },
