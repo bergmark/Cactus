@@ -1,5 +1,6 @@
 var FormHelper = Cactus.Application.FormHelper;
 var C = Cactus.Data.Collection;
+var Renderer = Cactus.Application.Renderer;
 
 Class("User", {
   has : {
@@ -13,18 +14,50 @@ var jsoneq = function (a, b) {
   return assert.strictEqual(JSON.stringify(a), JSON.stringify(b));
 };
 
+var userfh = new FormHelper({
+  action : "/new",
+  fields : {
+    name : { type : "string" },
+    email : { type : "string" },
+    password : { type : "string" },
+    passwordConfirmation : { type : "string", required : false }
+  }
+});
+
+Class("HashRenderer", {
+  isa : Renderer,
+  override : {
+    begin : function () {
+      this.SUPER();
+      return {
+        form : {
+          action : this._formHelper.getAction()
+        }
+      };
+    },
+    field : function (fieldName) {
+      this.SUPER(fieldName);
+      return {
+        input : {
+          type : "text"
+        }
+      };
+    },
+    end : function () {
+      this.SUPER();
+      return {};
+    }
+  }
+});
+
+
 module.exports = {
-  rendering : function () {
-    var fh = new FormHelper({
-      action : "/new",
-      fields : {
-        name : { type : "string" },
-        email : { type : "string" },
-        password : { type : "string" },
-        passwordConfirmation : { type : "string", required : false }
-      }
-    });
+  formhelper : function () {
+    var fh = userfh;
     assert.eql(["email", "name", "password", "passwordConfirmation"], fh.getFieldNames());
+  },
+  rendering : function () {
+    var fh = userfh;
 
     var renderer = fh.newRenderer();
     renderer.begin();
@@ -63,16 +96,28 @@ module.exports = {
     assert.throws(renderer.field.bind(renderer, "name"),
                   /field: Trying to render undefined or already rendered field "name"/i);
   },
-  populate : function () {
-    var fh = new FormHelper({
-      action : "/new",
-      fields : {
-        name : { type : "string" },
-        email : { type : "string" },
-        password : { type : "string" },
-        passwordConfirmation : { type : "string", required : false }
-      }
+  "Renderer subclassing" : function () {
+    var fh = userfh;
+    var data = fh.newData();
+    data.populate({
+      name : "test",
+      email : "test@example.com",
+      password : "pass",
+      passwordConfirmation : "pass"
     });
+    var renderer = fh.newRenderer(HashRenderer);
+    jsoneq({ form : { "action" : "/new"} }, renderer.begin());
+    assert.throws(renderer.begin.bind(renderer), /begin was called twice/i);
+    jsoneq({ input : { type : "text" } }, renderer.field("name"));
+    assert.throws(renderer.end.bind(renderer), /missing required fields/i);
+    renderer.field("email");
+    assert.throws(renderer.field.bind(renderer, "email"), /already rendered field/i);
+    renderer.field("password");
+    renderer.field("passwordConfirmation");
+    jsoneq({}, renderer.end());
+  },
+  populate : function () {
+    var fh = userfh;
     var data = fh.newData();
     data.populate({
       name : "test",
