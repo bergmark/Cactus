@@ -287,6 +287,11 @@ module.exports = (function () {
       var odd = math.odd;
       var toArray = Coll.toArray;
       assert.ok(toArray([]) instanceof Array);
+    },
+
+    isEmpty : function () {
+      assert.ok(Coll.isEmpty([]));
+      assert.ok(!Coll.isEmpty([1]));
     }
   };
 })();
