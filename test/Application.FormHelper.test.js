@@ -156,4 +156,16 @@ module.exports = {
     assert.strictEqual("pass", gwd("passwordConfirmation", "bar"));
     assert.strictEqual("baz", gwd("password", "baz"));
   },
+  "data with defaults" : function () {
+    var fh = userfh;
+    var data = fh.newData({
+      name : "default name",
+      email : "defaultemail@example.com",
+      password : "",
+      passwordConfirmation : ""
+    });
+    var gwd = data.getWithDefault.bind(data);
+    assert.strictEqual("default name", gwd("name"));
+    assert.strictEqual("x", gwd("name", "x"));
+  }
 };
