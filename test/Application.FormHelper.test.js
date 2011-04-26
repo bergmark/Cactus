@@ -39,7 +39,8 @@ Class("HashRenderer", {
       this.SUPER(fieldName);
       return {
         input : {
-          type : "text"
+          type : "text",
+          value : this._getFieldValue(fieldName, "")
         }
       };
     },
@@ -59,7 +60,7 @@ module.exports = {
   rendering : function () {
     var fh = userfh;
 
-    var renderer = fh.newRenderer();
+    var renderer = fh.newRenderer(Renderer);
     renderer.begin();
     renderer.field("name");
     renderer.field("email");
@@ -68,29 +69,29 @@ module.exports = {
     renderer.end();
 
     // Need begin, render, end sequence.
-    renderer = fh.newRenderer();
+    renderer = fh.newRenderer(Renderer);
     assert.throws(renderer.end.bind(renderer), /end: Need to call begin/i);
 
-    renderer = fh.newRenderer();
+    renderer = fh.newRenderer(Renderer);
     renderer.begin();
     assert.throws(renderer.begin.bind(renderer), /begin: begin was called twice/i);
 
-    renderer = fh.newRenderer();
+    renderer = fh.newRenderer(Renderer);
     assert.throws(renderer.field.bind(renderer, "email"), /field: Need to call begin/i);
 
     // Need to render all required fields before end.
     assert.eql(["email", "name", "password", "passwordConfirmation"], fh.getFieldNames());
-    renderer = fh.newRenderer();
+    renderer = fh.newRenderer(Renderer);
     renderer.begin();
     assert.throws(renderer.end.bind(renderer),
                   /end: Missing required fields: email,name,password/i);
 
     // Can't render undefined or already rendered fields.
-    renderer = fh.newRenderer();
+    renderer = fh.newRenderer(Renderer);
     renderer.begin();
     assert.throws(renderer.field.bind(renderer, "foo"),
                   /field: Trying to render undefined or already rendered field "foo"/i);
-    renderer = fh.newRenderer();
+    renderer = fh.newRenderer(Renderer);
     renderer.begin();
     renderer.field("name");
     assert.throws(renderer.field.bind(renderer, "name"),
@@ -105,10 +106,10 @@ module.exports = {
       password : "pass",
       passwordConfirmation : "pass"
     });
-    var renderer = fh.newRenderer(HashRenderer);
+    var renderer = fh.newRenderer(HashRenderer, data);
     jsoneq({ form : { "action" : "/new"} }, renderer.begin());
     assert.throws(renderer.begin.bind(renderer), /begin was called twice/i);
-    jsoneq({ input : { type : "text" } }, renderer.field("name"));
+    jsoneq({ input : { type : "text", value : "test" } }, renderer.field("name"));
     assert.throws(renderer.end.bind(renderer), /missing required fields/i);
     renderer.field("email");
     assert.throws(renderer.field.bind(renderer, "email"), /already rendered field/i);
@@ -154,5 +155,5 @@ module.exports = {
     assert.strictEqual("test", gwd("name", "foo"));
     assert.strictEqual("pass", gwd("passwordConfirmation", "bar"));
     assert.strictEqual("baz", gwd("password", "baz"));
-  }
+  },
 };
