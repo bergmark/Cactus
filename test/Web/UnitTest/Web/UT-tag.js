@@ -86,8 +86,11 @@ Cactus.UnitTest.Web.tag = function () {
     a.checked = true;
     b.checked = true;
 
-    this.assertFalse(a.checked && b.checked,
-                     "Both a and b are checked.");
+    // Don't check if sf, since in sf5 the values will both be checked.
+    if (!Browser.sf) {
+      this.assertFalse(a.checked && b.checked,
+                       "Both a and b are checked.");
+    }
   });
 
   // Make sure the innerHTML of options are set.
