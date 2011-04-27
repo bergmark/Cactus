@@ -217,50 +217,38 @@ module.exports = {
     assert.ok(triggered, "filter(x)(x, y, z) did not trigger");
   },
 
-  // TODO: Refactor to expresso async tests.
-  // Github issue #1.
-  /*
-  // wait.
-  tc.addTest(new Test(function () {
+  wait : function () {
     var t = new Date();
-    this.processResults.bind(this, t).wait(50)();
-  }, function (time) {
-    var t = new Date();
-    // Due to the inexact behavior of setTimeout, the diff may be lower than
-    // the specified time.
-    assert.ok(t - time >= 3,
-              "t(%s) - time(%s) = %s".format(t.getMilliseconds(),
-                                             time.getMilliseconds(),
-                                             t - time));
-  }));
+    (function () {
+      var t2 = new Date();
+      // due to the inexact behavior of setTimeout, the diff may be lower than
+      // the specified time.
+      assert.ok(t2 - t >= 3,
+                "t(%s) - time(%s) = %s".format(t2.getMilliseconds(),
+                                               t.getMilliseconds(),
+                                               t2 - t));
+    }).wait(50)();
+  },
   // The scope of wait's returned function should propagate to the delayed
   // function.
-  tc.addTest(new Test(function () {
-    this.processResults.bind(null).wait(20).call(this);
-  }, function () {
-    assert.ok(true);
-  }));
+  "wait scope" : function () {
+    var o = {};
+    (function () {
+      assert.strictEqual(o, this);
+    }).wait(20).call(o);
+  },
 
   // Arguments should propagate from the function that executes the timeout
   // to the delayed function.
-  (function () {
+  "wait arg propagation" : function () {
     var timeout;
     var arg0 = {};
     var arg1 = {};
-    tc.addTest(new Test(function () {
-      var that = this;
-      timeout = setTimeout(this.processResults.bind(this, "timeout"),
-                           1000);
-      var f = this.processResults.bind(this).wait(0);
-      f(arg0, arg1);
-    }, function (a, b) {
-      clearTimeout(timeout);
-      assert.ok(a !== "timeout", "Test timed out.");
-      assert.eql(arg0, a);
-      assert.eql(arg1, b);
-    }));
-  })();
-  */
+    (function (a, b) {
+      assert.strictEqual(arg0, a);
+      assert.strictEqual(arg1, b);
+    }).wait(0)(arg0, arg1);
+  },
 
   "once" : function () {
     var executions = 0;
