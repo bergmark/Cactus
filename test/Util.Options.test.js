@@ -480,6 +480,32 @@ module.exports = (function () {
         a : "Expected \"number\", but got \"string\"",
         b : "Expected \"number\", but got \"boolean\""
       }, o.getErrors());
+
+      o = new Options({
+        type : "number",
+        validators : [{
+          func : Function.returning(false),
+          message : "false"
+        }]
+      });
+      assert.throws(o.parse.bind(o, null), /got null.+false/);
+
+      // Errors for array validators.
+      o = new Options({
+        type : {
+          name : {
+            type : "string",
+            validators : [{
+              func : Function.returning(false),
+              message : "Error #1."
+            }, {
+              func : Function.returning(false),
+              message : "Error #2."
+            }]
+          }
+        }
+      });
+      assert.throws(o.parse.bind(o, { name : "" }), /Error #1.+Error #2/i);
     }
   };
 })();
