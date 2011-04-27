@@ -292,6 +292,13 @@ module.exports = (function () {
     isEmpty : function () {
       assert.ok(Coll.isEmpty([]));
       assert.ok(!Coll.isEmpty([1]));
+    },
+
+    grep : function () {
+      assert.eql(["a","d"], Coll.grep(["a","b","c","d"], /[ad]/));
+      assert.eql(["b","c"], Coll.grep(["a","b","c","d"], /[bc]/));
+      assert.eql([], Coll.grep([], /nomatch/));
+      assert.eql([], Coll.grep(["a","b","c"], /nomatch/));
     }
   };
 })();
