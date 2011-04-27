@@ -1,12 +1,12 @@
-Cactus.UnitTest.DOM.EventManager = function () {
+Cactus.UnitTest.Web.EventManager = function () {
   var TestCase = Cactus.Dev.UnitTest.TestCase;
   var Test = Cactus.Dev.UnitTest.Test;
-  var EventManager = Cactus.Web.DOM.EventManager;
-  var Events = Cactus.Web.DOM.Events;
-  var tag = Cactus.Web.DOM.tag;
+  var EventManager = Cactus.Web.EventManager;
+  var Events = Cactus.Web.Events;
+  var tag = Cactus.Web.tag;
   var EventSubscription = Cactus.Util.EventSubscription;
 
-  var tc = new TestCase("DOM.EventManager");
+  var tc = new TestCase("Web.EventManager");
 
   tc.add(function () {
     var em = new EventManager();
@@ -50,7 +50,7 @@ Cactus.UnitTest.DOM.EventManager = function () {
     });
 
     this.assertFalse(es.events instanceof Events,
-                     "Instantiated DOM.Events.");
+                     "Instantiated Web.Events.");
 
     es.onFoo();
     this.assert(fooTriggered);

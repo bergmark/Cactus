@@ -1,10 +1,10 @@
-Cactus.UnitTest.DOM.tag = function () {
+Cactus.UnitTest.Web.tag = function () {
   var UT = Cactus.Dev.UnitTest;
   var Test = UT.Test;
-  var tag = Cactus.Web.DOM.tag;
+  var tag = Cactus.Web.tag;
   var Browser = Cactus.Web.Browser;
 
-  var tagTC = new UT.TestCase("DOM.tag");
+  var tagTC = new UT.TestCase("Web.tag");
   tagTC.add(new Test(function () {
     this.processResults();
   }, function () {
@@ -86,8 +86,11 @@ Cactus.UnitTest.DOM.tag = function () {
     a.checked = true;
     b.checked = true;
 
-    this.assertFalse(a.checked && b.checked,
-                     "Both a and b are checked.");
+    // Don't check if sf, since in sf5 the values will both be checked.
+    if (!Browser.sf) {
+      this.assertFalse(a.checked && b.checked,
+                       "Both a and b are checked.");
+    }
   });
 
   // Make sure the innerHTML of options are set.

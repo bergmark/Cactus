@@ -1,10 +1,10 @@
-Cactus.UnitTest.DOM.ClassNames = function () {
+Cactus.UnitTest.Web.ClassNames = function () {
   var UT = Cactus.Dev.UnitTest;
   var Test = UT.Test;
-  var CN = Cactus.DOM.ClassNames;
+  var CN = Cactus.Web.ClassNames;
   var log = Cactus.Dev.log;
 
-  var tc = new UT.TestCase("DOM.ClassNames");
+  var tc = new UT.TestCase("Web.ClassNames");
   // Initial.
   tc.add(function () {
     var o = {};

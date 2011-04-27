@@ -1,10 +1,10 @@
-Cactus.UnitTest.DOM.selectFirst = function () {
+Cactus.UnitTest.Web.selectFirst = function () {
   var TestCase = Cactus.Dev.UnitTest.TestCase;
   var Test = Cactus.Dev.UnitTest.Test;
-  var $f = Cactus.Web.DOM.selectFirst;
-  var tag = Cactus.Web.DOM.tag;
+  var $f = Cactus.Web.selectFirst;
+  var tag = Cactus.Web.tag;
 
-  var tc = new TestCase("DOM.selectFirst");
+  var tc = new TestCase("Web.selectFirst");
 
   tc.add(function () {
     var span = tag("span", { id : "the-span" }, "Foo");

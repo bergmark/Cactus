@@ -3,18 +3,18 @@
   var TestCase = UT.TestCase;
   var TestSuite = UT.TestSuite;
   var UnitTestController = UT.UnitTestController;
-  var Events = Cactus.Web.DOM.Events;
+  var Events = Cactus.Web.Events;
 
   var tests = [
-    "DOM/Events",
-    "DOM/Element",
-    "DOM/Event",
-    "DOM/Events",
-    "DOM/select",
-    "DOM/selectFirst",
-    "DOM/tag",
-    "DOM/EventManager",
-    "DOM/Validation"
+    "Web/Events",
+    "Web/Element",
+    "Web/Event",
+    "Web/Events",
+    "Web/select",
+    "Web/selectFirst",
+    "Web/tag",
+    "Web/EventManager",
+    "Web/Validation"
   ];
 
   // If GET parameters are specified, only those tests are run.

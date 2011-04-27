@@ -1,12 +1,12 @@
-Cactus.UnitTest.DOM.select = function () {
+Cactus.UnitTest.Web.select = function () {
   var UT = Cactus.Dev.UnitTest;
   var TestCase = UT.TestCase;
   var Test = UT.Test;
-  var tag = Cactus.Web.DOM.tag;
-  var $ = Cactus.Web.DOM.select;
-  var ClassNames = Cactus.Web.DOM.ClassNames;
+  var tag = Cactus.Web.tag;
+  var $ = Cactus.Web.select;
+  var ClassNames = Cactus.Web.ClassNames;
 
-  var selectTC = new TestCase("DOM.select");
+  var selectTC = new TestCase("Web.select");
   selectTC.setup = function () {
     var html = '<div id="_select_root" class="a">\
                   <ul id="_select_ul" class="a">\
@@ -35,8 +35,8 @@ Cactus.UnitTest.DOM.select = function () {
     var a = $("#_select_root");
 
     this.assertEqual(1, a.length, "fetched more than one element");
-    this.assertEqual("_select_root", a [0].id);
-    this.assertEqual("a", a [0].className);
+    this.assertEqual("_select_root", a[0].id);
+    this.assertEqual("a", a[0].className);
   });
 
   // Get by classname.
@@ -45,14 +45,14 @@ Cactus.UnitTest.DOM.select = function () {
     var l = $(".l", this.sandbox);
 
     this.assertEqual(2, a.length, "Expected two .a's.");
-    this.assertEqual(document.getElementById("_select_root"), a [0]);
-    this.assertEqual(document.getElementById("_select_ul"), a [1]);
+    this.assertEqual(document.getElementById("_select_root"), a[0]);
+    this.assertEqual(document.getElementById("_select_ul"), a[1]);
 
     this.assertEqual(5, l.length);
-    this.assertEqual("l", l [0].className);
-    this.assertEqual("a", l [0].firstChild.nodeValue);
-    this.assertEqual("l", l [4].className);
-    this.assertEqual("e", l [4].firstChild.nodeValue);
+    this.assertEqual("l", l[0].className);
+    this.assertEqual("a", l[0].firstChild.nodeValue);
+    this.assertEqual("l", l[4].className);
+    this.assertEqual("e", l[4].firstChild.nodeValue);
 
   });
   // Get by tagname.
@@ -67,13 +67,13 @@ Cactus.UnitTest.DOM.select = function () {
     this.assertEqual(1, ul.length, "more than one ul found");
     this.assertEqual(5, li.length);
 
-    this.assertEqual("_select_root", div [0].id);
-    this.assertEqual("_select_ul", ul [0].id);
+    this.assertEqual("_select_root", div[0].id);
+    this.assertEqual("_select_ul", ul[0].id);
 
-    this.assertEqual("l", li [0].className);
-    this.assertEqual("a", li [0].firstChild.nodeValue);
-    this.assertEqual("l", li [4].className);
-    this.assertEqual("e", li [4].firstChild.nodeValue);
+    this.assertEqual("l", li[0].className);
+    this.assertEqual("a", li[0].firstChild.nodeValue);
+    this.assertEqual("l", li[4].className);
+    this.assertEqual("e", li[4].firstChild.nodeValue);
   });
   selectTC.add(new Test(null, function () { // get by tagname "*"
     var selectRoot = $("#_select_root", this.sandbox)[0];

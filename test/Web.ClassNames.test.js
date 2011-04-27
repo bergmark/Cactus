@@ -1,7 +1,7 @@
 require('../CactusWebTestable');
 
 module.exports = (function () {
-  var CN = Cactus.Web.DOM.ClassNames;
+  var CN = Cactus.Web.ClassNames;
 
   return {
     initial : function () {

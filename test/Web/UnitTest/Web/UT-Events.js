@@ -1,10 +1,10 @@
-Cactus.UnitTest.DOM.Events = function () {
+Cactus.UnitTest.Web.Events = function () {
   var UT = Cactus.Dev.UnitTest;
   var Test = UT.Test;
-  var Events = Cactus.Web.DOM.Events;
-  var tag = Cactus.Web.DOM.tag;
+  var Events = Cactus.Web.Events;
+  var tag = Cactus.Web.tag;
 
-  var tc = new UT.TestCase("DOM.Events");
+  var tc = new UT.TestCase("Web.Events");
   tc.setup = function () {
     this.o = {};
     this.oFunc = function () { };
