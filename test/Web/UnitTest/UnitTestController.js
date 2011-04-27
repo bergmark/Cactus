@@ -9,7 +9,7 @@
  * as tests finish.
  */
 Cactus.Dev.UnitTest.UnitTestController = (function () {
-  var tag = Cactus.Web.DOM.tag;
+  var tag = Cactus.Web.tag;
 
   /**
    * @param TestSuite testSuite  the testSuite to display
