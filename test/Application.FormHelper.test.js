@@ -4,6 +4,7 @@ var Renderer = Cactus.Application.Renderer;
 
 Class("User", {
   has : {
+    id : null,
     name : null,
     password : null,
     email : null
@@ -223,5 +224,41 @@ module.exports = {
     jsoneq({
       name : ["Validation failed: At least 5 characters."]
     }, data.getErrors());
+  },
+  valueTransformers : function () {
+    var user = new User({
+      id : 1
+    });
+    var fh = new FormHelper({
+      action : "/new",
+      fields : {
+        user : { type : User }
+      },
+      transformers : {
+        user : {
+          transform : function (u) { return u.id; },
+          reverse : Function.returning(user)
+        }
+      }
+    });
+    var data = fh.newData();
+    data.populate({
+      user : user
+    });
+    var renderer = fh.newRenderer(HashRenderer, data);
+    renderer.begin();
+    jsoneq({
+      input : {
+        type : "text",
+        value : 1
+      }
+    }, renderer.field("user"));
+
+    data.reversePopulate({
+      user : 1
+    });
+    assert.ok(data._values.user instanceof User);
+    assert.strictEqual(1, data.getWithDefault("user"));
+    assert.strictEqual(user, data.get().user);
   }
 };
