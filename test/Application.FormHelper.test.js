@@ -175,10 +175,33 @@ module.exports = {
     assert.throws(data.getWithDefault.bind(data, "name"), /No default defined for field "name"/);
   },
   "validation errors" : function () {
+    var userfh = new FormHelper({
+      action : "/new",
+      fields : {
+        name : {
+          type : "string",
+          validators : [{
+            func : function (v) {
+              return v.length >= 5;
+            },
+            message : "At least 5 characters."
+          }, {
+            func : function (v) {
+              return /^[A-Z ]*$/i.test(v);
+            },
+            message : "only A-z and spaces."
+          }]
+        },
+        email : { type : "string" },
+        password : { type : "string" },
+        passwordConfirmation : { type : "string", required : false }
+      }
+    });
+
     var data = userfh.newData();
     assert.ok(!data.isValid());
     data.populate({
-      name : "",
+      name : "my name",
       email : "",
       password : ""
     });
@@ -188,6 +211,17 @@ module.exports = {
       name : ["Missing property"],
       email : ["Missing property"],
       password : ["Missing property"]
+    }, data.getErrors());
+
+    // Validators.
+    data = userfh.newData();
+    data.populate({
+      name : "",
+      email : "",
+      password : ""
+    });
+    jsoneq({
+      name : ["Validation failed: At least 5 characters."]
     }, data.getErrors());
   }
 };
