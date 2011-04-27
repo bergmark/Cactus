@@ -185,9 +185,9 @@ module.exports = {
     assert.ok(data.isValid());
     data = userfh.newData();
     jsoneq({
-      name : "Missing property",
-      email : "Missing property",
-      password : "Missing property"
+      name : ["Missing property"],
+      email : ["Missing property"],
+      password : ["Missing property"]
     }, data.getErrors());
   }
 };

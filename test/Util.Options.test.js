@@ -327,8 +327,8 @@ module.exports = (function () {
         }]
       });
       o.parse(1);
-      exception(/^Options: Error: Validation failed, got 0. $/,
-               o.parse.bind(o, 0));
+      assert.throws(o.parse.bind(o,0), /Options: Error: Validation failed: got 0./);
+
 
       // Validation error message.
       o = new Options({
@@ -340,7 +340,7 @@ module.exports = (function () {
         }]
       });
       o.parse(1);
-      exception(/^Options: Error: Validation failed, got 0. Expected positive number.$/,
+      exception(/Options: Error: Validation failed: Expected positive number./,
                 o.parse.bind(o, 0));
 
       // Multiple ordered validators.
@@ -359,8 +359,8 @@ module.exports = (function () {
       });
       o.parse(0);
 
-      assert.throws(o.parse.bind(o, -1), /got -1\. Expected number bigger than -1/i);
-      assert.throws(o.parse.bind(o, 1), /got 1\. Expected number smaller than 1/i);
+      assert.throws(o.parse.bind(o, -1), /Expected number bigger than -1/i);
+      assert.throws(o.parse.bind(o, 1), /Expected number smaller than 1/i);
 
       o = new Options({
         validators : [{
@@ -376,7 +376,7 @@ module.exports = (function () {
         }]
       });
       o.parse(2);
-      assert.throws(o.parse.bind(o, 0), /got 0.+ bigger than 0.+ bigger than 1./i);
+      assert.throws(o.parse.bind(o, 0), /bigger than 0.+ bigger than 1./i);
 
     },
     "mixed values" : function () {
@@ -466,7 +466,7 @@ module.exports = (function () {
       var o = Options.simple("string");
       o.parse(1, false);
       var errors = o.getErrors();
-      jsoneq({ "" : "Expected \"string\", but got \"number\"" }, o.getErrors());
+      jsoneq({ "" : ["Expected \"string\", but got \"number\""] }, o.getErrors());
 
       o = Options.simple({
         a : "number",
@@ -477,8 +477,8 @@ module.exports = (function () {
         b : true
       }, false);
       jsoneq({
-        a : "Expected \"number\", but got \"string\"",
-        b : "Expected \"number\", but got \"boolean\""
+        a : ["Expected \"number\", but got \"string\""],
+        b : ["Expected \"number\", but got \"boolean\""]
       }, o.getErrors());
 
       o = new Options({
@@ -488,12 +488,12 @@ module.exports = (function () {
           message : "false"
         }]
       });
-      assert.throws(o.parse.bind(o, null), /got null.+false/);
+      assert.throws(o.parse.bind(o, null), /Validation failed.+false/i);
 
       // Errors for array validators.
       o = new Options({
         type : {
-          name : {
+          p : {
             type : "string",
             validators : [{
               func : Function.returning(false),
@@ -505,7 +505,7 @@ module.exports = (function () {
           }
         }
       });
-      assert.throws(o.parse.bind(o, { name : "" }), /Error #1.+Error #2/i);
+      assert.throws(o.parse.bind(o, { p : "" }), /Error #1.+Error #2/);
     }
   };
 })();
