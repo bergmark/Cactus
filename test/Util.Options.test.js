@@ -6,6 +6,7 @@ module.exports = (function () {
   var stringify = JSON.stringify;
   var object = Cactus.Addon.Object;
   var collection = Cactus.Data.Collection;
+  var object = Cactus.Addon.Object;
 
   var jsoneq = function (a, b) {
     return assert.strictEqual(JSON.stringify(a), JSON.stringify(b));
@@ -525,7 +526,13 @@ module.exports = (function () {
 
       o.parse(0);
       assert.throws(o.parse.bind(o, "x"), /expected "number".+got "string"/i);
+
+      // Do not run validators if constraints fail.
+      o.parse("x", false);
+      assert.strictEqual(1, object.count(o.getErrors()));
+
       assert.throws(o.parse.bind(o, -1), /Validation failed:.+send null or 0/i);
+
       // Default value should be applied before validation as well.
       ran = false;
       assert.strictEqual(0, o.parse(null));
