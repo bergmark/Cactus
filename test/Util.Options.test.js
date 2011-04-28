@@ -18,6 +18,7 @@ module.exports = (function () {
         type : {
           type : {
             required : false,
+            type : "mixed",
             validators : [{
               func : function (v) {
                 if (typeof v === "string") {
@@ -52,11 +53,7 @@ module.exports = (function () {
           },
           enumerable : {
             required : false,
-            validators : [{
-              func : function (v) {
-                return v instanceof Array;
-              }
-            }]
+            type : Array
           }
         }
       });
@@ -320,6 +317,7 @@ module.exports = (function () {
     "validators" : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
+        type : "number",
         validators : [{
           func : function (v) {
             return v > 0;
@@ -332,6 +330,7 @@ module.exports = (function () {
 
       // Validation error message.
       o = new Options({
+        type : "number",
         validators : [{
           func : function (v) {
             return v > 0;
@@ -345,6 +344,7 @@ module.exports = (function () {
 
       // Multiple ordered validators.
       o = new Options({
+        type : "number",
         validators : [{
           func : function (v) {
             return v > -1;
@@ -363,6 +363,7 @@ module.exports = (function () {
       assert.throws(o.parse.bind(o, 1), /Expected number smaller than 1/i);
 
       o = new Options({
+        type : "number",
         validators : [{
           func : function (v) {
             return v > 0;
@@ -488,7 +489,7 @@ module.exports = (function () {
           message : "false"
         }]
       });
-      assert.throws(o.parse.bind(o, null), /Validation failed.+false/i);
+      assert.throws(o.parse.bind(o, 1), /Validation failed.+false/i);
 
       // Errors for array validators.
       o = new Options({
@@ -506,6 +507,29 @@ module.exports = (function () {
         }
       });
       assert.throws(o.parse.bind(o, { p : "" }), /Error #1.+Error #2/);
+    },
+    validators : function () {
+      // Validators should run only if all other validations pass.
+      var ran = false;
+      var o = new Options({
+        type : "number",
+        defaultValue : 0,
+        validators : [{
+          func : function (v) {
+            ran = true;
+            return v === 0;
+          },
+          message : "Only way to validate is to send null or 0."
+        }]
+      });
+
+      o.parse(0);
+      assert.throws(o.parse.bind(o, "x"), /expected "number".+got "string"/i);
+      assert.throws(o.parse.bind(o, -1), /Validation failed:.+send null or 0/i);
+      // Default value should be applied before validation as well.
+      ran = false;
+      assert.strictEqual(0, o.parse(null));
+      assert.ok(ran, "Validation did not run.");
     }
   };
 })();
