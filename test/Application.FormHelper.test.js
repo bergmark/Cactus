@@ -25,6 +25,87 @@ var userfh = new FormHelper({
   }
 });
 
+var editUser = new FormHelper({
+  action : "/edit",
+  fields : {
+    name : {
+      in : { type : "string" },
+      out : {
+        // Will always be string or ["string"] for form submissions.
+        type : "string",
+        validators : [{
+          required : true,
+          message : "This field is required"
+        }, {
+          // Non-required validations will not be executed if the field is required and value is empty.
+
+        }]
+      }
+    },
+    email : {
+      type : "string",
+      inout : {
+        validators : [{
+          regex : /^[^@]+@[^@]+\.[^@]+$/,
+          message : "Invalid e-mail address."
+        }]
+      }
+    },
+    bestFriend : {
+      type : User,
+      in : {
+        transform : function (v) {
+          return v.getId();
+        }
+      },
+      out : {
+        type : "string",
+        required : false,
+        // Is executed before validators,
+        // return value is validated against `type`.
+        // Value is passed as 2nd arg to validators.
+        transform : function (id) {
+          return UserRepository.find(parseInt(id, 10));
+        },
+        validators : [{
+          func : function (id, user) {
+            return UserRepository.isValidId(id);
+          },
+          message : "Invalid user id."
+        }, {
+          func : function (id, user) {
+            return user.hasFriend(user);
+          },
+          message : "You're not friends with this user."
+        }]
+      }
+    },
+    friends : {
+      type : [User],
+        in : {
+          transform : function (v) {
+            return v.getId();
+          }
+        },
+      out : {
+        type : ["string"],
+        transform : function (ids) {
+          return C.map(ids, function (v) { return UserRepository.find(parseInt(id, 10)); });
+        }
+      }
+    },
+    subscribeToNewsletter : {
+      type : "boolean",
+      out : {
+        required : true
+      }
+    },
+    country : {
+      enumerable : ["SWE", "ENG", "FIN", "USA"]
+    }
+  }
+});
+
 Class("HashRenderer", {
   isa : Renderer,
   override : {
