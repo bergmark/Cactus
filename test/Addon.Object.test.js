@@ -59,6 +59,11 @@ module.exports = (function () {
       assert.strictEqual(0, object.count({}));
       assert.strictEqual(1, object.count({ a : 1 }));
       assert.strictEqual(2, object.count({ a : 1, b : 2 }));
+    },
+
+    keys : function () {
+      assert.eql(["a","b","c"], object.keys({ a : null, b : null, c : null }));
+      assert.eql([], object.keys({}));
     }
   };
 })();

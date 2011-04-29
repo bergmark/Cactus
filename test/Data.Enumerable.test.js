@@ -33,10 +33,10 @@ module.exports = (function () {
   });
 
   return {
-    map : function (f) {
+    map : function () {
       assert.strictEqual("2,3,4", new Coll({ arr : [1,2,3] }).map(function (v) { return v + 1; }).toArray().join(","));
     },
-    select : function (f) {
+    select : function () {
       assert.strictEqual("1,3", new Coll({ arr : [1,2,3] }).select(CMath.odd.bind(CMath)).toArray().join(","));
     }
   };
