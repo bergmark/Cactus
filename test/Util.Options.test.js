@@ -146,6 +146,7 @@ module.exports = (function () {
 
       // Optional arrays.
       new Options([{
+        type : Array,
         defaultValue : []
       }]).parse(null);
 
@@ -537,6 +538,10 @@ module.exports = (function () {
       ran = false;
       assert.strictEqual(0, o.parse(null));
       assert.ok(ran, "Validation did not run.");
+    },
+    init : function () {
+      // Check for `type` on construction since omitting it is a common error.
+      assert.throws(function () { new Options({}) }, /Missing "type" or "enumerable"/);
     }
   };
 })();
