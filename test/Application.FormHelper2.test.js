@@ -95,7 +95,7 @@ module.exports = {
     assert.throws(data.getWithDefault.bind(data, "name"), /No default defined for field "name"/);
   },
   "validation errors" : function () {
-    var userfh = new FormHelper({
+    var fh = new FormHelper({
       action : "/new",
       fields : {
         name : {
@@ -118,7 +118,7 @@ module.exports = {
       }
     });
 
-    var data = userfh.newData();
+    var data = fh.newData();
     assert.ok(!data.isValid());
     data.populate({
       name : "my name",
@@ -126,7 +126,7 @@ module.exports = {
       password : ""
     });
     assert.ok(data.isValid());
-    data = userfh.newData();
+    data = fh.newData();
     jsoneq({
       name : ["Missing property"],
       email : ["Missing property"],
@@ -134,7 +134,7 @@ module.exports = {
     }, data.getErrors());
 
     // Validators.
-    data = userfh.newData();
+    data = fh.newData();
     data.populate({
       name : "",
       email : "",
@@ -180,5 +180,43 @@ module.exports = {
     assert.ok(data._values.user instanceof Object);
     assert.strictEqual(1, data.getWithDefault("user"));
     jsoneq(user, data.get().user);
+  },
+  rendering : function () {
+    var renderer = fh.newRenderer(Renderer);
+    renderer.begin();
+    renderer.field("name");
+    renderer.field("email");
+    renderer.field("password");
+    renderer.field("passwordConfirmation");
+    renderer.end();
+
+    // Need begin, render, end sequence.
+    renderer = fh.newRenderer(Renderer);
+    assert.throws(renderer.end.bind(renderer), /end: Need to call begin/i);
+
+    renderer = fh.newRenderer(Renderer);
+    renderer.begin();
+    assert.throws(renderer.begin.bind(renderer), /begin: begin was called twice/i);
+
+    renderer = fh.newRenderer(Renderer);
+    assert.throws(renderer.field.bind(renderer, "email"), /field: Need to call begin/i);
+
+    // Need to render all required fields before end.
+    assert.eql(["email", "name", "password", "passwordConfirmation"], fh.getFieldNames());
+    renderer = fh.newRenderer(Renderer);
+    renderer.begin();
+    assert.throws(renderer.end.bind(renderer),
+                  /end: Missing required fields: email,name,password/i);
+
+    // Can't render undefined or already rendered fields.
+    renderer = fh.newRenderer(Renderer);
+    renderer.begin();
+    assert.throws(renderer.field.bind(renderer, "foo"),
+                  /field: Trying to render undefined or already rendered field "foo"/i);
+    renderer = fh.newRenderer(Renderer);
+    renderer.begin();
+    renderer.field("name");
+    assert.throws(renderer.field.bind(renderer, "name"),
+                  /field: Trying to render undefined or already rendered field "name"/i);
   }
 };
