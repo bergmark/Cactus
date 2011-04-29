@@ -3,6 +3,7 @@ var C = Cactus.Data.Collection;
 var Renderer = Cactus.Application.Renderer;
 
 var userfh = new FormHelper({
+  action : "/new",
   fields : {
     email : null,
     name : null,
@@ -12,8 +13,9 @@ var userfh = new FormHelper({
 });
 
 module.exports = {
-  formhelper : function () {
+  init : function () {
     var fh = userfh;
     assert.eql(["email", "name", "password", "passwordConfirmation"], fh.getFieldNames());
+    assert.strictEqual("/new", fh.getAction());
   }
 };
