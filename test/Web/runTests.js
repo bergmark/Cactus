@@ -14,7 +14,8 @@
     "Web/selectFirst",
     "Web/tag",
     "Web/EventManager",
-    "Web/Validation"
+    "Web/Validation",
+    "Web/Template"
   ];
 
   // If GET parameters are specified, only those tests are run.
