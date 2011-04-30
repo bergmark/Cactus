@@ -182,40 +182,46 @@ module.exports = {
     jsoneq(user, data.get().user);
   },
   rendering : function () {
-    var renderer = fh.newRenderer(Renderer);
+    var data = fh.newData({
+      name : "x",
+      email : "x@example.com",
+      password : "pass",
+      passwordConfirmation : "pass"
+    });
+    var renderer = fh.newRenderer(data);
     renderer.begin();
-    renderer.field("name");
-    renderer.field("email");
-    renderer.field("password");
-    renderer.field("passwordConfirmation");
+    assert.strictEqual("x", renderer.field("name"));
+    assert.strictEqual("x@example.com", renderer.field("email"));
+    assert.strictEqual("pass", renderer.field("password"));
+    assert.strictEqual("pass", renderer.field("passwordConfirmation"));
     renderer.end();
 
     // Need begin, render, end sequence.
-    renderer = fh.newRenderer(Renderer);
+    renderer = fh.newRenderer();
     assert.throws(renderer.end.bind(renderer), /end: Need to call begin/i);
 
-    renderer = fh.newRenderer(Renderer);
+    renderer = fh.newRenderer();
     renderer.begin();
     assert.throws(renderer.begin.bind(renderer), /begin: begin was called twice/i);
 
-    renderer = fh.newRenderer(Renderer);
+    renderer = fh.newRenderer();
     assert.throws(renderer.field.bind(renderer, "email"), /field: Need to call begin/i);
 
     // Need to render all required fields before end.
     assert.eql(["email", "name", "password", "passwordConfirmation"], fh.getFieldNames());
-    renderer = fh.newRenderer(Renderer);
+    renderer = fh.newRenderer();
     renderer.begin();
     assert.throws(renderer.end.bind(renderer),
                   /end: Missing required fields: email,name,password/i);
 
     // Can't render undefined or already rendered fields.
-    renderer = fh.newRenderer(Renderer);
+    renderer = fh.newRenderer();
     renderer.begin();
     assert.throws(renderer.field.bind(renderer, "foo"),
                   /field: Trying to render undefined or already rendered field "foo"/i);
-    renderer = fh.newRenderer(Renderer);
+    renderer = fh.newRenderer();
     renderer.begin();
-    renderer.field("name");
+    renderer.field("name", "x");
     assert.throws(renderer.field.bind(renderer, "name"),
                   /field: Trying to render undefined or already rendered field "name"/i);
   }
