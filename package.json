@@ -13,7 +13,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "expresso -I . -r test.js"
+    "test": "expresso -I . -r test.js -s"
   },
   "engines": {
     "node": ">=0.4.2"
