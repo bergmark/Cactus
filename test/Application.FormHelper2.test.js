@@ -144,7 +144,7 @@ module.exports = {
       name : ["Validation failed: At least 5 characters."]
     }, data.getErrors());
   },
-  valueTransformers : function () {
+  valueTransformers : function (done) {
     var user = {
       id : 1
     };
@@ -156,10 +156,10 @@ module.exports = {
           inTransformer : function (u) {
             return u.id;
           },
-          outTransformer : function (id) {
-            return {
+          outTransformerCont : function (CONTINUE, id) {
+            CONTINUE({
               id : id
-            };
+            });
           }
         }
       }
@@ -176,10 +176,12 @@ module.exports = {
 
     data.reversePopulate({
       user : 1
+    }).thenRun(function () {
+      assert.ok(data._values.user instanceof Object);
+      assert.strictEqual(1, data.getWithDefault("user"));
+      jsoneq(user, data.get().user);
+      done();
     });
-    assert.ok(data._values.user instanceof Object);
-    assert.strictEqual(1, data.getWithDefault("user"));
-    jsoneq(user, data.get().user);
   },
   rendering : function () {
     var data = fh.newData({
