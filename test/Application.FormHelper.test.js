@@ -200,6 +200,25 @@ module.exports = {
       done();
     }).now()
   },
+  "reversePopulate with helpers" : function (done) {
+    var fh = new FormHelper({
+      name : {
+        type : "string",
+        outTransformerCont : function (CONTINUE, name, helpers) {
+          CONTINUE(helpers.myValue);
+        }
+      }
+    });
+    var data = fh.newData();
+    data.reversePopulate({
+      name : "x"
+    }, {
+      myValue : "y"
+    }).then(function () {
+      assert.strictEqual("y", data.get().name);
+      done();
+    }).now();
+  },
   rendering : function () {
     var data = fh.newData({
       name : "x",
