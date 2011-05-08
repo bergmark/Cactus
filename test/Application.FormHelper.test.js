@@ -183,7 +183,13 @@ module.exports = {
       assert.strictEqual(1, data.getWithDefault("user"));
       jsoneq(user, data.get().user);
 
-      done();
+      // Reverse populating with undefined fields.
+      data.reversePopulate({
+        undef : "undef"
+      }).then(function () {
+        assert.throws(data.get.bind(data), /"undef".+lacks definition/i);
+        done();
+      }).now();
     }).now();
   },
   rendering : function () {
