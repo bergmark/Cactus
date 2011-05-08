@@ -175,14 +175,16 @@ module.exports = {
       }
     }, data.get());
 
+    data = fh.newData();
     data.reversePopulate({
       user : 1
-    }).thenRun(function () {
+    }).then(function () {
       assert.ok(data._values.user instanceof Object);
       assert.strictEqual(1, data.getWithDefault("user"));
       jsoneq(user, data.get().user);
+
       done();
-    });
+    }).now();
   },
   rendering : function () {
     var data = fh.newData({
