@@ -186,11 +186,32 @@ module.exports = {
       // Reverse populating with undefined fields.
       data.reversePopulate({
         undef : "undef"
-      }).then(function () {
-        assert.throws(data.get.bind(data), /"undef".+lacks definition/i);
-        done();
-      }).now();
+      }).now()
+    }).then(function () {
+      assert.throws(data.get.bind(data), /"undef".+lacks definition/i);
+      done();
     }).now();
+  },
+  "default value transformers" : function (done) {
+    var fh = new FormHelper({
+      action : "",
+      fields : {
+        name : { type : "string" }
+      }
+    });
+    var data = fh.newData();
+    data.populate({
+      name : "x"
+    });
+    assert.strictEqual("x", data.get().name);
+
+    data = fh.newData();
+    data.reversePopulate({
+      name : "y"
+    }).then(function () {
+      assert.strictEqual("y", data.get().name);
+      done();
+    }).now()
   },
   rendering : function () {
     var data = fh.newData({
