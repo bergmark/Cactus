@@ -8,19 +8,15 @@ var jsoneq = function (a, b) {
 };
 
 var fh = new FormHelper({
-  action : "/new",
-  fields : {
-    email : { type : "string" },
-    name : { type : "string" },
-    password : { type : "string" },
-    passwordConfirmation : { type : "string", required : false }
-  }
+  email : { type : "string" },
+  name : { type : "string" },
+  password : { type : "string" },
+  passwordConfirmation : { type : "string", required : false }
 });
 
 module.exports = {
   init : function () {
     assert.eql(["email", "name", "password", "passwordConfirmation"], fh.getFieldNames());
-    assert.strictEqual("/new", fh.getAction());
   },
   populate : function () {
     var data = fh.newData();
@@ -97,26 +93,23 @@ module.exports = {
   },
   "validation errors" : function () {
     var fh = new FormHelper({
-      action : "/new",
-      fields : {
-        name : {
-          type : "string",
-          validators : [{
-            func : function (v) {
-              return v.length >= 5;
-            },
-            message : "At least 5 characters."
-          }, {
-            func : function (v) {
-              return /^[A-Z ]*$/i.test(v);
-            },
-            message : "only A-z and spaces."
-          }]
-        },
-        email : { type : "string" },
-        password : { type : "string" },
-        passwordConfirmation : { type : "string", required : false }
-      }
+      name : {
+        type : "string",
+        validators : [{
+          func : function (v) {
+            return v.length >= 5;
+          },
+          message : "At least 5 characters."
+        }, {
+          func : function (v) {
+            return /^[A-Z ]*$/i.test(v);
+          },
+          message : "only A-z and spaces."
+        }]
+      },
+      email : { type : "string" },
+      password : { type : "string" },
+      passwordConfirmation : { type : "string", required : false }
     });
 
     var data = fh.newData();
@@ -150,18 +143,15 @@ module.exports = {
       id : 1
     };
     var fh = new FormHelper({
-      action : "/new",
-      fields : {
-        user : {
-          type : Object,
-          inTransformer : function (u) {
-            return u.id;
-          },
-          outTransformerCont : function (CONTINUE, id) {
-            CONTINUE({
-              id : id
-            });
-          }
+      user : {
+        type : Object,
+        inTransformer : function (u) {
+          return u.id;
+        },
+        outTransformerCont : function (CONTINUE, id) {
+          CONTINUE({
+            id : id
+          });
         }
       }
     });
@@ -194,10 +184,7 @@ module.exports = {
   },
   "default value transformers" : function (done) {
     var fh = new FormHelper({
-      action : "",
-      fields : {
-        name : { type : "string" }
-      }
+      name : { type : "string" }
     });
     var data = fh.newData();
     data.populate({
@@ -220,7 +207,8 @@ module.exports = {
       password : "pass",
       passwordConfirmation : "pass"
     });
-    var renderer = fh.newRenderer(data);
+    var renderer = fh.newRenderer(data, "action");
+    assert.strictEqual("action", renderer.getAction());
     renderer.begin();
     assert.strictEqual("x", renderer.field("name"));
     assert.strictEqual("x@example.com", renderer.field("email"));
@@ -264,16 +252,13 @@ module.exports = {
       }
     });
     var fh = new FormHelper({
-      action : "",
-      fields : {
-        users : {
-          type : [{ type : User }],
-          inTransformer : function (users) {
-            return C.map(users, function (u) { return u.id; });
-          },
-          outTransformerCont : function (CONTINUE, ids) {
-            CONTINUE(o.map(ids, function (id) { return new User({ id : id }); }));
-          }
+      users : {
+        type : [{ type : User }],
+        inTransformer : function (users) {
+          return C.map(users, function (u) { return u.id; });
+        },
+        outTransformerCont : function (CONTINUE, ids) {
+          CONTINUE(o.map(ids, function (id) { return new User({ id : id }); }));
         }
       }
     });
