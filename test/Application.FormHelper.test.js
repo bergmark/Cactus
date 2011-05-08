@@ -1,6 +1,7 @@
 var FormHelper = Cactus.Application.FormHelper;
 var C = Cactus.Data.Collection;
 var Renderer = Cactus.Application.Renderer;
+var object = Cactus.Addon.Object;
 
 var jsoneq = function (a, b) {
   return assert.strictEqual(JSON.stringify(a), JSON.stringify(b));
@@ -226,5 +227,34 @@ module.exports = {
     renderer.field("name", "x");
     assert.throws(renderer.field.bind(renderer, "name"),
                   /field: Trying to render undefined or already rendered field "name"/i);
+  },
+  "compound fields" : function () {
+    Class("User", {
+      has : {
+        id : null
+      }
+    });
+    var fh = new FormHelper({
+      action : "",
+      fields : {
+        users : {
+          type : [{ type : User }],
+          inTransformer : function (users) {
+            return C.map(users, function (u) { return u.id; });
+          },
+          outTransformerCont : function (CONTINUE, ids) {
+            CONTINUE(o.map(ids, function (id) { return new User({ id : id }); }));
+          }
+        }
+      }
+    });
+    var data = fh.newData();
+    data.populate({
+      users : [new User({ id : 1 })]
+    });
+    var renderer = fh.newRenderer(data);
+    renderer.begin();
+    assert.strictEqual(1, renderer.field("users")[0]);
+    renderer.end();
   }
 };
