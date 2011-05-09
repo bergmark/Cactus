@@ -356,5 +356,17 @@ module.exports = {
     assert.eql(1, Function.id(1));
     var o = {};
     assert.eql(o, Function.id({}));
+  },
+
+  freeze : function () {
+    var triggered = false;
+    var o = {};
+    (function () {
+      triggered = true;
+      assert.strictEqual(1, arguments.length);
+      assert.strictEqual(0, arguments[0]);
+      assert.ok(this !== o);
+    }).curry(0).freeze().call(o, 1, 2, 3);
+    assert.ok(triggered);
   }
 };
