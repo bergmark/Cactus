@@ -1,4 +1,4 @@
-var Service = Cactus.Application.Service;
+var DtoFactory = Cactus.Application.DtoFactory;
 var C = Cactus.Data.Collection;
 var Renderer = Cactus.Application.Renderer;
 var object = Cactus.Addon.Object;
@@ -7,7 +7,7 @@ var jsoneq = function (a, b) {
   return assert.strictEqual(JSON.stringify(a), JSON.stringify(b));
 };
 
-var fh = new Service({
+var fh = new DtoFactory({
   email : { type : "string" },
   name : { type : "string" },
   password : { type : "string" },
@@ -92,7 +92,7 @@ module.exports = {
     assert.throws(dto.getWithDefault.bind(dto, "name"), /No default defined for field "name"/);
   },
   "validation errors" : function () {
-    var fh = new Service({
+    var fh = new DtoFactory({
       name : {
         type : "string",
         validators : [{
@@ -142,7 +142,7 @@ module.exports = {
     var user = {
       id : 1
     };
-    var fh = new Service({
+    var fh = new DtoFactory({
       user : {
         type : Object,
         inTransformer : function (u) {
@@ -183,7 +183,7 @@ module.exports = {
     }).now();
   },
   "default value transformers" : function (done) {
-    var fh = new Service({
+    var fh = new DtoFactory({
       name : { type : "string" }
     });
     var dto = fh.newDto();
@@ -201,7 +201,7 @@ module.exports = {
     }).now()
   },
   "reversePopulate with helpers" : function (done) {
-    var fh = new Service({
+    var fh = new DtoFactory({
       name : {
         type : "string",
         outTransformerCont : function (CONTINUE, name, helpers) {
@@ -270,7 +270,7 @@ module.exports = {
         id : null
       }
     });
-    var fh = new Service({
+    var fh = new DtoFactory({
       users : {
         type : [{ type : User }],
         inTransformer : function (users) {
