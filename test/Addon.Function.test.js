@@ -352,7 +352,7 @@ module.exports = {
     f.partial(o, 0, undefined)(1,2);
   },
 
-  "id" : function () {
+  id : function () {
     assert.eql(1, Function.id(1));
     var o = {};
     assert.eql(o, Function.id({}));
@@ -369,6 +369,7 @@ module.exports = {
     }).curry(0).freeze().call(o, 1, 2, 3);
     assert.ok(triggered);
   },
+
   "take/drop" : function () {
     var f = function () {
       assert.eql([1,2,3], arguments);
@@ -380,5 +381,5 @@ module.exports = {
     f.take(3)(1,2,3);
     f.curry(1,2,3).take(0)(4);
     f.take(3)(1,2,3,4);
-   }
+  }
 };

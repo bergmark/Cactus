@@ -64,6 +64,10 @@ module.exports = (function () {
     keys : function () {
       assert.eql(["a","b","c"], object.keys({ a : null, b : null, c : null }));
       assert.eql([], object.keys({}));
+    },
+
+    gettingProp : function () {
+      assert.ok(1, object.gettingProp({ a : 1 }, "a")());
     }
   };
 })();
