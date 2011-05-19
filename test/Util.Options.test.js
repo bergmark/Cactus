@@ -6,7 +6,6 @@ module.exports = (function () {
   var stringify = JSON.stringify;
   var object = Cactus.Addon.Object;
   var collection = Cactus.Data.Collection;
-  var object = Cactus.Addon.Object;
 
   var jsoneq = function (a, b) {
     return assert.strictEqual(JSON.stringify(a), JSON.stringify(b));
@@ -542,6 +541,47 @@ module.exports = (function () {
     init : function () {
       // Check for `type` on construction since omitting it is a common error.
       assert.throws(function () { new Options({}) }, /Missing "type" or "enumerable"/);
+    },
+    "predefined validations" : function () {
+      var o = new Options({
+        type : "number",
+        validators : ["natural"]
+      });
+      o.parse(1);
+      o.parse(0);
+      assert.throws(o.parse.bind(o,-1), /Expected natural number/i);
+
+      o = new Options({
+        type : "number",
+        validators : ["positive"]
+      });
+      o.parse(1);
+      assert.throws(o.parse.bind(o, 0), /Expected positive number/i);
+
+      o = new Options({
+        type : "number",
+        validators : ["negative"]
+      });
+      o.parse(-1);
+      assert.throws(o.parse.bind(o, 0), /Expected negative number/i);
+
+      o = new Options({
+        type : "number",
+        validators : ["x"]
+      });
+      assert.throws(o.parse.bind(o, 1),
+                   /Undefined built in validator "x"/i);
+      o = new Options({
+        type : {
+          a : {
+            type : "number",
+            validators : ["x"]
+          }
+        }
+      });
+      assert.throws(o.parse.bind(o, { a : 1 }),
+                    /Undefined built in validator "x"/i);
+
     }
   };
 })();
