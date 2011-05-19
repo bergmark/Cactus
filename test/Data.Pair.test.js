@@ -17,9 +17,9 @@ module.exports = (function () {
       p.changeSecond(4);
       assert.eql(2, p.getSecond());
     },
-    toHash : function () {
+    serialize : function () {
       var p = new Pair(1, 2);
-      var h = p.toHash();
+      var h = p.serialize();
       assert.eql(1, h.first);
       assert.eql(2, h.second);
     }
