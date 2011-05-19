@@ -37,3 +37,4 @@ require('./lib/Util/ValueTransformer');
 require('./lib/Application/DtoFactory');
 require('./lib/Application/Dto');
 require('./lib/Application/Renderer');
+require('./lib/Util/EventIterator');

@@ -52,7 +52,7 @@ Cactus.Dev.UnitTest.Test = (function () {
     this.processResults();
   };
 
-  Joose.Class("Test", {
+  var Test = Class("Test", {
     does : EventSubscription,
     has : {
       /**

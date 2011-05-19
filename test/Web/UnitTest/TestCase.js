@@ -17,7 +17,7 @@ Cactus.Dev.UnitTest.TestCase = (function () {
   var log = Cactus.Dev.log;
   var CArray = Cactus.Addon.Array;
 
-  Joose.Class("TestCase", {
+  var TestCase = Class("TestCase", {
     does : EventSubscription,
     has : {
       /**
