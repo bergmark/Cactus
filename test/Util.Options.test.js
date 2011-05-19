@@ -589,7 +589,7 @@ module.exports = (function () {
       o.parse(1);
       o.parse("x");
       assert.throws(o.parse.bind(o, true),
-                    /Expected a type in a Union/i);
+                    /Expected a Union/i);
     }
   };
 })();
