@@ -368,5 +368,17 @@ module.exports = {
       assert.ok(this !== o);
     }).curry(0).freeze().call(o, 1, 2, 3);
     assert.ok(triggered);
-  }
+  },
+  "take/drop" : function () {
+    var f = function () {
+      assert.eql([1,2,3], arguments);
+    };
+    f.drop(0)(1,2,3);
+    f.drop(1)(0,1,2,3);
+    f.drop(2)(-1,1,2,3);
+
+    f.take(3)(1,2,3);
+    f.curry(1,2,3).take(0)(4);
+    f.take(3)(1,2,3,4);
+   }
 };
