@@ -56,6 +56,11 @@ module.exports = (function () {
       sh.get("x");
       sh.get("y");
       sh.get("z");
+    },
+    has : function () {
+      var sh = new StrictMap({ x : 1 });
+      assert.ok(sh.has("x"));
+      assert.ok(!sh.has("y"));
     }
   };
 })();
