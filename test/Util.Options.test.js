@@ -581,7 +581,15 @@ module.exports = (function () {
       });
       assert.throws(o.parse.bind(o, { a : 1 }),
                     /Undefined built in validator "x"/i);
-
+    },
+    "union types" : function () {
+      var o = new Options({
+        union : ["string", "number"]
+      });
+      o.parse(1);
+      o.parse("x");
+      assert.throws(o.parse.bind(o, true),
+                    /Expected a type in a Union/i);
     }
   };
 })();
