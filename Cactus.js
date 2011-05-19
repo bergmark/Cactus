@@ -34,6 +34,6 @@ require('./lib/Util/IdentityMap');
 require('./lib/Util/CollectionAggregate');
 require('./lib/Util/ValueTransformer');
 
-require('./lib/Application/FormHelper');
-require('./lib/Application/Data');
+require('./lib/Application/Service');
+require('./lib/Application/Dto');
 require('./lib/Application/Renderer');
