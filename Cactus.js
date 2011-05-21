@@ -9,6 +9,7 @@ require('./lib/Addon/String');
 require('./lib/Data/Pair');
 require('./lib/Data/Collection');
 require('./lib/Data/Enumerable');
+require('./lib/Data/StrictArray');
 require('./lib/Data/CountMap');
 require('./lib/Data/ObjectMap');
 require('./lib/Data/Range');
