@@ -36,7 +36,7 @@ module.exports = (function () {
       assert.throws(s1.add.bind(s1, 2), /element already in set/i);
 
       s2.add(1);
-      s2.add(2);
+      s2.add(1);
     },
 
     // Getting an element by a non existant index should throw an error.
