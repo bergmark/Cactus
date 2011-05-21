@@ -28,17 +28,15 @@ module.exports = (function () {
       assert.eql("b", set.get(0));
     },
 
-    // Pass the "shallow" argument to compare all objects by value instead of
-    // identity.
-    "shallow" : function () {
-      var set = new Set({
-        elementType : "shallow"
-      });
-      set.add({ a : 1 });
-      set.add({ a : 2 });
-      assert.eql(2, set.size());
-      assert.throws(set.add.bind(set, { a : 1 }),
-                    /already in set/i);
+    customEquality : function () {
+      var s1 = new Set(Function.empty.returning(true));
+      var s2 = new Set(Function.empty.returning(false));
+
+      s1.add(1);
+      assert.throws(s1.add.bind(s1, 2), /element already in set/i);
+
+      s2.add(1);
+      s2.add(2);
     },
 
     // Getting an element by a non existant index should throw an error.
