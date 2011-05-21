@@ -13,6 +13,7 @@ module.exports = {
     assert.throws(sa.get.bind(sa, 2), /bad index: 2, length is: 2/i);
     sa = new SA();
     assert.throws(sa.get.bind(sa, 0), /bad index: 0/i);
+    assert.throws(sa.get.bind(sa, -1), /bad index: -1/i);
 
     sa = new SA([]);
     assert.ok(sa.isEmpty());

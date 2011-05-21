@@ -14,6 +14,7 @@ require('./lib/Data/CountMap');
 require('./lib/Data/ObjectMap');
 require('./lib/Data/Range');
 require('./lib/Data/Set');
+require('./lib/Data/StrictSet');
 require('./lib/Data/StrictHash');
 require('./lib/Data/StrictMap');
 require('./lib/Data/Tree');
