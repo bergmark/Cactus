@@ -16,6 +16,7 @@ require('./lib/Data/Set');
 require('./lib/Data/StrictHash');
 require('./lib/Data/StrictMap');
 require('./lib/Data/Tree');
+require('./lib/Data/StrictFlushDictionary');
 
 require('./lib/Dev/Assertion');
 
