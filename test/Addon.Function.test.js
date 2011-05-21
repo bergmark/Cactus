@@ -146,6 +146,14 @@ module.exports = {
       return 1;
     }).returning(2)());
     assert.eql(3, Function.empty.returning(3)());
+
+    var called = false;
+    (function (a, b) {
+      called = true;
+      assert.strictEqual(5, a);
+      assert.strictEqual(6, b);
+    }).returning(4)(5, 6);
+    assert.ok(called);
   },
 
   // Make sure that returning passes all arguments it gets through
