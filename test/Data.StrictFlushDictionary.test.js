@@ -1,8 +1,8 @@
+var SFD = Cactus.Data.StrictFlushDictionary;
+
 module.exports = {
   test : function () {
-    var sfd = new StrictFlushDictionary([
-      "key"
-    ]);
+    var sfd = new SFD(["key"]);
     assert.ok(!sfd.has("key"));
     sfd.add("key", "val");
     assert.ok(sfd.has("key"));
