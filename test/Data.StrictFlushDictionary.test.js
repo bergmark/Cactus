@@ -23,6 +23,7 @@ module.exports = {
     sfd.get("y");
 
     assert.throws(sfd.get.bind(sfd, "u"), /undefined key/i);
+    assert.throws(sfd.has.bind(sfd, "u"), /undefined key/i);
 
     new SFD();
   }
