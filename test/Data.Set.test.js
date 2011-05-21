@@ -28,9 +28,26 @@ module.exports = (function () {
       assert.eql("b", set.get(0));
     },
 
+    isEmpty : function () {
+      var s = new Set();
+      assert.ok(s.isEmpty());
+      s.add(1);
+      assert.ok(!s.isEmpty());
+      s.remove(1);
+      assert.ok(s.isEmpty());
+    },
+
+    "add values on init" : function () {
+      var s = new Set([1,2,3]);
+      assert.ok(s.has(1));
+      assert.ok(s.has(3));
+      s = new Set([]);
+      assert.ok(s.isEmpty());
+    },
+
     customEquality : function () {
-      var s1 = new Set(Function.empty.returning(true));
-      var s2 = new Set(Function.empty.returning(false));
+      var s1 = new Set([], Function.empty.returning(true));
+      var s2 = new Set([], Function.empty.returning(false));
 
       s1.add(1);
       assert.throws(s1.add.bind(s1, 2), /element already in set/i);
