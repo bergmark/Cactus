@@ -137,6 +137,8 @@ module.exports = {
     jsoneq({
       name : ["Validation failed: At least 5 characters."]
     }, dto.getErrors());
+
+    // Validation of entire structure.
   },
   valueTransformers : function (done) {
     var user = {

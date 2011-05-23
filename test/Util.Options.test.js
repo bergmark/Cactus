@@ -582,6 +582,13 @@ module.exports = (function () {
       assert.throws(o.parse.bind(o, { a : 1 }),
                     /Undefined built in validator "x"/i);
 
+      o = new Options({
+        type : "string",
+        validators : ["non empty string"]
+      });
+      o.parse("x");
+      assert.throws(o.parse.bind(o, ""),
+                    /Expected non-empty string/i);
     }
   };
 })();
