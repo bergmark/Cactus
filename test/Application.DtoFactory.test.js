@@ -40,7 +40,6 @@ module.exports = {
       assert.ok(/"name": Missing property/.test(e.message));
       assert.ok(/"password": Missing property/.test(e.message));
       assert.ok(/"email": Missing property/.test(e.message));
-      assert.ok(/"name": Missing property/.test(e.message));
       assert.ok(!/"passwordConfirmation"/.test(e.message));
       return true;
     });

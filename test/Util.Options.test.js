@@ -508,6 +508,20 @@ module.exports = (function () {
         }
       });
       assert.throws(o.parse.bind(o, { p : "" }), /Error #1.+Error #2/);
+
+      // When Error is thrown, there should be a hash property with the error
+      // messages as well.
+      o = new Options({
+        type : "string"
+      });
+      assert.throws(o.parse.bind(o, 1), function (e) {
+        assert.ok(/expected "string".+got "number"/i.test(e.message));
+        assert.ok("hash" in e);
+        jsoneq({
+          "" : ['Expected "string", but got "number"']
+        }, e.hash);
+        return true
+      });
     },
     validators : function () {
       // Validators should run only if all other validations pass.
