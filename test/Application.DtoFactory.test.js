@@ -3,10 +3,6 @@ var C = Cactus.Data.Collection;
 var Renderer = Cactus.Application.Renderer;
 var object = Cactus.Addon.Object;
 
-var jsoneq = function (a, b) {
-  return assert.strictEqual(JSON.stringify(a), JSON.stringify(b));
-};
-
 var fh = new DtoFactory({
   email : { type : "string" },
   name : { type : "string" },
@@ -26,12 +22,12 @@ module.exports = {
       password : "pass",
       passwordConfirmation : "pass"
     });
-    jsoneq({
+    ({
       name : "test",
       email : "test@example.com",
       password : "pass",
       passwordConfirmation : "pass"
-    }, dto.get());
+    }).should.eql(dto.get());
 
     // Can't get if required values are missing.
     dto = fh.newDto();
@@ -55,12 +51,12 @@ module.exports = {
       password : "pass",
       passwordConfirmation : "pass"
     });
-    jsoneq({
+    ({
       name : "test2",
       email : "test@example.com",
       password : "pass",
       passwordConfirmation : "pass"
-    }, dto.get());
+    }).should.eql(dto.get());
 
     // Getting values on validation errors (for view).
     dto = fh.newDto();
@@ -120,11 +116,11 @@ module.exports = {
     });
     assert.ok(dto.isValid());
     dto = fh.newDto();
-    jsoneq({
+    ({
       name : ["Missing property"],
       email : ["Missing property"],
       password : ["Missing property"]
-    }, dto.getErrors());
+    }).should.eql(dto.getErrors());
 
     // Validators.
     dto = fh.newDto();
@@ -133,9 +129,7 @@ module.exports = {
       email : "",
       password : ""
     });
-    jsoneq({
-      name : ["Validation failed: At least 5 characters."]
-    }, dto.getErrors());
+    ({ name : ["Validation failed: At least 5 characters."] }).should.eql(dto.getErrors());
 
     // Validation of entire structure.
   },
@@ -160,11 +154,11 @@ module.exports = {
     dto.populate({
       user : user
     });
-    jsoneq({
+    ({
       user : {
         id : 1
       }
-    }, dto.get());
+    }).should.eql(dto.get());
 
     dto = fh.newDto();
     dto.reversePopulate({
@@ -172,7 +166,7 @@ module.exports = {
     }).then(function () {
       assert.ok(dto._values.user instanceof Object);
       assert.strictEqual(1, dto.getWithDefault("user"));
-      jsoneq(user, dto.get().user);
+      user.should.eql(dto.get().user);
 
       // Reverse populating with undefined fields.
       dto.reversePopulate({
@@ -310,5 +304,15 @@ module.exports = {
       dto.get().should.not.property("name");
       done();
     }).now();
+  },
+  "default value for dto factories" : function () {
+    var df = new DtoFactory({
+      name : {
+        type : "string",
+        defaultValue : "adam"
+      }
+    });
+    var dto = df.newDto();
+    ({ name : "adam" }).should.eql(dto.get());
   }
 };
