@@ -303,6 +303,15 @@ module.exports = (function () {
       assert.eql(2, o.parse({ a : 2}).a);
       assert.eql(1, o.parse({ a : null }).a);
       assert.eql(1, o.parse({}).a);
+
+      // Bools.
+      o = new Options({
+        type : "boolean",
+        defaultValue : false
+      });
+      o.parse(true);
+      o.parse(false);
+      not(o.parse(null));
     },
     "enums" : function () {
       var exception = assertException.curry(assert);

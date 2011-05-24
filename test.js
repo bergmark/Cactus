@@ -17,3 +17,5 @@ global.contEx = function (cont, reg) {
     this.CONTINUE();
   });
 };
+global.ok = function (v, msg) { assert.ok(v, msg); };
+global.not = function (v, msg) { assert.ok(!v, msg); };
