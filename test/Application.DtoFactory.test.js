@@ -132,6 +132,25 @@ module.exports = {
     ({ name : ["Validation failed: At least 5 characters."] }).should.eql(dto.getErrors());
 
     // Validation of entire structure.
+    var df = new DtoFactory({
+      a : { type : "string", required : false },
+      b : { type : "string", required : false },
+      __validators : [{
+        func : function (v) {
+          return !!v.a || !!v.b;
+        },
+        message : "a or b"
+      }]
+    });
+    dto = df.newDto();
+    dto.reversePopulate({ a : "x" }).then(function () {
+      dto.get();
+
+      dto = df.newDto();
+      dto.reversePopulate({}).now();
+    }).then(function () {
+      assert.throws(dto.get.bind(dto), /a or b/i);
+    }).now();
   },
   valueTransformers : function (done) {
     var user = {
