@@ -86,7 +86,7 @@ module.exports = {
     // Throw error on missing default.
     assert.throws(dto.getWithDefault.bind(dto, "name"), /No default defined for field "name"/);
   },
-  "validation errors" : function () {
+  "validation errors" : function (done) {
     var fh = new DtoFactory({
       name : {
         type : "string",
@@ -139,20 +139,18 @@ module.exports = {
         func : function (v) {
           return !!v.a || !!v.b;
         },
-        message : "a or b"
+        message : "a or b 1"
       }]
     });
     dto = df.newDto();
     dto.reversePopulate({ a : "x" }).then(function () {
       dto.get();
-
       dto = df.newDto();
       dto.reversePopulate({}).now();
     }).then(function () {
       assert.throws(dto.get.bind(dto), /a or b/i);
-
       // should get defaultValues etc.
-      var o = {}
+      var o = {};
       df = new DtoFactory({
         a : { type : "string", required : false },
         b : { type : "string", required : false },
@@ -161,7 +159,7 @@ module.exports = {
             o.hash = v;
             return !!v.a || !!v.b;
           },
-          message : "a or b"
+          message : "a or b 2"
         }]
       });
       dto = df.newDto();
@@ -171,6 +169,25 @@ module.exports = {
     }).then(function (o) {
       try { dto.get(); } catch (e) { }
       ({}).should.eql(o.hash);
+      done();
+    }).now();
+  },
+  globalValidation : function (done) {
+    var fh = new DtoFactory({
+      name : { type : "string" },
+      __validators : [{
+        func : function (v, helpers) {
+          return helpers.ok;
+        },
+        message : "bad"
+      }]
+    });
+    var dto = fh.newDto();
+    dto.reversePopulate({ name : "x" }).then(function () {
+      dto.get({ ok : true });
+      assert.throws(dto.get.bind(dto, { ok : false }),
+                    /validation failed: bad/i);
+      done();
     }).now();
   },
   valueTransformers : function (done) {
@@ -211,7 +228,7 @@ module.exports = {
       // Reverse populating with undefined fields.
       dto.reversePopulate({
         undef : "undef"
-      }).now()
+      }).now();
     }).then(function () {
       assert.throws(dto.get.bind(dto), /"undef".+lacks definition/i);
       done();
