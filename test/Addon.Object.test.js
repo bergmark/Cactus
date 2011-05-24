@@ -68,6 +68,16 @@ module.exports = (function () {
 
     gettingProp : function () {
       assert.ok(1, object.gettingProp({ a : 1 }, "a")());
+    },
+
+    merge : function () {
+      var a = { a : 1, b : 0 };
+      var b = { b : 2, c : 3 };
+      ({ a : 1, b : 2, c : 3 }).should.eql(object.merge(a, b));
+
+      // No mutations of a and b.
+      a.should.eql({ a : 1, b : 0 });
+      b.should.eql({ b : 2, c : 3 });
     }
   };
 })();
