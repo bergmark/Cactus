@@ -150,6 +150,27 @@ module.exports = {
       dto.reversePopulate({}).now();
     }).then(function () {
       assert.throws(dto.get.bind(dto), /a or b/i);
+
+      // should get defaultValues etc.
+      var o = {}
+      df = new DtoFactory({
+        a : { type : "string", required : false },
+        b : { type : "string", required : false },
+        __validators : [{
+          func : function (v) {
+            o.hash = v;
+            return !!v.a || !!v.b;
+          },
+          message : "a or b"
+        }]
+      });
+      dto = df.newDto();
+      dto.reversePopulate({}).then(function () {
+        this.CONTINUE(o);
+      }).now();
+    }).then(function (o) {
+      try { dto.get(); } catch (e) { }
+      ({}).should.eql(o.hash);
     }).now();
   },
   valueTransformers : function (done) {
