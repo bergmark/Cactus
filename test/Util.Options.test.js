@@ -312,6 +312,18 @@ module.exports = (function () {
       o.parse(true);
       o.parse(false);
       not(o.parse(null));
+
+      o = new Options({
+        type : {
+          x : {
+            type : "boolean",
+            defaultValue : false
+          }
+        }
+      });
+      jsoneq({ x : true }, o.parse({ x : true }));
+      jsoneq({ x : false }, o.parse({ x : false }));
+      jsoneq({ x : false }, o.parse({}));
     },
     "enums" : function () {
       var exception = assertException.curry(assert);
