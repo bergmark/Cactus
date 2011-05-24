@@ -324,6 +324,14 @@ module.exports = (function () {
       jsoneq({ x : true }, o.parse({ x : true }));
       jsoneq({ x : false }, o.parse({ x : false }));
       jsoneq({ x : false }, o.parse({}));
+
+      // When not passing bool properties.
+      o = new Options({
+        type : {
+          b : { type : "boolean", defaultValue : false }
+        }
+      });
+      ({ b : false }).should.eql(o.parse({}));
     },
     "enums" : function () {
       var exception = assertException.curry(assert);
@@ -624,6 +632,6 @@ module.exports = (function () {
       o.parse("x");
       assert.throws(o.parse.bind(o, ""),
                     /Expected non-empty string/i);
-    }
+    },
   };
 })();
