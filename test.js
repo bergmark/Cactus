@@ -18,4 +18,4 @@ global.contEx = function (cont, reg) {
   });
 };
 global.ok = function (v, msg) { assert.ok(v, msg); };
-global.not = function (v, msg) { assert.ok(!v, msg); };
+global.not = function (v, msg) { assert.ok(v === false, msg); };

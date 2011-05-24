@@ -20,6 +20,7 @@ require('./lib/Data/StrictMap');
 require('./lib/Data/Tree');
 require('./lib/Data/FlushDictionary');
 require('./lib/Data/StrictFlushDictionary');
+require('./lib/Data/Dictionary');
 
 require('./lib/Dev/Assertion');
 
