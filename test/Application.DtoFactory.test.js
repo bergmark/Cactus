@@ -266,7 +266,7 @@ module.exports = {
                   /field: Trying to render undefined or already rendered field "name"/i);
   },
   "compound fields" : function () {
-    Class("User", {
+    var User = Class({
       has : {
         id : null
       }
@@ -290,5 +290,25 @@ module.exports = {
     renderer.begin();
     assert.strictEqual(1, renderer.field("users")[0]);
     renderer.end();
+  },
+  "remove undefined fields" : function (done) {
+    var df = new DtoFactory({
+      name : {
+        type : "string",
+        required : false,
+        outTransformerCont : function (CONT, s) { CONT(s === "" ? undefined : s); }
+      }
+    });
+    var dto = df.newDto();
+    dto.reversePopulate({ name : "x" }).then(function () {
+      dto.get().should.property("name");
+      "x".should.equal(dto.get().name);
+
+      dto = df.newDto();
+      dto.reversePopulate({ name : "" }).now();
+    }).then(function () {
+      dto.get().should.not.property("name");
+      done();
+    }).now();
   }
 };
