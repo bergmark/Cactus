@@ -238,9 +238,9 @@ module.exports = (function () {
       o.parse(new F());
       o.parse(new G());
       var H = function () {};
-      exception(/^Options: Error: Expected "Anonymous constructor", but got "number"$/,
+      exception(/^Options: Error: Expected "anonymous type", but got "number"$/,
                 o.parse.bind(o, 1));
-      exception(/^Options: Error: Expected "Anonymous constructor", but got "Anonymous constructor"$/,
+      exception(/^Options: Error: Expected "anonymous type", but got "anonymous type"$/,
                 o.parse.bind(o, new H()));
     },
     "null and undefined" : function () {
@@ -640,6 +640,19 @@ module.exports = (function () {
       o.parse("x");
       assert.throws(o.parse.bind(o, true),
                     /Expected a Union/i);
+    },
+    "gettype" : function () {
+      var t = Options.gettype.bind(Options);
+      ({ union : [
+        { type : "string"},
+        { type : "number" }
+      ]}).should.eql(t(new Options.types.T_Union([
+        { type : "string" },
+        { type : "number" }
+      ])));
+      [{ type : "string" }].should.eql(t(new Options.types.T_Array({ type : "string" })));
+      ({ enumerable : [1,2,3] }).should.eql(t(new Options.types.T_Enumerable([1, 2, 3])));
+      "mixed".should.equal(t(new Options.types.T_Mixed()));
     },
     "typeof" : function () {
       var t = Options.typeof.bind(Options);
