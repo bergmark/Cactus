@@ -6,14 +6,14 @@ module.exports = (function () {
       var set = new Set();
       assert.ok(set instanceof Set);
 
-      set.add("a");
+      assert.ok(set.add("a"));
       assert.eql(1, set.size());
 
       set.add("b");
       assert.eql(2, set.size());
 
       // Add an element already in the set, the length should not change.
-      assert.throws(set.add.bind(set, "b"), /element already in set/i);
+      assert.ok(!set.add("b"));
       assert.eql(2, set.size());
 
       assert.eql("a", set.get(0));
@@ -28,17 +28,32 @@ module.exports = (function () {
       assert.eql("b", set.get(0));
     },
 
-    // Pass the "shallow" argument to compare all objects by value instead of
-    // identity.
-    "shallow" : function () {
-      var set = new Set({
-        elementType : "shallow"
-      });
-      set.add({ a : 1 });
-      set.add({ a : 2 });
-      assert.eql(2, set.size());
-      assert.throws(set.add.bind(set, { a : 1 }),
-                    /already in set/i);
+    isEmpty : function () {
+      var s = new Set();
+      assert.ok(s.isEmpty());
+      s.add(1);
+      assert.ok(!s.isEmpty());
+      s.remove(1);
+      assert.ok(s.isEmpty());
+    },
+
+    "add values on init" : function () {
+      var s = new Set([1,2,3]);
+      assert.ok(s.has(1));
+      assert.ok(s.has(3));
+      s = new Set([]);
+      assert.ok(s.isEmpty());
+    },
+
+    customEquality : function () {
+      var s1 = new Set([], Function.empty.returning(true));
+      var s2 = new Set([], Function.empty.returning(false));
+
+      s1.add(1);
+      assert.ok(!s1.add(2));
+
+      s2.add(1);
+      assert.ok(s2.add(1));
     },
 
     // Getting an element by a non existant index should throw an error.

@@ -42,7 +42,7 @@ module.exports = (function () {
       var om = new ObjectMap();
       om.set("a", 1);
       om.set("b", 2);
-      var h = om.toHash();
+      var h = om.serialize();
       var aIndex = h[0][0] === "a" ? 0 : 1;
       var bIndex = aIndex === 0 ? 1 : 0;
       assert.eql("a", h[aIndex][0]);
@@ -54,7 +54,7 @@ module.exports = (function () {
       om = new ObjectMap();
       om.set({ serialize : Function.returning(1) },
              { serialize : Function.returning(2) });
-      h = om.toHash();
+      h = om.serialize();
       assert.eql(1, h[0][0]);
       assert.eql(2, h[0][1]);
     },

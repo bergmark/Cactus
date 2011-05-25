@@ -53,6 +53,12 @@ module.exports = (function () {
 
       assert.eql(3, ca.unique(a).length);
       assert.eql(2, ca.unique(b).length);
+    },
+
+    "compare for sort" : function () {
+      assert.strictEqual(-1, ca.compare(0, 1));
+      assert.strictEqual(0, ca.compare(0, 0));
+      assert.strictEqual(1, ca.compare(1, 0));
     }
   };
 })();

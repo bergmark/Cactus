@@ -3,10 +3,6 @@ var C = Cactus.Data.Collection;
 var Renderer = Cactus.Application.Renderer;
 var object = Cactus.Addon.Object;
 
-var jsoneq = function (a, b) {
-  return assert.strictEqual(JSON.stringify(a), JSON.stringify(b));
-};
-
 var fh = new DtoFactory({
   email : { type : "string" },
   name : { type : "string" },
@@ -26,12 +22,12 @@ module.exports = {
       password : "pass",
       passwordConfirmation : "pass"
     });
-    jsoneq({
+    ({
       name : "test",
       email : "test@example.com",
       password : "pass",
       passwordConfirmation : "pass"
-    }, dto.get());
+    }).should.eql(dto.get());
 
     // Can't get if required values are missing.
     dto = fh.newDto();
@@ -40,7 +36,6 @@ module.exports = {
       assert.ok(/"name": Missing property/.test(e.message));
       assert.ok(/"password": Missing property/.test(e.message));
       assert.ok(/"email": Missing property/.test(e.message));
-      assert.ok(/"name": Missing property/.test(e.message));
       assert.ok(!/"passwordConfirmation"/.test(e.message));
       return true;
     });
@@ -56,12 +51,12 @@ module.exports = {
       password : "pass",
       passwordConfirmation : "pass"
     });
-    jsoneq({
+    ({
       name : "test2",
       email : "test@example.com",
       password : "pass",
       passwordConfirmation : "pass"
-    }, dto.get());
+    }).should.eql(dto.get());
 
     // Getting values on validation errors (for view).
     dto = fh.newDto();
@@ -91,7 +86,7 @@ module.exports = {
     // Throw error on missing default.
     assert.throws(dto.getWithDefault.bind(dto, "name"), /No default defined for field "name"/);
   },
-  "validation errors" : function () {
+  "validation errors" : function (done) {
     var fh = new DtoFactory({
       name : {
         type : "string",
@@ -121,11 +116,11 @@ module.exports = {
     });
     assert.ok(dto.isValid());
     dto = fh.newDto();
-    jsoneq({
+    ({
       name : ["Missing property"],
       email : ["Missing property"],
       password : ["Missing property"]
-    }, dto.getErrors());
+    }).should.eql(dto.getErrors());
 
     // Validators.
     dto = fh.newDto();
@@ -134,9 +129,66 @@ module.exports = {
       email : "",
       password : ""
     });
-    jsoneq({
-      name : ["Validation failed: At least 5 characters."]
-    }, dto.getErrors());
+    ({ name : ["Validation failed: At least 5 characters."] }).should.eql(dto.getErrors());
+
+    // Validation of entire structure.
+    var df = new DtoFactory({
+      a : { type : "string", required : false },
+      b : { type : "string", required : false },
+      __validators : [{
+        func : function (v) {
+          return !!v.a || !!v.b;
+        },
+        message : "a or b 1"
+      }]
+    });
+    dto = df.newDto();
+    dto.reversePopulate({ a : "x" }).then(function () {
+      dto.get();
+      dto = df.newDto();
+      dto.reversePopulate({}).now();
+    }).then(function () {
+      assert.throws(dto.get.bind(dto), /a or b/i);
+      // should get defaultValues etc.
+      var o = {};
+      df = new DtoFactory({
+        a : { type : "string", required : false },
+        b : { type : "string", required : false },
+        __validators : [{
+          func : function (v) {
+            o.hash = v;
+            return !!v.a || !!v.b;
+          },
+          message : "a or b 2"
+        }]
+      });
+      dto = df.newDto();
+      dto.reversePopulate({}).then(function () {
+        this.CONTINUE(o);
+      }).now();
+    }).then(function (o) {
+      try { dto.get(); } catch (e) { }
+      ({}).should.eql(o.hash);
+      done();
+    }).now();
+  },
+  globalValidation : function (done) {
+    var fh = new DtoFactory({
+      name : { type : "string" },
+      __validators : [{
+        func : function (v, helpers) {
+          return helpers.ok;
+        },
+        message : "bad"
+      }]
+    });
+    var dto = fh.newDto();
+    dto.reversePopulate({ name : "x" }).then(function () {
+      dto.get({ ok : true });
+      assert.throws(dto.get.bind(dto, { ok : false }),
+                    /validation failed: bad/i);
+      done();
+    }).now();
   },
   valueTransformers : function (done) {
     var user = {
@@ -159,11 +211,11 @@ module.exports = {
     dto.populate({
       user : user
     });
-    jsoneq({
+    ({
       user : {
         id : 1
       }
-    }, dto.get());
+    }).should.eql(dto.get());
 
     dto = fh.newDto();
     dto.reversePopulate({
@@ -171,12 +223,12 @@ module.exports = {
     }).then(function () {
       assert.ok(dto._values.user instanceof Object);
       assert.strictEqual(1, dto.getWithDefault("user"));
-      jsoneq(user, dto.get().user);
+      user.should.eql(dto.get().user);
 
       // Reverse populating with undefined fields.
       dto.reversePopulate({
         undef : "undef"
-      }).now()
+      }).now();
     }).then(function () {
       assert.throws(dto.get.bind(dto), /"undef".+lacks definition/i);
       done();
@@ -265,7 +317,7 @@ module.exports = {
                   /field: Trying to render undefined or already rendered field "name"/i);
   },
   "compound fields" : function () {
-    Class("User", {
+    var User = Class({
       has : {
         id : null
       }
@@ -289,5 +341,39 @@ module.exports = {
     renderer.begin();
     assert.strictEqual(1, renderer.field("users")[0]);
     renderer.end();
+  },
+  "remove undefined fields" : function (done) {
+    var df = new DtoFactory({
+      name : {
+        type : "string",
+        required : false,
+        outTransformerCont : function (CONT, s) { CONT(s === "" ? undefined : s); }
+      }
+    });
+    var dto = df.newDto();
+    dto.reversePopulate({ name : "x" }).then(function () {
+      dto.get().should.property("name");
+      "x".should.equal(dto.get().name);
+
+      dto = df.newDto();
+      dto.reversePopulate({ name : "" }).now();
+    }).then(function () {
+      dto.get().should.not.property("name");
+      done();
+    }).now();
+  },
+  "default value for dto factories" : function () {
+    var df = new DtoFactory({
+      name : {
+        type : "string",
+        defaultValue : "adam"
+      }
+    });
+    var dto = df.newDto();
+    ({ name : "adam" }).should.eql(dto.get());
+
+    // Should be default value for getWithDefault.
+    dto = df.newDto();
+    "adam".should.eql(dto.getWithDefault("name"));
   }
 };

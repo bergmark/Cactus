@@ -63,7 +63,7 @@ Cactus.Dev.UnitTest.TestSuite = (function () {
         ei.startForward();
     }
   };
-  Joose.Class("TestSuite2", {
+  var TestSuite2 = Class("TestSuite2", {
     does : EventSubscription,
     has : {
       /**

@@ -28,12 +28,12 @@ module.exports = (function () {
       // Cannot dec if key is undefined.
       Assertion.exception(assert, /:dec:.+undefined key/i, object.bound(cm, "dec", "undefined key"));
     },
-    toHash : function () {
+    serialize : function () {
       var cm = new CountMap();
       cm.inc("a");
       cm.inc("b");
       cm.inc("b");
-      var h = cm.toHash();
+      var h = cm.serialize();
       assert.eql(h.a, 1);
       assert.eql(h.b, 2);
     },

@@ -303,6 +303,35 @@ module.exports = (function () {
       assert.eql(2, o.parse({ a : 2}).a);
       assert.eql(1, o.parse({ a : null }).a);
       assert.eql(1, o.parse({}).a);
+
+      // Bools.
+      o = new Options({
+        type : "boolean",
+        defaultValue : false
+      });
+      o.parse(true);
+      o.parse(false);
+      not(o.parse(null));
+
+      o = new Options({
+        type : {
+          x : {
+            type : "boolean",
+            defaultValue : false
+          }
+        }
+      });
+      jsoneq({ x : true }, o.parse({ x : true }));
+      jsoneq({ x : false }, o.parse({ x : false }));
+      jsoneq({ x : false }, o.parse({}));
+
+      // When not passing bool properties.
+      o = new Options({
+        type : {
+          b : { type : "boolean", defaultValue : false }
+        }
+      });
+      ({ b : false }).should.eql(o.parse({}));
     },
     "enums" : function () {
       var exception = assertException.curry(assert);
@@ -508,6 +537,20 @@ module.exports = (function () {
         }
       });
       assert.throws(o.parse.bind(o, { p : "" }), /Error #1.+Error #2/);
+
+      // When Error is thrown, there should be a hash property with the error
+      // messages as well.
+      o = new Options({
+        type : "string"
+      });
+      assert.throws(o.parse.bind(o, 1), function (e) {
+        assert.ok(/expected "string".+got "number"/i.test(e.message));
+        assert.ok("hash" in e);
+        jsoneq({
+          "" : ['Expected "string", but got "number"']
+        }, e.hash);
+        return true
+      });
     },
     validators : function () {
       // Validators should run only if all other validations pass.
@@ -581,6 +624,13 @@ module.exports = (function () {
       });
       assert.throws(o.parse.bind(o, { a : 1 }),
                     /Undefined built in validator "x"/i);
+      o = new Options({
+        type : "string",
+        validators : ["non empty string"]
+      });
+      o.parse("x");
+      assert.throws(o.parse.bind(o, ""),
+                    /Expected non-empty string/i);
     },
     "union types" : function () {
       var o = new Options({

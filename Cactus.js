@@ -9,13 +9,18 @@ require('./lib/Addon/String');
 require('./lib/Data/Pair');
 require('./lib/Data/Collection');
 require('./lib/Data/Enumerable');
+require('./lib/Data/StrictArray');
 require('./lib/Data/CountMap');
 require('./lib/Data/ObjectMap');
 require('./lib/Data/Range');
 require('./lib/Data/Set');
+require('./lib/Data/StrictSet');
 require('./lib/Data/StrictHash');
 require('./lib/Data/StrictMap');
 require('./lib/Data/Tree');
+require('./lib/Data/Dictionary');
+require('./lib/Data/FlushDictionary');
+require('./lib/Data/StrictFlushDictionary');
 
 require('./lib/Dev/Assertion');
 
@@ -37,3 +42,4 @@ require('./lib/Util/ValueTransformer');
 require('./lib/Application/DtoFactory');
 require('./lib/Application/Dto');
 require('./lib/Application/Renderer');
+require('./lib/Util/EventIterator');
