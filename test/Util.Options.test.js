@@ -8,8 +8,10 @@ module.exports = (function () {
   var collection = Cactus.Data.Collection;
 
   var jsoneq = function (a, b) {
-    return assert.strictEqual(JSON.stringify(a), JSON.stringify(b));
+    a.should.eql(b);
   };
+  var gettype = Options.gettype.bind(Options);
+  var exception = assertException.curry(assert);
 
   return {
     "recursive definition" : function () {
@@ -189,59 +191,6 @@ module.exports = (function () {
       jsoneq({ a : 1, b : 1 }, o.parse({ a : 1, b : 1}));
       exception(/^Options: Error in property "b": Expected "number", but got "boolean"$/,
                 o.parse.bind(o, { a : 1, b : false }));
-    },
-    "instanceof checks" : function () {
-      var exception = assertException.curry(assert);
-      var Foo2 = Class("Foo2", {});
-      Class("Bar", {
-        isa : Foo2
-      });
-      var o = new Options({
-        type : Foo2
-      });
-      o.parse(new Foo2());
-      o.parse(new Bar());
-      exception(/^Options: Error: Expected "Foo2", but got "number"$/,
-                o.parse.bind(o, 1));
-      Class("Baz");
-      exception(/^Options: Error: Expected "Foo2", but got "Baz"$/,
-                o.parse.bind(o, new Baz()));
-
-      // Non-Joose classes.
-      function Bax() {
-
-      }
-      function Qux() {
-
-      }
-      Qux.extend(Bax);
-      o = new Options({
-        type : Bax
-      });
-      o.parse(new Bax());
-      o.parse(new Qux());
-      function Qax() {
-
-      }
-      exception(/^Options: Error: Expected "Bax", but got "number"$/,
-                o.parse.bind(o, 1));
-      exception(/^Options: Error: Expected "Bax", but got "Qax"$/,
-                o.parse.bind(o, new Qax()));
-
-      // Anonymous classes.
-      var F = function () {};
-      var G = function () {};
-      o = new Options({
-        type : F
-      });
-      G.extend(F);
-      o.parse(new F());
-      o.parse(new G());
-      var H = function () {};
-      exception(/^Options: Error: Expected "anonymous type", but got "number"$/,
-                o.parse.bind(o, 1));
-      exception(/^Options: Error: Expected "anonymous type", but got "anonymous type"$/,
-                o.parse.bind(o, new H()));
     },
     "null and undefined" : function () {
       var exception = assertException.curry(assert);
@@ -632,7 +581,7 @@ module.exports = (function () {
       assert.throws(o.parse.bind(o, ""),
                     /Expected non-empty string/i);
     },
-    "union types" : function () {
+    "T_Union" : function () {
       var o = new Options({
         union : ["string", "number"]
       });
@@ -640,19 +589,76 @@ module.exports = (function () {
       o.parse("x");
       assert.throws(o.parse.bind(o, true),
                     /Expected a Union/i);
-    },
-    "gettype" : function () {
-      var t = Options.gettype.bind(Options);
       ({ union : [
         { type : "string"},
         { type : "number" }
-      ]}).should.eql(t(new Options.types.T_Union([
+      ]}).should.eql(gettype(new Options.types.T_Union([
         { type : "string" },
         { type : "number" }
       ])));
-      [{ type : "string" }].should.eql(t(new Options.types.T_Array({ type : "string" })));
-      ({ enumerable : [1,2,3] }).should.eql(t(new Options.types.T_Enumerable([1, 2, 3])));
-      "mixed".should.equal(t(new Options.types.T_Mixed()));
+    },
+    "T_Instance" : function () {
+      var Foo2 = Class("Foo2", {});
+      Class("Bar", {
+        isa : Foo2
+      });
+      var o = new Options({
+        type : Foo2
+      });
+      o.parse(new Foo2());
+      o.parse(new Bar());
+      exception(/Expected an instance of "Foo2", but got value <1> \(type "number"\)/,
+                o.parse.bind(o, 1));
+      Class("Baz");
+      exception(/Expected an instance of "Foo2", but got value <a Baz> \(type "Baz"\)$/,
+                o.parse.bind(o, new Baz()));
+
+      // Non-Joose classes.
+      function Bax() {
+
+      }
+      function Qux() {
+
+      }
+      Qux.extend(Bax);
+      o = new Options({
+        type : Bax
+      });
+      o.parse(new Bax());
+      o.parse(new Qux());
+      function Qax() {
+      }
+      Qax.prototype.toString = function () {
+        return "my Qax";
+      };
+      exception(/Expected an instance of "Bax", but got value <1> \(type "number"\)/,
+                o.parse.bind(o, 1));
+      exception(/Expected an instance of "Bax", but got value <my Qax> \(type "Qax"\)$/,
+                o.parse.bind(o, new Qax()));
+
+      // Anonymous classes.
+      var F = function () {};
+      var G = function () {};
+      o = new Options({
+        type : F
+      });
+      G.extend(F);
+      o.parse(new F());
+      o.parse(new G());
+      var H = function () {};
+      H.prototype.toString = Function.returning("my H");
+      exception(/Expected an instance of "anonymous type", but got value <1>/,
+                o.parse.bind(o, 1));
+      exception(/Expected an instance of "anonymous type", but got value <my H> \(type "anonymous type"\)/i,
+                o.parse.bind(o, new H()));
+
+      function I() {}
+      I.should.equal(gettype(new Options.types.T_Instance(I)).type);
+    },
+    "gettype" : function () {
+      [{ type : "string" }].should.eql(gettype(new Options.types.T_Array({ type : "string" })));
+      ({ enumerable : [1,2,3] }).should.eql(gettype(new Options.types.T_Enumerable([1, 2, 3])));
+      "mixed".should.equal(gettype(new Options.types.T_Mixed()));
     },
     "typeof" : function () {
       var t = Options.typeof.bind(Options);
