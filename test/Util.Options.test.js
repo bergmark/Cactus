@@ -640,6 +640,22 @@ module.exports = (function () {
       o.parse("x");
       assert.throws(o.parse.bind(o, true),
                     /Expected a Union/i);
+    },
+    "typeof" : function () {
+      var t = Options.typeof.bind(Options);
+      "number".should.equal(t(1));
+      "boolean".should.equal(t(true));
+      "undefined".should.equal(t(undefined));
+      "null".should.equal(t(null));
+      "Function".should.equal(t(function () {}));
+      "Object".should.equal(t({}));
+      "Array".should.equal(t([]));
+      Class("JooseClass");
+      "JooseClass".should.equal(t(new JooseClass()));
+      function MyClass() {}
+      "MyClass".should.equal(t(new MyClass()));
+      var AnonymousClass = function () {};
+      "anonymous type".should.equal(t(new AnonymousClass));
     }
   };
 })();
