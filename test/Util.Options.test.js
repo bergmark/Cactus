@@ -47,7 +47,7 @@ module.exports = (function () {
           b : { type : "boolean" }
         }
       });
-      jsoneq({ a : 1, b : true }, o.parse({ a : 1, b : true }));
+      ({ a : 1, b : true }).should.eql(o.parse({ a : 1, b : true }));
       o = new Options({
         type : {
           a : { type : "number" },
@@ -590,10 +590,8 @@ module.exports = (function () {
       o.parse("");
       o.parse({});
       [].should.eql(o.parse([]));
-      exception(/Expected "mixed", but got "null"/i,
-                o.parse.bind(o, null));
-      exception(/Expected "mixed", but got "undefined"/i,
-                o.parse.bind(o, undefined));
+      ok(null === o.parse(null));
+      ok(undefined === o.parse(undefined));
       "mixed".should.equal(gettype(new Options.types.T_Mixed()));
     },
     "typeof" : function () {
