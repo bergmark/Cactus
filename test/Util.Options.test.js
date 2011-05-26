@@ -32,8 +32,8 @@ module.exports = (function () {
       o = new Options({
         type : [{ type : "number" }]
       });
-      jsoneq([1, 2], o.parse([1, 2]));
-      jsoneq([], o.parse([]));
+      [1, 2].should.eql(o.parse([1, 2]));
+      [].should.eql(o.parse([]));
       exception(/^Options: Error: Expected \[\{"type":"number"\}\], but got "string"$/i, o.parse.bind(o, "a"));
       assert.throws(o.parse.bind(o, ["a"]),
                     /error in property "0": expected "number", but got "string"/i);
@@ -71,7 +71,8 @@ module.exports = (function () {
             defaultValue : []
           }
         }
-      }).parse({});
+      });
+      o.parse({});
 
       // Hashes.
       o = new Options({
@@ -81,6 +82,12 @@ module.exports = (function () {
         }
       });
       jsoneq({ a : 1, b : true }, o.parse({ a : 1, b : true }));
+      o = new Options({
+        type : {
+          a : { type : "number" },
+          b : { type : "boolean" }
+        }
+      });
       exception(/^Options: Error: Expected \{"a":\{"type":"number"\},"b":\{"type":"boolean"\}\}, but got "number"/i,
                 o.parse.bind(o, 1));
       exception(/^Options: Error in property "a": expected "number", but got "string"$/i,
@@ -91,6 +98,17 @@ module.exports = (function () {
                 o.parse.bind(o, { a : 1 }));
       exception(/^Options: Error in property "c": Property lacks definition$/i,
                 o.parse.bind(o, { a : 1, b : true, c : "1" }));
+
+      // With required specified.
+      o = new Options({
+        type : {
+          name : { type : "string", required : true }
+        }
+      });
+      assert.throws(o.parse.bind(o, {}), function (e) {
+        assert.ok(/"name": Missing property/.test(e.message));
+        return true;
+      });
     },
     map : function () {
       var o = new Options({
@@ -98,8 +116,8 @@ module.exports = (function () {
         type : "number"
       });
       jsoneq({ a : 1, b : 1 }, o.parse({ a : 1, b : 1}));
-      //exception(/^Options: Error in property "b": Expected "number", but got "boolean"$/,
-      //          o.parse.bind(o, { a : 1, b : false }));
+      exception(/^Options: Error in property "b": Expected "number", but got "boolean"$/,
+                o.parse.bind(o, { a : 1, b : false }));
     },
     "null and undefined" : function () {
       var exception = assertException.curry(assert);
@@ -189,17 +207,6 @@ module.exports = (function () {
       });
       ({ b : false }).should.eql(o.parse({}));
     },
-    "enums" : function () {
-      var exception = assertException.curry(assert);
-      var o = new Options({
-        enumerable : [1,2,3]
-      });
-      o.parse(1);
-      o.parse(2);
-      o.parse(3);
-      exception(/^Options: Error: Expected a value in \[1,2,3\], but got 0$/, o.parse.bind(o, 0));
-      exception(/^Options: Error: Expected a value in \[1,2,3\], but got 4$/, o.parse.bind(o, 4));
-    },
     "validators" : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
@@ -264,7 +271,6 @@ module.exports = (function () {
       });
       o.parse(2);
       assert.throws(o.parse.bind(o, 0), /bigger than 0.+ bigger than 1./i);
-
     },
     "simple interface" : function () {
       var o = Options.simple("number");
@@ -328,16 +334,24 @@ module.exports = (function () {
       assert.strictEqual(2, o.parse({}).a);
 
       // defaultValueFunc return value must match type.
-      assert.throws(function () {
-        new Options({
-          type : {
-            a : {
-              defaultValueFunc : function () { return 1; },
-              type : "boolean"
-            }
-          }
-        }).parse({});
-      }, /expected "boolean", but got "number"/i);
+      exception(/expected "boolean", but got "number"/i,
+                function () {
+                  return new Options({
+                    defaultValueFunc : function () { return 1; },
+                    type : "boolean"
+                  }).parse(undefined);
+                });
+      exception(/expected "boolean", but got "number"/i,
+                function () {
+                  return new Options({
+                    type : {
+                      a : {
+                        defaultValueFunc : function () { return 1; },
+                        type : "boolean"
+                      }
+                    }
+                  }).parse({});
+                });
     },
     errorHash : function () {
       var o = Options.simple("string");
@@ -474,12 +488,23 @@ module.exports = (function () {
       assert.throws(o.parse.bind(o, ""),
                     /Expected non-empty string/i);
     },
+    T_Enumerable : function () {
+      var exception = assertException.curry(assert);
+      var o = new Options({
+        enumerable : [1,2,3]
+      });
+      (1).should.equal(o.parse(1));
+      o.parse(2);
+      o.parse(3);
+      exception(/^Options: Error: Expected a value in \[1,2,3\], but got 0$/, o.parse.bind(o, 0));
+      exception(/^Options: Error: Expected a value in \[1,2,3\], but got 4$/, o.parse.bind(o, 4));
+    },
     "T_Union" : function () {
       var o = new Options({
         union : ["string", "number"]
       });
-      o.parse(1);
-      o.parse("x");
+      (1).should.equal(o.parse(1));
+      "x".should.equal(o.parse("x"));
       assert.throws(o.parse.bind(o, true),
                     /Expected a Union/i);
       ({ union : [
@@ -498,7 +523,8 @@ module.exports = (function () {
       var o = new Options({
         type : Foo2
       });
-      o.parse(new Foo2());
+      var foo2 = new Foo2();
+      foo2.should.equal(o.parse(foo2));
       o.parse(new Bar());
       exception(/Expected an instance of "Foo2", but got value <1> \(type "number"\)/,
                 o.parse.bind(o, 1));
@@ -552,10 +578,10 @@ module.exports = (function () {
       var o = new Options({
         type : "mixed"
       });
-      o.parse(true);
+      true.should.equal(o.parse(true));
       o.parse("");
       o.parse({});
-      o.parse([]);
+      [].should.eql(o.parse([]));
       exception(/Expected "mixed", but got "null"/i,
                 o.parse.bind(o, null));
       exception(/Expected "mixed", but got "undefined"/i,
@@ -661,18 +687,33 @@ module.exports = (function () {
         type : [{ type : "string" }]
       });
       o.parse({
+        type : "mixed",
         validators : [{
           func : Function.empty,
           message : "msg"
         }]
       });
       o.parse({
+        type : "number",
         enumerable : [1,2,3]
       });
 
       // Fails until properties can constrain each other.
       // exception(/./i,
       //           o.parse.bind(o, {}));
+    },
+    "return values for types" : function () {
+      var o = new Options({
+        map : true,
+        type : {
+          first : { type : "string" },
+          inTransformer : { type : "string", defaultValue : "x" }
+        }
+      });
+      var res = o.parse({
+        name : { first : "adam" }
+      });
+      ({ name : { first : "adam", inTransformer : "x" } }).should.eql(res);
     }
   };
 })();

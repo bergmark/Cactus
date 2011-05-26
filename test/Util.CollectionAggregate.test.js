@@ -53,7 +53,7 @@ module.exports = {
       privateMethods : ["add", "remove", "has", "count", "get"]
     });
     var c = new C4();
-    assert.ok(!("addZ" in c));
+    not("addZ" in c);
     assert.ok(!("removeZ" in c));
     assert.ok(!("hasZ" in c));
     assert.ok(!("zCount" in c));
