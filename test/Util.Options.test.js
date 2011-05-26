@@ -14,99 +14,6 @@ module.exports = (function () {
   var exception = assertException.curry(assert);
 
   return {
-    "recursive definition" : function () {
-      var exception = assertException.curry(assert);
-      var o = new Options({
-        type : {
-          type : {
-            required : false,
-            type : "mixed",
-            validators : [{
-              func : function (v) {
-                if (typeof v === "string") {
-                  return collection.hasValue(["string", "number", "object", "function", "boolean", "mixed"], v);
-                } else if (v instanceof Array) {
-                  return v.length === 1;
-                }
-                return false;
-              }
-            }]
-          },
-          required : {
-            required : false,
-            type : "boolean"
-          },
-          defaultValue : {
-            required : false,
-            type : "mixed"
-          },
-          defaultValueFunc : {
-            required : false,
-            type : Function
-          },
-          validators : {
-            type : [{
-              type : {
-                func : { type : Function },
-                message : { type : "string" }
-              }
-            }],
-            defaultValue : []
-          },
-          enumerable : {
-            required : false,
-            type : Array
-          }
-        }
-      });
-      o.parse({
-        type : "string"
-      });
-      o.parse({
-        type : "number"
-      });
-      o.parse({
-        required : false,
-        type : "number"
-      });
-      o.parse({
-        defaultValue : 3,
-        type : "number"
-      });
-      o.parse({
-        defaultValue : true,
-        type : "boolean"
-      });
-      o.parse({
-        defaultValue : 4,
-        type : "mixed"
-      });
-      o.parse({
-        defaultValue : {},
-        type : "mixed"
-      });
-      o.parse({
-        defaultValueFunc : function () { return 1; },
-        type : "number"
-      });
-      o.parse({
-        type : [{ type : "string" }]
-      });
-      o.parse({
-        validators : [{
-          func : Function.empty,
-          message : "msg"
-        }]
-      });
-      o.parse({
-        enumerable : [1,2,3]
-      });
-
-      // Fails until properties can constrain each other.
-      // exception(/./i,
-      //           o.parse.bind(o, {}));
-    },
-
     a : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
@@ -123,7 +30,7 @@ module.exports = (function () {
       exception(/^Options: Error: Expected "number", but got "string"$/, o.parse.bind(o, "1"));
 
       o = new Options({
-        type : [{ type : "number"}]
+        type : [{ type : "number" }]
       });
       jsoneq([1, 2], o.parse([1, 2]));
       jsoneq([], o.parse([]));
@@ -146,10 +53,13 @@ module.exports = (function () {
       jsoneq([], o.parse([]));
 
       // Optional arrays.
-      new Options([{
-        type : Array,
+      o = new Options({
+        type : [{
+          type : "mixed"
+        }],
         defaultValue : []
-      }]).parse(null);
+      });
+      o.parse(null);
 
       // Optional array in hash.
       o = new Options({
@@ -183,14 +93,13 @@ module.exports = (function () {
                 o.parse.bind(o, { a : 1, b : true, c : "1" }));
     },
     map : function () {
-      var exception = assertException.curry(assert);
       var o = new Options({
         map : true,
         type : "number"
       });
       jsoneq({ a : 1, b : 1 }, o.parse({ a : 1, b : 1}));
-      exception(/^Options: Error in property "b": Expected "number", but got "boolean"$/,
-                o.parse.bind(o, { a : 1, b : false }));
+      //exception(/^Options: Error in property "b": Expected "number", but got "boolean"$/,
+      //          o.parse.bind(o, { a : 1, b : false }));
     },
     "null and undefined" : function () {
       var exception = assertException.curry(assert);
@@ -364,10 +273,11 @@ module.exports = (function () {
         type : "mixed"
       });
       o.parse(true);
-      o.parse(null);
       o.parse("");
       o.parse({});
       o.parse([]);
+      exception(/Expected "mixed", but got "null"/i,
+                o.parse.bind(o, null));
     },
     "simple interface" : function () {
       var o = Options.simple("number");
@@ -530,10 +440,6 @@ module.exports = (function () {
       assert.strictEqual(0, o.parse(null));
       assert.ok(ran, "Validation did not run.");
     },
-    init : function () {
-      // Check for `type` on construction since omitting it is a common error.
-      assert.throws(function () { new Options({}) }, /Missing "type" or "enumerable"/);
-    },
     "predefined validations" : function () {
       var o = new Options({
         type : "number",
@@ -675,6 +581,98 @@ module.exports = (function () {
       "MyClass".should.equal(t(new MyClass()));
       var AnonymousClass = function () {};
       "anonymous type".should.equal(t(new AnonymousClass));
+    },
+    "recursive definition" : function () {
+      var exception = assertException.curry(assert);
+      var o = new Options({
+        type : {
+          type : {
+            required : false,
+            type : "mixed",
+            validators : [{
+              func : function (v) {
+                if (typeof v === "string") {
+                  return collection.hasValue(["string", "number", "object", "function", "boolean", "mixed"], v);
+                } else if (v instanceof Array) {
+                  return v.length === 1;
+                }
+                return false;
+              }
+            }]
+          },
+          required : {
+            required : false,
+            type : "boolean"
+          },
+          defaultValue : {
+            required : false,
+            type : "mixed"
+          },
+          defaultValueFunc : {
+            required : false,
+            type : Function
+          },
+          validators : {
+            type : [{
+              type : {
+                func : { type : Function },
+                message : { type : "string" }
+              }
+            }],
+            defaultValue : []
+          },
+          enumerable : {
+            required : false,
+            type : Array
+          }
+        }
+      });
+      o.parse({
+        type : "string"
+      });
+      o.parse({
+        type : "number"
+      });
+      o.parse({
+        required : false,
+        type : "number"
+      });
+      o.parse({
+        defaultValue : 3,
+        type : "number"
+      });
+      o.parse({
+        defaultValue : true,
+        type : "boolean"
+      });
+      o.parse({
+        defaultValue : 4,
+        type : "mixed"
+      });
+      o.parse({
+        defaultValue : {},
+        type : "mixed"
+      });
+      o.parse({
+        defaultValueFunc : function () { return 1; },
+        type : "number"
+      });
+      o.parse({
+        type : [{ type : "string" }]
+      });
+      o.parse({
+        validators : [{
+          func : Function.empty,
+          message : "msg"
+        }]
+      });
+      o.parse({
+        enumerable : [1,2,3]
+      });
+
+      // Fails until properties can constrain each other.
+      // exception(/./i,
+      //           o.parse.bind(o, {}));
     }
   };
 })();
