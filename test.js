@@ -21,3 +21,5 @@ global.ok = function (v, msg) { assert.ok(v, msg); };
 global.not = function (v, msg) { assert.ok(v === false, msg); };
 global.equal = function (a, b, msg) { assert.equal(a, b, msg); };
 global.eql = function (a, b, msg) { assert.eql(a, b, msg); };
+var Assertion = Cactus.Dev.Assertion;
+global.exception = Assertion.exception.bind(Assertion, assert);

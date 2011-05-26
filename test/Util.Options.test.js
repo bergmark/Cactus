@@ -1,18 +1,14 @@
 module.exports = (function () {
   var Options = Cactus.Util.Options;
-  var Assertion = Cactus.Dev.Assertion;
-  var assertException = Assertion.exception.bind(Assertion);
   var JSON = Cactus.Util.JSON;
   var stringify = JSON.stringify;
   var object = Cactus.Addon.Object;
   var collection = Cactus.Data.Collection;
 
   var gettype = Options.gettype.bind(Options);
-  var exception = assertException.curry(assert);
 
   return {
     "null and undefined" : function () {
-      var exception = assertException.curry(assert);
       var o = new Options({
         type : "number"
       });
@@ -22,7 +18,6 @@ module.exports = (function () {
                 o.parse.bind(o, null));
     },
     "required values" : function () {
-      var exception = assertException.curry(assert);
       var o = new Options({
         required : false,
         type : "boolean"
@@ -74,7 +69,6 @@ module.exports = (function () {
       eql({ b : false }, o.parse({}));
     },
     "validators" : function () {
-      var exception = assertException.curry(assert);
       var o = new Options({
         type : "number",
         validators : [{
@@ -428,7 +422,6 @@ module.exports = (function () {
       not(o.parse(null));
     },
     T_Enumerable : function () {
-      var exception = assertException.curry(assert);
       var o = new Options({
         enumerable : [1,2,3]
       });
@@ -609,8 +602,12 @@ module.exports = (function () {
       var AnonymousClass = function () {};
       equal("anonymous type", t(new AnonymousClass));
     },
+    "BUILD errors" : function () {
+      new Options({});
+
+      // required or defaultValue or defaultValueFunc
+    },
     "recursive definition" : function () {
-      var exception = assertException.curry(assert);
       var o = new Options({
         type : {
           type : {
