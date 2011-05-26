@@ -27,7 +27,7 @@ require('./lib/Dev/Assertion');
 require('./lib/Util/JSON');
 require('./lib/Util/EventSubscription');
 require('./lib/Util/EventPool');
-require('./lib/Util/Options');
+require('./lib/Util/TypeChecker');
 
 require('./lib/Data/KeyValueCoding');
 require('./lib/Util/generateComparator');
