@@ -135,7 +135,7 @@ module.exports = (function () {
         required : false,
         type : "boolean"
       });
-      o.parse(true);
+      true.should.equal(o.parse(true));
       // undefined not allowed for atomic values.
       o.parse(null);
 
