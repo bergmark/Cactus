@@ -14,7 +14,7 @@ module.exports = (function () {
   var exception = assertException.curry(assert);
 
   return {
-    a : function () {
+    initial : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
         type : "string"
@@ -39,40 +39,6 @@ module.exports = (function () {
                     /error in property "0": expected "number", but got "string"/i);
       exception(/error in property "1": expected "number", but got "boolean"/i, o.parse.bind(o, [1, true]));
       exception(/error in property "0": expected "number", but got "string"[\s\S]+error in property "1": expected "number", but got "boolean"/i, o.parse.bind(o, ["a", true]));
-
-      // Nesting of arrays.
-      o = new Options({
-        type : [{ type : [{ type : "number" }] }]
-      });
-      jsoneq([[1, 2]], o.parse([[1, 2]]));
-      exception(/^Options: Error in property "0": expected \[\{"type":"number"\}\], but got "number"$/i,
-                o.parse.bind(o, [1, [2, 3]]));
-      exception(/^Options: Error in property "1.1": expected "number", but got "boolean"$/i,
-                o.parse.bind(o, [[1], [2, true]]));
-      jsoneq([[]], o.parse([[]]));
-      jsoneq([], o.parse([]));
-
-      // Optional arrays.
-      o = new Options({
-        type : [{
-          type : "mixed"
-        }],
-        defaultValue : []
-      });
-      o.parse(null);
-
-      // Optional array in hash.
-      o = new Options({
-        type : {
-          a : {
-            type : [{
-              type : "number"
-            }],
-            defaultValue : []
-          }
-        }
-      });
-      o.parse({});
 
       // Hashes.
       o = new Options({
@@ -109,15 +75,6 @@ module.exports = (function () {
         assert.ok(/"name": Missing property/.test(e.message));
         return true;
       });
-    },
-    map : function () {
-      var o = new Options({
-        map : true,
-        type : "number"
-      });
-      jsoneq({ a : 1, b : 1 }, o.parse({ a : 1, b : 1}));
-      exception(/^Options: Error in property "b": Expected "number", but got "boolean"$/,
-                o.parse.bind(o, { a : 1, b : false }));
     },
     "null and undefined" : function () {
       var exception = assertException.curry(assert);
@@ -488,6 +445,43 @@ module.exports = (function () {
       assert.throws(o.parse.bind(o, ""),
                     /Expected non-empty string/i);
     },
+    T_Array : function () {
+      [{ type : "string" }].should.eql(gettype(new Options.types.T_Array({ type : "string" })));
+
+      // Nesting of arrays.
+      var o = new Options({
+        type : [{ type : [{ type : "number" }] }]
+      });
+      jsoneq([[1, 2]], o.parse([[1, 2]]));
+      exception(/^Options: Error in property "0": expected \[\{"type":"number"\}\], but got "number"$/i,
+                o.parse.bind(o, [1, [2, 3]]));
+      exception(/^Options: Error in property "1.1": expected "number", but got "boolean"$/i,
+                o.parse.bind(o, [[1], [2, true]]));
+      jsoneq([[]], o.parse([[]]));
+      jsoneq([], o.parse([]));
+
+      // Optional arrays.
+      o = new Options({
+        type : [{
+          type : "mixed"
+        }],
+        defaultValue : []
+      });
+      o.parse(null);
+
+      // Optional array in hash.
+      o = new Options({
+        type : {
+          a : {
+            type : [{
+              type : "number"
+            }],
+            defaultValue : []
+          }
+        }
+      });
+      o.parse({});
+    },
     T_Enumerable : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
@@ -498,6 +492,8 @@ module.exports = (function () {
       o.parse(3);
       exception(/^Options: Error: Expected a value in \[1,2,3\], but got 0$/, o.parse.bind(o, 0));
       exception(/^Options: Error: Expected a value in \[1,2,3\], but got 4$/, o.parse.bind(o, 4));
+
+      ({ enumerable : [1,2,3] }).should.eql(gettype(new Options.types.T_Enumerable([1, 2, 3])));
     },
     "T_Union" : function () {
       var o = new Options({
@@ -574,6 +570,15 @@ module.exports = (function () {
       function I() {}
       I.should.equal(gettype(new Options.types.T_Instance(I)).type);
     },
+    T_Map : function () {
+      var o = new Options({
+        map : true,
+        type : "number"
+      });
+      jsoneq({ a : 1, b : 1 }, o.parse({ a : 1, b : 1 }));
+      exception(/^Options: Error in property "b": Expected "number", but got "boolean"$/,
+                o.parse.bind(o, { a : 1, b : false }));
+    },
     "T_Mixed" : function () {
       var o = new Options({
         type : "mixed"
@@ -587,10 +592,6 @@ module.exports = (function () {
       exception(/Expected "mixed", but got "undefined"/i,
                 o.parse.bind(o, undefined));
       "mixed".should.equal(gettype(new Options.types.T_Mixed()));
-    },
-    "gettype" : function () {
-      [{ type : "string" }].should.eql(gettype(new Options.types.T_Array({ type : "string" })));
-      ({ enumerable : [1,2,3] }).should.eql(gettype(new Options.types.T_Enumerable([1, 2, 3])));
     },
     "typeof" : function () {
       var t = Options.typeof.bind(Options);
@@ -701,19 +702,6 @@ module.exports = (function () {
       // Fails until properties can constrain each other.
       // exception(/./i,
       //           o.parse.bind(o, {}));
-    },
-    "return values for types" : function () {
-      var o = new Options({
-        map : true,
-        type : {
-          first : { type : "string" },
-          inTransformer : { type : "string", defaultValue : "x" }
-        }
-      });
-      var res = o.parse({
-        name : { first : "adam" }
-      });
-      ({ name : { first : "adam", inTransformer : "x" } }).should.eql(res);
     }
   };
 })();
