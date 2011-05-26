@@ -362,7 +362,7 @@ module.exports = (function () {
       });
       assert.throws(o.parse.bind(o, 1), function (e) {
         assert.ok(/expected "string".+got "number"/i.test(e.message));
-        assert.ok("hash" in e);
+        assert.ok("hash" in e, "Missing hash property");
         jsoneq({
           "" : ['Expected "string", but got "number"']
         }, e.hash);
@@ -481,6 +481,9 @@ module.exports = (function () {
         }
       });
       o.parse({});
+    },
+    T_Primitive : function () {
+
     },
     T_Enumerable : function () {
       var exception = assertException.curry(assert);
