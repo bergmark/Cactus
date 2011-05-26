@@ -84,6 +84,16 @@ module.exports = (function () {
     bound : function () {
       var odd = math.odd;
       assert.ok(odd(1));
+    },
+
+    xor : function () {
+      equal(false, math.xor());
+      equal(1, math.xor(1));
+      equal(0, math.xor(0));
+      equal(0, math.xor(1, 0));
+      equal(null, math.xor(0, null));
+      equal(1, math.xor(0, 1));
+      equal(false, math.xor(0, 1, 2));
     }
   };
 })();
