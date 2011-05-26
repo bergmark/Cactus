@@ -119,8 +119,6 @@ module.exports = (function () {
       });
       o.parse(true);
       // undefined not allowed for atomic values.
-      exception(/Options: Error: undefined is not an allowed atomic value./i,
-                o.parse.bind(o, undefined));
       o.parse(null);
 
       // Hash with non-required properties.
@@ -560,6 +558,8 @@ module.exports = (function () {
       o.parse([]);
       exception(/Expected "mixed", but got "null"/i,
                 o.parse.bind(o, null));
+      exception(/Expected "mixed", but got "undefined"/i,
+                o.parse.bind(o, undefined));
       "mixed".should.equal(gettype(new Options.types.T_Mixed()));
     },
     "gettype" : function () {
