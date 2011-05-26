@@ -112,8 +112,8 @@ module.exports = (function () {
       });
       o.parse(0);
 
-      assert.throws(o.parse.bind(o, -1), /Expected number bigger than -1/i);
-      assert.throws(o.parse.bind(o, 1), /Expected number smaller than 1/i);
+      exception(/Expected number bigger than -1/i, o.parse.bind(o, -1));
+      exception(/Expected number smaller than 1/i, o.parse.bind(o, 1));
 
       o = new Options({
         type : "number",
