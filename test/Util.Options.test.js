@@ -7,76 +7,10 @@ module.exports = (function () {
   var object = Cactus.Addon.Object;
   var collection = Cactus.Data.Collection;
 
-  var jsoneq = function (a, b) {
-    a.should.eql(b);
-  };
   var gettype = Options.gettype.bind(Options);
   var exception = assertException.curry(assert);
 
   return {
-    initial : function () {
-      var exception = assertException.curry(assert);
-      var o = new Options({
-        type : "string"
-      });
-      assert.eql("aoeu", o.parse("aoeu"));
-      exception(/expected "string", but got 1 \(type "number"\)/i, o.parse.bind(o, 1));
-      exception(/expected "string", but got true \(type "boolean"\)/i, o.parse.bind(o, true));
-
-      o = new Options({
-        type : "number"
-      });
-      assert.eql(100, o.parse(100));
-      exception(/^Options: Error: Expected "number", but got "1" \(type "string"\)$/, o.parse.bind(o, "1"));
-
-      o = new Options({
-        type : [{ type : "number" }]
-      });
-      [1, 2].should.eql(o.parse([1, 2]));
-      [].should.eql(o.parse([]));
-      exception(/Expected \[\{"type":"number"\}\], but got "a" \(type "string"\)/i,
-                o.parse.bind(o, "a"));
-      assert.throws(o.parse.bind(o, ["a"]),
-                    /error in property "0": expected "number", but got "a" \(type "string"\)/i);
-      exception(/error in property "1": expected "number", but got true \(type "boolean"\)/i, o.parse.bind(o, [1, true]));
-      exception(/error in property "0": expected "number", but got "a"[\s\S]+error in property "1": expected "number", but got true/i, o.parse.bind(o, ["a", true]));
-
-      // Hashes.
-      o = new Options({
-        type : {
-          a : { type : "number" },
-          b : { type : "boolean" }
-        }
-      });
-      ({ a : 1, b : true }).should.eql(o.parse({ a : 1, b : true }));
-      o = new Options({
-        type : {
-          a : { type : "number" },
-          b : { type : "boolean" }
-        }
-      });
-      exception(/Expected \{"a":\{"type":"number"\},"b":\{"type":"boolean"\}\}, but got 1/i,
-                o.parse.bind(o, 1));
-      exception(/Error in property "a": expected "number", but got "2"/i,
-                o.parse.bind(o, { a : "2", b : true }));
-      exception(/Error in property "a": expected "number", but got "2"[\s\S]+Error in property "b": expected "boolean", but got "2"/i,
-                o.parse.bind(o, { a : "2", b : "2" }));
-      exception(/Error in property "b": Missing property/,
-                o.parse.bind(o, { a : 1 }));
-      exception(/Error in property "c": Property lacks definition/i,
-                o.parse.bind(o, { a : 1, b : true, c : "1" }));
-
-      // With required specified.
-      o = new Options({
-        type : {
-          name : { type : "string", required : true }
-        }
-      });
-      assert.throws(o.parse.bind(o, {}), function (e) {
-        assert.ok(/"name": Missing property/.test(e.message));
-        return true;
-      });
-    },
     "null and undefined" : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
@@ -93,27 +27,9 @@ module.exports = (function () {
         required : false,
         type : "boolean"
       });
-      true.should.equal(o.parse(true));
-      // undefined not allowed for atomic values.
+      equal(true, o.parse(true));
       o.parse(null);
 
-      // Hash with non-required properties.
-      o = new Options({
-        type : {
-          a : { type : "number", required : false },
-          b : { type : "boolean", required : false }
-        }
-      });
-      jsoneq({ a : 1, b : false },
-             o.parse({ a : 1, b : false }));
-      var h = o.parse({ a : 1, b : undefined });
-      assert.ok(!("b" in h));
-      h = o.parse({ a : 1, b : null });
-      assert.eql(null, h.b);
-      h = o.parse({ a : undefined, b : undefined });
-      assert.ok(object.isEmpty(h));
-      h = o.parse({});
-      assert.ok(object.isEmpty(h));
     },
     "default value" : function () {
       var o = new Options({
@@ -136,14 +52,6 @@ module.exports = (function () {
       assert.eql(1, o.parse({ a : null }).a);
       assert.eql(1, o.parse({}).a);
 
-      // Bools.
-      o = new Options({
-        type : "boolean",
-        defaultValue : false
-      });
-      o.parse(true);
-      o.parse(false);
-      not(o.parse(null));
 
       o = new Options({
         type : {
@@ -153,9 +61,9 @@ module.exports = (function () {
           }
         }
       });
-      jsoneq({ x : true }, o.parse({ x : true }));
-      jsoneq({ x : false }, o.parse({ x : false }));
-      jsoneq({ x : false }, o.parse({}));
+      eql({ x : true }, o.parse({ x : true }));
+      eql({ x : false }, o.parse({ x : false }));
+      eql({ x : false }, o.parse({}));
 
       // When not passing bool properties.
       o = new Options({
@@ -163,7 +71,7 @@ module.exports = (function () {
           b : { type : "boolean", defaultValue : false }
         }
       });
-      ({ b : false }).should.eql(o.parse({}));
+      eql({ b : false }, o.parse({}));
     },
     "validators" : function () {
       var exception = assertException.curry(assert);
@@ -315,7 +223,7 @@ module.exports = (function () {
       var o = Options.simple("string");
       o.parse(1, false);
       var errors = o.getErrors();
-      jsoneq({ "" : ["Expected \"string\", but got 1 (type \"number\")"] }, o.getErrors());
+      eql({ "" : ["Expected \"string\", but got 1 (type \"number\")"] }, o.getErrors());
 
       o = Options.simple({
         a : "number",
@@ -325,7 +233,7 @@ module.exports = (function () {
         a : "x",
         b : true
       }, false);
-      jsoneq({
+      eql({
         a : ['Expected "number", but got "x" (type "string")'],
         b : ['Expected "number", but got true (type "boolean")']
       }, o.getErrors());
@@ -364,7 +272,7 @@ module.exports = (function () {
       assert.throws(o.parse.bind(o, 1), function (e) {
         assert.ok(/expected "string".+got 1 \(type "number"\)/i.test(e.message));
         assert.ok("hash" in e, "Missing hash property");
-        jsoneq({
+        eql({
           "" : ['Expected "string", but got 1 (type "number")']
         }, e.hash);
         return true
@@ -447,19 +355,32 @@ module.exports = (function () {
                     /Expected non-empty string/i);
     },
     T_Array : function () {
-      [{ type : "string" }].should.eql(gettype(new Options.types.T_Array({ type : "string" })));
+      eql([{ type : "string" }], gettype(new Options.types.T_Array({ type : "string" })));
+
+      var o = new Options({
+        type : [{ type : "number" }]
+      });
+      eql([1, 2], o.parse([1, 2]));
+      eql([], o.parse([]));
+      exception(/Expected \[\{"type":"number"\}\], but got "a" \(type "string"\)/i,
+                o.parse.bind(o, "a"));
+      assert.throws(o.parse.bind(o, ["a"]),
+                    /error in property "0": expected "number", but got "a" \(type "string"\)/i);
+      exception(/error in property "1": expected "number", but got true \(type "boolean"\)/i, o.parse.bind(o, [1, true]));
+      exception(/error in property "0": expected "number", but got "a"[\s\S]+error in property "1": expected "number", but got true/i, o.parse.bind(o, ["a", true]));
+
 
       // Nesting of arrays.
       var o = new Options({
         type : [{ type : [{ type : "number" }] }]
       });
-      jsoneq([[1, 2]], o.parse([[1, 2]]));
+      eql([[1, 2]], o.parse([[1, 2]]));
       exception(/^Options: Error in property "0": expected \[\{"type":"number"\}\], but got 1/i,
                 o.parse.bind(o, [1, [2, 3]]));
       exception(/^Options: Error in property "1.1": expected "number", but got true/i,
                 o.parse.bind(o, [[1], [2, true]]));
-      jsoneq([[]], o.parse([[]]));
-      jsoneq([], o.parse([]));
+      eql([[]], o.parse([[]]));
+      eql([], o.parse([]));
 
       // Optional arrays.
       o = new Options({
@@ -484,33 +405,53 @@ module.exports = (function () {
       o.parse({});
     },
     T_Primitive : function () {
+      var o = new Options({
+        type : "string"
+      });
+      assert.eql("aoeu", o.parse("aoeu"));
+      exception(/expected "string", but got 1 \(type "number"\)/i, o.parse.bind(o, 1));
+      exception(/expected "string", but got true \(type "boolean"\)/i, o.parse.bind(o, true));
 
+      o = new Options({
+        type : "number"
+      });
+      assert.eql(100, o.parse(100));
+      exception(/^Options: Error: Expected "number", but got "1" \(type "string"\)$/, o.parse.bind(o, "1"));
+
+      // Default values
+      o = new Options({
+        type : "boolean",
+        defaultValue : false
+      });
+      o.parse(true);
+      o.parse(false);
+      not(o.parse(null));
     },
     T_Enumerable : function () {
       var exception = assertException.curry(assert);
       var o = new Options({
         enumerable : [1,2,3]
       });
-      (1).should.equal(o.parse(1));
+      eql(1, o.parse(1));
       o.parse(2);
       o.parse(3);
       exception(/^Options: Error: Expected a value in \[1,2,3\], but got 0$/, o.parse.bind(o, 0));
       exception(/^Options: Error: Expected a value in \[1,2,3\], but got 4$/, o.parse.bind(o, 4));
 
-      ({ enumerable : [1,2,3] }).should.eql(gettype(new Options.types.T_Enumerable([1, 2, 3])));
+      eql({ enumerable : [1,2,3] }, gettype(new Options.types.T_Enumerable([1, 2, 3])));
     },
     "T_Union" : function () {
       var o = new Options({
         union : ["string", "number"]
       });
-      (1).should.equal(o.parse(1));
-      "x".should.equal(o.parse("x"));
+      eql(1, o.parse(1));
+      eql("x", o.parse("x"));
       assert.throws(o.parse.bind(o, true),
                     /Expected a Union/i);
-      ({ union : [
+      eql({ union : [
         { type : "string"},
         { type : "number" }
-      ]}).should.eql(gettype(new Options.types.T_Union([
+      ]}, gettype(new Options.types.T_Union([
         { type : "string" },
         { type : "number" }
       ])));
@@ -524,7 +465,7 @@ module.exports = (function () {
         type : Foo2
       });
       var foo2 = new Foo2();
-      foo2.should.equal(o.parse(foo2));
+      equal(foo2, o.parse(foo2));
       o.parse(new Bar());
       exception(/Expected an instance of "Foo2", but got value <1> \(type "number"\)/,
                 o.parse.bind(o, 1));
@@ -572,14 +513,71 @@ module.exports = (function () {
                 o.parse.bind(o, new H()));
 
       function I() {}
-      I.should.equal(gettype(new Options.types.T_Instance(I)).type);
+      equal(I, gettype(new Options.types.T_Instance(I)).type);
+    },
+    T_Hash : function () {
+      var o = new Options({ x : { type : "boolean" } });
+      eql({ x : { type : "boolean" } }, gettype(new Options.types.T_Hash({ x : { type : "boolean" } })));
+
+      o = new Options({
+        type : {
+          a : { type : "number" },
+          b : { type : "boolean" }
+        }
+      });
+      eql({ a : 1, b : true }, o.parse({ a : 1, b : true }));
+      o = new Options({
+        type : {
+          a : { type : "number" },
+          b : { type : "boolean" }
+        }
+      });
+      exception(/Expected \{"a":\{"type":"number"\},"b":\{"type":"boolean"\}\}, but got 1/i,
+                o.parse.bind(o, 1));
+      exception(/Error in property "a": expected "number", but got "2"/i,
+                o.parse.bind(o, { a : "2", b : true }));
+      exception(/Error in property "a": expected "number", but got "2"[\s\S]+Error in property "b": expected "boolean", but got "2"/i,
+                o.parse.bind(o, { a : "2", b : "2" }));
+      exception(/Error in property "b": Missing property/,
+                o.parse.bind(o, { a : 1 }));
+      exception(/Error in property "c": Property lacks definition/i,
+                o.parse.bind(o, { a : 1, b : true, c : "1" }));
+
+      // With required specified.
+      o = new Options({
+        type : {
+          name : { type : "string", required : true }
+        }
+      });
+      assert.throws(o.parse.bind(o, {}), function (e) {
+        assert.ok(/"name": Missing property/.test(e.message));
+        return true;
+      });
+
+      // Non-required properties.
+      o = new Options({
+        type : {
+          a : { type : "number", required : false },
+          b : { type : "boolean", required : false }
+        }
+      });
+      eql({ a : 1, b : false },
+          o.parse({ a : 1, b : false }));
+      var h = o.parse({ a : 1, b : undefined });
+      ok(!("b" in h));
+      h = o.parse({ a : 1, b : null });
+      equal(null, h.b);
+      h = o.parse({ a : undefined, b : undefined });
+      ok(object.isEmpty(h));
+      h = o.parse({});
+      ok(object.isEmpty(h));
     },
     T_Map : function () {
       var o = new Options({
         map : true,
         type : "number"
       });
-      jsoneq({ a : 1, b : 1 }, o.parse({ a : 1, b : 1 }));
+      eql({ a : 1, b : 1 }, o.parse({ a : 1, b : 1 }));
       exception(/Error in property "b": Expected "number", but got false/,
                 o.parse.bind(o, { a : 1, b : false }));
     },
@@ -587,29 +585,29 @@ module.exports = (function () {
       var o = new Options({
         type : "mixed"
       });
-      true.should.equal(o.parse(true));
+      equal(true, o.parse(true));
       o.parse("");
       o.parse({});
-      [].should.eql(o.parse([]));
+      eql([], o.parse([]));
       ok(null === o.parse(null));
       ok(undefined === o.parse(undefined));
-      "mixed".should.equal(gettype(new Options.types.T_Mixed()));
+      equal("mixed", gettype(new Options.types.T_Mixed()));
     },
     "typeof" : function () {
       var t = Options.typeof.bind(Options);
-      "number".should.equal(t(1));
-      "boolean".should.equal(t(true));
-      "undefined".should.equal(t(undefined));
-      "null".should.equal(t(null));
-      "Function".should.equal(t(function () {}));
-      "Object".should.equal(t({}));
-      "Array".should.equal(t([]));
+      equal("number", t(1));
+      equal("boolean", t(true));
+      equal("undefined", t(undefined));
+      equal("null", t(null));
+      equal("Function", t(function () {}));
+      equal("Object", t({}));
+      equal("Array", t([]));
       Class("JooseClass");
-      "JooseClass".should.equal(t(new JooseClass()));
+      equal("JooseClass", t(new JooseClass()));
       function MyClass() {}
-      "MyClass".should.equal(t(new MyClass()));
+      equal("MyClass", t(new MyClass()));
       var AnonymousClass = function () {};
-      "anonymous type".should.equal(t(new AnonymousClass));
+      equal("anonymous type", t(new AnonymousClass));
     },
     "recursive definition" : function () {
       var exception = assertException.curry(assert);
