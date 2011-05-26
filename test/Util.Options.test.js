@@ -268,17 +268,6 @@ module.exports = (function () {
       assert.throws(o.parse.bind(o, 0), /bigger than 0.+ bigger than 1./i);
 
     },
-    "mixed values" : function () {
-      var o = new Options({
-        type : "mixed"
-      });
-      o.parse(true);
-      o.parse("");
-      o.parse({});
-      o.parse([]);
-      exception(/Expected "mixed", but got "null"/i,
-                o.parse.bind(o, null));
-    },
     "simple interface" : function () {
       var o = Options.simple("number");
       o.parse(1);
@@ -561,10 +550,21 @@ module.exports = (function () {
       function I() {}
       I.should.equal(gettype(new Options.types.T_Instance(I)).type);
     },
+    "T_Mixed" : function () {
+      var o = new Options({
+        type : "mixed"
+      });
+      o.parse(true);
+      o.parse("");
+      o.parse({});
+      o.parse([]);
+      exception(/Expected "mixed", but got "null"/i,
+                o.parse.bind(o, null));
+      "mixed".should.equal(gettype(new Options.types.T_Mixed()));
+    },
     "gettype" : function () {
       [{ type : "string" }].should.eql(gettype(new Options.types.T_Array({ type : "string" })));
       ({ enumerable : [1,2,3] }).should.eql(gettype(new Options.types.T_Enumerable([1, 2, 3])));
-      "mixed".should.equal(gettype(new Options.types.T_Mixed()));
     },
     "typeof" : function () {
       var t = Options.typeof.bind(Options);
