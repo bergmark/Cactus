@@ -20,25 +20,26 @@ module.exports = (function () {
         type : "string"
       });
       assert.eql("aoeu", o.parse("aoeu"));
-      exception(/expected "string", but got "number"/i, o.parse.bind(o, 1));
-      exception(/expected "string", but got "boolean"/i, o.parse.bind(o, true));
+      exception(/expected "string", but got 1 \(type "number"\)/i, o.parse.bind(o, 1));
+      exception(/expected "string", but got true \(type "boolean"\)/i, o.parse.bind(o, true));
 
       o = new Options({
         type : "number"
       });
       assert.eql(100, o.parse(100));
-      exception(/^Options: Error: Expected "number", but got "string"$/, o.parse.bind(o, "1"));
+      exception(/^Options: Error: Expected "number", but got "1" \(type "string"\)$/, o.parse.bind(o, "1"));
 
       o = new Options({
         type : [{ type : "number" }]
       });
       [1, 2].should.eql(o.parse([1, 2]));
       [].should.eql(o.parse([]));
-      exception(/^Options: Error: Expected \[\{"type":"number"\}\], but got "string"$/i, o.parse.bind(o, "a"));
+      exception(/Expected \[\{"type":"number"\}\], but got "a" \(type "string"\)/i,
+                o.parse.bind(o, "a"));
       assert.throws(o.parse.bind(o, ["a"]),
-                    /error in property "0": expected "number", but got "string"/i);
-      exception(/error in property "1": expected "number", but got "boolean"/i, o.parse.bind(o, [1, true]));
-      exception(/error in property "0": expected "number", but got "string"[\s\S]+error in property "1": expected "number", but got "boolean"/i, o.parse.bind(o, ["a", true]));
+                    /error in property "0": expected "number", but got "a" \(type "string"\)/i);
+      exception(/error in property "1": expected "number", but got true \(type "boolean"\)/i, o.parse.bind(o, [1, true]));
+      exception(/error in property "0": expected "number", but got "a"[\s\S]+error in property "1": expected "number", but got true/i, o.parse.bind(o, ["a", true]));
 
       // Hashes.
       o = new Options({
@@ -54,15 +55,15 @@ module.exports = (function () {
           b : { type : "boolean" }
         }
       });
-      exception(/^Options: Error: Expected \{"a":\{"type":"number"\},"b":\{"type":"boolean"\}\}, but got "number"/i,
+      exception(/Expected \{"a":\{"type":"number"\},"b":\{"type":"boolean"\}\}, but got 1/i,
                 o.parse.bind(o, 1));
-      exception(/^Options: Error in property "a": expected "number", but got "string"$/i,
+      exception(/Error in property "a": expected "number", but got "2"/i,
                 o.parse.bind(o, { a : "2", b : true }));
-      exception(/^Options: Error in property "a": expected "number", but got "string"[\s\S]Options: Error in property "b": expected "boolean", but got "string"$/i,
+      exception(/Error in property "a": expected "number", but got "2"[\s\S]+Error in property "b": expected "boolean", but got "2"/i,
                 o.parse.bind(o, { a : "2", b : "2" }));
-      exception(/^Options: Error in property "b": Missing property$/,
+      exception(/Error in property "b": Missing property/,
                 o.parse.bind(o, { a : 1 }));
-      exception(/^Options: Error in property "c": Property lacks definition$/i,
+      exception(/Error in property "c": Property lacks definition/i,
                 o.parse.bind(o, { a : 1, b : true, c : "1" }));
 
       // With required specified.
@@ -81,9 +82,9 @@ module.exports = (function () {
       var o = new Options({
         type : "number"
       });
-      exception(/^Options: Error: Expected "number", but got "undefined"$/,
+      exception(/Expected "number", but got undefined \(type "undefined"\)/,
                 o.parse.bind(o, undefined));
-      exception(/^Options: Error: Expected "number", but got "null"$/,
+      exception(/Expected "number", but got null \(type "null"\)/,
                 o.parse.bind(o, null));
     },
     "required values" : function () {
@@ -291,14 +292,14 @@ module.exports = (function () {
       assert.strictEqual(2, o.parse({}).a);
 
       // defaultValueFunc return value must match type.
-      exception(/expected "boolean", but got "number"/i,
+      exception(/expected "boolean", but got 1/i,
                 function () {
                   return new Options({
                     defaultValueFunc : function () { return 1; },
                     type : "boolean"
                   }).parse(undefined);
                 });
-      exception(/expected "boolean", but got "number"/i,
+      exception(/expected "boolean", but got 1/i,
                 function () {
                   return new Options({
                     type : {
@@ -314,7 +315,7 @@ module.exports = (function () {
       var o = Options.simple("string");
       o.parse(1, false);
       var errors = o.getErrors();
-      jsoneq({ "" : ["Expected \"string\", but got \"number\""] }, o.getErrors());
+      jsoneq({ "" : ["Expected \"string\", but got 1 (type \"number\")"] }, o.getErrors());
 
       o = Options.simple({
         a : "number",
@@ -325,8 +326,8 @@ module.exports = (function () {
         b : true
       }, false);
       jsoneq({
-        a : ["Expected \"number\", but got \"string\""],
-        b : ["Expected \"number\", but got \"boolean\""]
+        a : ['Expected "number", but got "x" (type "string")'],
+        b : ['Expected "number", but got true (type "boolean")']
       }, o.getErrors());
 
       o = new Options({
@@ -361,10 +362,10 @@ module.exports = (function () {
         type : "string"
       });
       assert.throws(o.parse.bind(o, 1), function (e) {
-        assert.ok(/expected "string".+got "number"/i.test(e.message));
+        assert.ok(/expected "string".+got 1 \(type "number"\)/i.test(e.message));
         assert.ok("hash" in e, "Missing hash property");
         jsoneq({
-          "" : ['Expected "string", but got "number"']
+          "" : ['Expected "string", but got 1 (type "number")']
         }, e.hash);
         return true
       });
@@ -385,7 +386,7 @@ module.exports = (function () {
       });
 
       o.parse(0);
-      assert.throws(o.parse.bind(o, "x"), /expected "number".+got "string"/i);
+      assert.throws(o.parse.bind(o, "x"), /expected "number".+got "x"/i);
 
       // Do not run validators if constraints fail.
       o.parse("x", false);
@@ -453,9 +454,9 @@ module.exports = (function () {
         type : [{ type : [{ type : "number" }] }]
       });
       jsoneq([[1, 2]], o.parse([[1, 2]]));
-      exception(/^Options: Error in property "0": expected \[\{"type":"number"\}\], but got "number"$/i,
+      exception(/^Options: Error in property "0": expected \[\{"type":"number"\}\], but got 1/i,
                 o.parse.bind(o, [1, [2, 3]]));
-      exception(/^Options: Error in property "1.1": expected "number", but got "boolean"$/i,
+      exception(/^Options: Error in property "1.1": expected "number", but got true/i,
                 o.parse.bind(o, [[1], [2, true]]));
       jsoneq([[]], o.parse([[]]));
       jsoneq([], o.parse([]));
@@ -579,7 +580,7 @@ module.exports = (function () {
         type : "number"
       });
       jsoneq({ a : 1, b : 1 }, o.parse({ a : 1, b : 1 }));
-      exception(/^Options: Error in property "b": Expected "number", but got "boolean"$/,
+      exception(/Error in property "b": Expected "number", but got false/,
                 o.parse.bind(o, { a : 1, b : false }));
     },
     "T_Mixed" : function () {
