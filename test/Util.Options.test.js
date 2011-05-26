@@ -130,7 +130,7 @@ module.exports = (function () {
         }]
       });
       o.parse(2);
-      assert.throws(o.parse.bind(o, 0), /bigger than 0.+ bigger than 1./i);
+      exception(/bigger than 0.+ bigger than 1./i, o.parse.bind(o, 0));
     },
     "simple interface" : function () {
       var o = Options.simple("number");
