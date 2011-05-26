@@ -371,7 +371,6 @@ module.exports = {
     });
     var dto = df.newDto();
     ({ name : "adam" }).should.eql(dto.get());
-
     // Should be default value for getWithDefault.
     dto = df.newDto();
     "adam".should.eql(dto.getWithDefault("name"));
