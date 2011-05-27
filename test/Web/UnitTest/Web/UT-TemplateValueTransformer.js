@@ -55,7 +55,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
 
     t.setValueTransformer({
       keyPath : "x",
-      transform : function (v) {
+      forward : function (v) {
         return v * 2;
       }
     });
@@ -64,7 +64,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
 
     t.setValueTransformer ({
       keyPath : "y",
-      transform : function (v) {
+      forward : function (v) {
         return v * 3;
       }
     });
@@ -77,7 +77,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     var triggered = false;
     t.setValueTransformer({
       keyPath : "y",
-      transform : function (v, kvc) {
+      forward : function (v, kvc) {
         test.assertEqual(o, kvc);
         triggered = true;
         return v;
@@ -102,7 +102,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     // .bar .x.
     t.setValueTransformer({
       selector : ".foo .x",
-      transform : function (v) {
+      forward : function (v) {
         return v * 10;
       }
     });
@@ -114,7 +114,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     // Set after binding.
     t.setValueTransformer({
       selector : ".bar .x",
-      transform : function (v) {
+      forward : function (v) {
         return v * 5;
         }
     });
@@ -127,13 +127,13 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     var t = Template.create('<div><div class="x"></div></div>');
     t.setValueTransformer({
       keyPath : "x",
-      transform : function (v) {
+      forward : function (v) {
         return Math.abs(v);
       }
     });
     t.setValueTransformer({
       selector : ".x",
-      transform : function (v) {
+      forward : function (v) {
         return Math.sqrt(v);
       }
     });
@@ -148,7 +148,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     var t = Template.create('<div class="x"></div>');
     t.setValueTransformer({
       selector : "root",
-      transform : Math.sqrt
+      forward : Math.sqrt
     });
     var o = new O(4);
     t.bindTo(o);
@@ -161,7 +161,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     var t = Template.create('<div><div class="x"></div></div>');
     t.setValueTransformer({
       selector : ".x",
-      transform : Math.sqrt
+      forward : Math.sqrt
     });
     var o = new O(4);
     var t2 = Template.create(t);
@@ -176,12 +176,12 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
       '<div><h1 class="x"></h1></div>', {
         valueTransformers : [{
           selector : ".x",
-          transform : function (v) {
+          forward : function (v) {
             return v + "b";
           }
         }, {
           keyPath : "x",
-          transform : function (v) {
+          forward : function (v) {
             return v + "a";
           }
         }],
@@ -189,13 +189,13 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
       });
     t.setValueTransformer({
       selector : ".x",
-      transform : function (v) {
+      forward : function (v) {
         return v + "d";
       }
     });
     t.setValueTransformer({
       keyPath : "x",
-      transform : function (v) {
+      forward : function (v) {
         return v + "c";
       }
     });
@@ -208,10 +208,10 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
       '<div><h1 class="x"></h1><h2 class="y"></h2></div>', {
         valueTransformers : [{
           selector : ".y",
-          transform : Math.sqrt
+          forward : Math.sqrt
         }, {
           keyPath : "x",
-          transform : Math.sqrt
+          forward : Math.sqrt
         }],
         kvcBinding : new O(4, -9)
       });
@@ -226,10 +226,10 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
       '<div><h1 class="x"></h1><h2 class="y"></h2></div>', {
         valueTransformers : [{
           selector : ".x",
-          transform : Math.sqrt
+          forward : Math.sqrt
         }, {
           keyPath : "x",
-          transform : Math.abs
+          forward : Math.abs
         }],
         kvcBinding : new O(-4)
       });
@@ -245,7 +245,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
       t.bindTo(o);
     t.setValueTransformer({
       keyPath : "x",
-      transform : function (v) {
+      forward : function (v) {
         return v * 2;
       }
     });
@@ -265,7 +265,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
       '<div><h1 class="x"></h1><h2 class="y"></h2></div>');
     t.setValueTransformer({
       keyPath : "x",
-      transform : function (v) {
+      forward : function (v) {
         return v * 2;
       }
     });
@@ -292,23 +292,25 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
       </div>', {
         valueTransformers : [{
           keyPath : "x",
-          transform : Math.abs,
-          reverse : Math.sqrt
+          forward : Math.abs,
+          backward : Math.sqrt
         }, {
           selector : ".y",
-          transform : Math.abs,
-          reverse : Math.sqrt
+          forward : Math.abs,
+          backward : function (v) {
+            return Math.sqrt(v);
+          }
         }, {
           selector : ".z"
           // Omitting both transformers.
-        }, /* Both types of reverse transformers. */ {
+        }, /* Both types of backward transformers. */ {
           keyPath : "w",
-          reverse : function (v) {
+          backward : function (v) {
             return -v;
           }
         }, {
           selector : ".w",
-          reverse : Math.sqrt
+          backward : Math.sqrt
         }],
         kvcBinding : o
       });
@@ -330,7 +332,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     this.assertEqual(-4, o.getValue("w"));
     this.assertEqual(-4, valueOf(t, ".w"));
 
-    // Cloning of reverse transformers,
+    // Cloning of backward transformers,
     // checking both selector and value transformers.
     var t2 = Template.create(t);
     t2.bindTo(o);
@@ -341,7 +343,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     this.assertEqual(-4, valueOf(t2, ".w"));
   });
 
-  // Regression test for a bug that caused the reverse transformer's value
+  // Regression test for a bug that caused the backward transformer's value
   // to be set to the event object.
   tc.add(function () {
     var o = new KVC();
@@ -351,7 +353,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
       kvcBinding : o,
       valueTransformers : [{
         keyPath : "foo",
-        reverse : function (v) {
+        backward : function (v) {
           value = v;
         }
       }]

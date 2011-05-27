@@ -347,7 +347,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
       '<option class="x" value=""></option>', {
         valueTransformers : [{
           keyPath : "x",
-          transform : function (v, o) {
+          forward : function (v, o) {
             return {
               value : o.getValue("x")*10,
               text : o.getValue("y")*10

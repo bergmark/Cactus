@@ -166,7 +166,7 @@ Cactus.UnitTest.Web.Template = function () {
     this.assertEqual(true, kvc.getValue("foo"), "Foo is not true.");
   });
 
-  // Checkbox read/write events should go through reverse value transformers.
+  // Checkbox read/write events should go through backward value transformers.
   templateTC.add(function () {
     var t = Template.create ('\
       <div>\
@@ -175,10 +175,10 @@ Cactus.UnitTest.Web.Template = function () {
         // Negate the value of the key path, going both ways.
         valueTransformers : [{
           keyPath : "foo",
-          transform : function (v) {
+          forward : function (v) {
             return !v;
           },
-          reverse : function (v) {
+          backward : function (v) {
             return !v;
           }
         }]
@@ -1044,14 +1044,14 @@ Cactus.UnitTest.Web.Template = function () {
     var t = this.t;
     t.setValueTransformer({
       keyPath : "x",
-      transform : function (v) {
+      forward : function (v) {
         // Invert the progress.
         return 1 - v;
       }
     });
     t.setValueTransformer({
       selector : ".x",
-      transform : function (v) {
+      forward : function (v) {
         // Subtract a quarter.
         return v - 0.25;
       }
