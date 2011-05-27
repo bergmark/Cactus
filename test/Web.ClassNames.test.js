@@ -7,7 +7,7 @@ module.exports = (function () {
     initial : function () {
       var o = {};
       assert.ok(!CN.has(o, "foo"));
-      CN.del(o, "foo");
+      CN.remove(o, "foo");
     },
     b : function () {
       // First CN.
@@ -37,20 +37,20 @@ module.exports = (function () {
       CN.add(o, "bax");
 
       // Remove middle CN.
-      CN.del(o, "baz");
+      CN.remove(o, "baz");
       assert.ok(CN.has(o, "foo"), 6);
       assert.ok(CN.has(o, "bar"), 7);
       assert.ok(!CN.has(o, "baz"), 8);
       assert.ok(CN.has(o, "bax"), 9);
 
       // Remove first CN.
-      CN.del(o, "foo");
+      CN.remove(o, "foo");
       assert.ok(!CN.has(o, "foo"), 10);
       assert.ok(CN.has(o, "bar"), 11);
       assert.ok(CN.has(o, "bax"), 12);
 
       // Remove last CN.
-      CN.del(o, "bax");
+      CN.remove(o, "bax");
       assert.ok(CN.has(o, "bar"));
       assert.ok(!CN.has(o, "bax"));
     },
@@ -64,7 +64,7 @@ module.exports = (function () {
       assert.ok(!CN.has(o, "a"));
       assert.ok(!CN.has(o, "b"));
 
-      CN.del(o, "a");
+      CN.remove(o, "a");
       assert.ok(CN.has(o, "a-b"));
       assert.ok(CN.has(o, "c"));
       assert.ok(!CN.has(o, "a"));
