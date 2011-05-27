@@ -31,8 +31,7 @@ module.exports = (function () {
       ac.add(5);
       assert.ok(addedTriggered, "added was not triggered");
     },
-    c : function () {
-      var test = this;
+    remmove : function () {
       var ac = new AC([1, 2, 3]);
 
       ac.remove(2);
@@ -49,6 +48,10 @@ module.exports = (function () {
       ac.remove(3);
       assert.ok(removedTriggered, "removed was not triggered");
       assert.eql("1", ac.getRange().join(","));
+
+      ac = new AC();
+      exception(/Object is not in collection/i,
+                ac.remove.bind(ac, "x"));
     },
     swap : function () {
       var test = this;
