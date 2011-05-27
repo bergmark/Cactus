@@ -67,6 +67,51 @@ module.exports = (function () {
         }
       });
       eql({ b : false }, o.parse({}));
+
+      // Default values with incorrect types should have special error message (always throw error)
+      exception(/Expected "boolean", but got 1/, function () {
+        return new TypeChecker({
+          type : "boolean",
+          defaultValue : 1
+        });
+      });
+    },
+    defaultValueFunc : function () {
+      var o = new TypeChecker({
+        defaultValueFunc : function () { return 1; },
+        type : "number"
+      });
+      assert.strictEqual(1, o.parse(null));
+      o = new TypeChecker({
+        type : {
+          a : {
+            defaultValueFunc : function () { return 2; },
+            type : "number"
+          }
+        }
+      });
+      assert.strictEqual(2, o.parse({ a : null }).a);
+      assert.strictEqual(2, o.parse({}).a);
+
+      // defaultValueFunc return value must match type.
+      exception(/expected "boolean", but got 1/i,
+                function () {
+                  return new TypeChecker({
+                    defaultValueFunc : function () { return 1; },
+                    type : "boolean"
+                  }).parse(undefined);
+                });
+      exception(/expected "boolean", but got 1/i,
+                function () {
+                  return new TypeChecker({
+                    type : {
+                      a : {
+                        defaultValueFunc : function () { return 1; },
+                        type : "boolean"
+                      }
+                    }
+                  }).parse({});
+                });
     },
     "validators" : function () {
       var o = new TypeChecker({
@@ -175,43 +220,6 @@ module.exports = (function () {
       o.parse({
         a : new X()
       });
-    },
-    defaultValueFunc : function () {
-      var o = new TypeChecker({
-        defaultValueFunc : function () { return 1; },
-        type : "number"
-      });
-      assert.strictEqual(1, o.parse(null));
-      o = new TypeChecker({
-        type : {
-          a : {
-            defaultValueFunc : function () { return 2; },
-            type : "number"
-          }
-        }
-      });
-      assert.strictEqual(2, o.parse({ a : null }).a);
-      assert.strictEqual(2, o.parse({}).a);
-
-      // defaultValueFunc return value must match type.
-      exception(/expected "boolean", but got 1/i,
-                function () {
-                  return new TypeChecker({
-                    defaultValueFunc : function () { return 1; },
-                    type : "boolean"
-                  }).parse(undefined);
-                });
-      exception(/expected "boolean", but got 1/i,
-                function () {
-                  return new TypeChecker({
-                    type : {
-                      a : {
-                        defaultValueFunc : function () { return 1; },
-                        type : "boolean"
-                      }
-                    }
-                  }).parse({});
-                });
     },
     errorHash : function () {
       var o = TypeChecker.simple("string");
@@ -653,8 +661,8 @@ module.exports = (function () {
             }]
           },
           required : {
-            required : false,
-            type : "boolean"
+            type : "boolean",
+            defaultValue : true
           },
           defaultValue : {
             required : false,
