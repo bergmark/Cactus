@@ -15,6 +15,7 @@
     "Web/tag",
     "Web/EventManager",
     "Web/Validation",
+    "Web/TemplateValueTransformer",
     "Web/Template"
   ];
 

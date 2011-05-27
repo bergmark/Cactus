@@ -10,19 +10,26 @@ Cactus.UnitTest.Web.Template = function () {
   var CN = Cactus.Web.ClassNames;
   var Widget = Cactus.Web.Widget;
   var $f = Cactus.Web.selectFirst;
+  var object = Cactus.Addon.Object;
 
 
   var templateTC = new TestCase("Web.Template");
-  Class("O", {
-    isa : KVC,
+  var O = Class({
+    does : KVC,
     has : {
       x : { is : "rw" },
-      y : { is : "rw" }
+      y : null
     },
     methods : {
       BUILD : function (x, y) {
         this.x = x || 1;
         this.y = y || 2;
+      },
+      setY : function (y) {
+        this.y = y + 1;
+      },
+      getY : function () {
+        return this.y * -1;
       }
     }
   });
@@ -89,7 +96,7 @@ Cactus.UnitTest.Web.Template = function () {
 
     this.assertEqual (1, dataSource.getValue("x"));
     this.assertEqual ("1", Element.getValue(h1));
-    this.assertEqual ("-2", Element.getValue(h2));
+    this.assertEqual ("-2", Element.getValue(h2)); // >
     dataSource.setValue ("x", 5);
     this.assertEqual ("5", Element.getValue(h1));
     dataSource.setValue ("y", 9);
@@ -132,9 +139,9 @@ Cactus.UnitTest.Web.Template = function () {
   // Test toggling a bool with a read/write check box.
   templateTC.add (function () {
     var t = Template.create ('\
-<div>\
-<input type="checkbox" name="foo" class="foo" value="bar">\
-</div>');
+      <div>\
+      <input type="checkbox" name="foo" class="foo" value="bar">\
+      </div>');
     var kvc = new KVC();
     kvc.foo = true;
     t.bindTo (kvc);
@@ -162,20 +169,20 @@ Cactus.UnitTest.Web.Template = function () {
   // Checkbox read/write events should go through reverse value transformers.
   templateTC.add(function () {
     var t = Template.create ('\
-<div>\
-<input type="checkbox" name="foo" class="foo" value="bar">\
-</div>', {
-  // Negate the value of the key path, going both ways.
-  valueTransformers : [{
-    keyPath : "foo",
-    transform : function (v) {
-      return !v;
-    },
-    reverse : function (v) {
-      return !v;
-    }
-  }]
-});
+      <div>\
+      <input type="checkbox" name="foo" class="foo" value="bar">\
+      </div>', {
+        // Negate the value of the key path, going both ways.
+        valueTransformers : [{
+          keyPath : "foo",
+          transform : function (v) {
+            return !v;
+          },
+          reverse : function (v) {
+            return !v;
+          }
+        }]
+      });
 
     var box = get(t, ".foo");
     function simulateClick() {
@@ -200,13 +207,13 @@ Cactus.UnitTest.Web.Template = function () {
   // Read/Write for several associated checkboxes.
   templateTC.add (function () {
     var t = Template.create ('\
-<div>\
-<form>\
-<input type="checkbox" name="foo[]" class="foo" value="a">\
-<input type="checkbox" name="foo[]" class="foo" value="b">\
-</form>\
-</div>\
-');
+      <div>\
+      <form>\
+      <input type="checkbox" name="foo[]" class="foo" value="a">\
+      <input type="checkbox" name="foo[]" class="foo" value="b">\
+      </form>\
+      </div>\
+      ');
     var kvc = new KVC();
       kvc.foo = [];
     t.bindTo (kvc);
@@ -247,11 +254,11 @@ Cactus.UnitTest.Web.Template = function () {
   templateTC.add(function () {
     var t = Template.create(
       '<div>\
-<form>\
-<input type="radio" class="a" name="a" value="1">\
-<input type="radio"           name="a" value="2">\
-</form>\
-</div>');
+      <form>\
+      <input type="radio" class="a" name="a" value="1">\
+      <input type="radio"           name="a" value="2">\
+      </form>\
+      </div>');
     var kvc = new KVC();
     var root = t.getRootElement();
     var radios = $("input", root);
@@ -272,9 +279,9 @@ Cactus.UnitTest.Web.Template = function () {
   // Read/write for selects.
   templateTC.add (function () {
     var t = Template.create ('<div><select class="foop">\
-<option value="a">A</option>\
-<option value="b">B</option>\
-</select></div>');
+      <option value="a">A</option>\
+      <option value="b">B</option>\
+      </select></div>');
     var kvc = new KVC();
     kvc.foop = "a";
     t.bindTo (kvc);
@@ -293,12 +300,12 @@ Cactus.UnitTest.Web.Template = function () {
     this.assertEqual ("a", Element.getValue (select));
   });
 
-    // Button KP's matching a method on the bound object should create an
+  // Button KP's matching a method on the bound object should create an
   // onclick=method.
   templateTC.add (function () {
     var t = Template.create ('<div>\
-<input class="foo" type="button">\
-</div>');
+      <input class="foo" type="button">\
+      </div>');
     var kvc = new KVC();
     var fooTriggered = false;
     kvc.foo = function () {
@@ -317,8 +324,8 @@ Cactus.UnitTest.Web.Template = function () {
 
     // Should also work for <button>s and input submits.
     var t = Template.create ('<div>\
-<input class="foo" type="submit">\
-</div>');
+      <input class="foo" type="submit">\
+      </div>');
     var kvc = new KVC();
     var fooTriggered = false;
     kvc.foo = function () {
@@ -370,9 +377,9 @@ Cactus.UnitTest.Web.Template = function () {
 
     eventBindingTC.setup = function () {
       this.t = Template.create('<div>\
-<div class="x"></div>\
-<div class="y"></div>\
-</div>');
+        <div class="x"></div>\
+        <div class="y"></div>\
+        </div>');
       this.root = this.t.getRootElement();
       this.o = new O();
       this.x = $f(".x", this.root);
@@ -513,7 +520,7 @@ Cactus.UnitTest.Web.Template = function () {
       this.o.p = new KVC();
       this.o.p.q = function () {
         clickTriggered = true;
-      }
+      };
       this.t.createEventBindings ([{
         selector : ".x",
         method : "p.q"
@@ -626,7 +633,7 @@ Cactus.UnitTest.Web.Template = function () {
         selector : ".z",
           callback : Function.empty
       }]);
-      this.assertException(/no element with the selector/i, Object.bound(this.t, "bindTo", this.o));
+      this.assertException(/no element with the selector/i, object.bound(this.t, "bindTo", this.o));
     });
   })();
 
@@ -825,14 +832,17 @@ Cactus.UnitTest.Web.Template = function () {
   templateTC.add(function() {
     var saves = [];
 
-    function C(name) {
-      this.name = name;
-    } C.prototype = {
-      save : function () {
-        saves.push(this.name)
+    var C = Class({
+      does : KVC,
+      methods : {
+        BUILD : function (name) {
+          this.name = name;
+        },
+        save : function () {
+          saves.push(this.name)
+        }
       }
-    };
-    KVC.implement(C);
+    });
 
     var t = Template.create(
       '<div><input type="button" class="save" value="Save"></div>');
@@ -1082,6 +1092,7 @@ Cactus.UnitTest.Web.Template = function () {
     this.assertEqual(100, this.bar("z1 .x", root).offsetWidth);
   });
 */
+
   // The template should be able to tag its root with a className, based on a
   // boolean property.
   templateTC.add(function () {
@@ -1324,5 +1335,5 @@ Cactus.UnitTest.Web.Template = function () {
     this.assertEqual(2, valueOf(t2, "root"));
   });
 
-  return [templateTC]; // , eventBindingTC];
+  return [templateTC, eventBindingTC];
 };

@@ -10,5 +10,6 @@ require("./lib/Web/Element");
 require("./lib/Web/EventManager");
 require("./lib/Web/Ready");
 require("./lib/Web/Validation");
-require('./lib/Web/AbstractTemplate');
-require('./lib/Web/Template');
+require("./lib/Web/AbstractTemplate");
+require("./lib/Web/TemplateValueTransformer");
+require("./lib/Web/Template");
