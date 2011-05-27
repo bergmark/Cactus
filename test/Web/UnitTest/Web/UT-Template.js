@@ -1107,7 +1107,9 @@ Cactus.UnitTest.Web.Template = function () {
     t.addClassNameCondition("a", "a-false", true);
     t.addClassNameCondition("b", "b-true",  false);
     t.addClassNameCondition("b", "b-false", true);
+    this.assertFalse(t.classNameConditions.hasDataSource(), "Should not have data source here");
     t.bindTo(o);
+    this.assert(t.classNameConditions.hasDataSource(), "Should have data source here");
 
     var root = t.getRootElement();
     var has = CN.has.curry(root);
@@ -1121,7 +1123,6 @@ Cactus.UnitTest.Web.Template = function () {
 
 
     // Changing the value.
-
     o.setValue("a", false);
     o.setValue("b", true);
     this.assertFalse(has("a-trueDefaultNegation"), "a-trueDefaultNegation.");
