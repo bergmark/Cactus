@@ -4,12 +4,12 @@ module.exports = {
   test : function () {
     var sfd = new SFD();
     sfd.define("key");
-    assert.ok(!sfd.has("key"));
+    assert.ok(!sfd.hasKey("key"));
     sfd.add("key", "val");
-    assert.ok(sfd.has("key"));
+    assert.ok(sfd.hasKey("key"));
 
     assert.eql(["val"], sfd.get("key"));
-    assert.ok(!sfd.has("key"));
+    assert.ok(!sfd.hasKey("key"));
     assert.eql([], sfd.get("key"));
 
     sfd.define("key2");
@@ -24,12 +24,12 @@ module.exports = {
     sfd.get("y");
 
     assert.throws(sfd.get.bind(sfd, "u"), /undefined key/i);
-    assert.throws(sfd.has.bind(sfd, "u"), /undefined key/i);
+    assert.throws(sfd.hasKey.bind(sfd, "u"), /undefined key/i);
 
     new SFD();
 
     sfd = new SFD({ a : [1] });
-    ok(sfd.has("a"));
+    ok(sfd.hasKey("a"));
 
     exception(/non empty Array value/i,
               function () { return new SFD({ a : [] }); });

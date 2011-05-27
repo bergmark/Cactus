@@ -3,12 +3,12 @@ var FD = Cactus.Data.FlushDictionary;
 module.exports = {
   initial : function () {
     var fd = new FD();
-    assert.ok(!fd.has("key"));
+    assert.ok(!fd.hasKey("key"));
     assert.eql([], fd.get("key"));
     fd.add("key", 1);
-    assert.ok(fd.has("key"));
+    assert.ok(fd.hasKey("key"));
     assert.eql([1], fd.get("key"));
-    assert.ok(!fd.has("key"));
+    assert.ok(!fd.hasKey("key"));
     assert.eql([], fd.get("key"));
 
     fd.add("key2", 1);
