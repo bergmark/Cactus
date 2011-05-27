@@ -172,6 +172,7 @@ Cactus.Dev.UnitTest.Test = (function () {
         try {
           this.resultProcessor.apply(this, arguments);
         } catch (e) {
+          console.log(e);
           // The last assertion failed, so it was the cause of
           // the error.
           if (this.lastAssertionFailed()) {

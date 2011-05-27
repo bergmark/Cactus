@@ -11,6 +11,7 @@ require("./lib/Web/EventManager");
 require("./lib/Web/Ready");
 require("./lib/Web/Validation");
 require("./lib/Web/AbstractTemplate");
+require("./lib/Web/ViewHandler");
 require("./lib/Web/Mediator");
 require("./lib/Web/TemplateValueTransformer");
 require("./lib/Web/Template");
