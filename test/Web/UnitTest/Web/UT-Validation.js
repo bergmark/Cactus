@@ -859,8 +859,8 @@ Cactus.UnitTest.Web.Validation = function () {
   tc.add(new Test(function () {
     Events.add(this.foo, "blur", this.validation.failVisible.bind(this.validation, "bar_foo", "Temporary message."));
     this.foo.onblur();
-      // Same delay as validation should cause this call to be queued up after.
-    setTimeout(this.processResults.bind(this, this.validation, this.form), 1100);
+    // Same delay as validation should cause this call to be queued up after.
+    setTimeout(this.processResults.bind(this, this.validation, this.form), 250);
   }, function (validation, form) {
     this.assertEqual(stringify(["Temporary message."]), stringify(validation.getViolationMessagesFor("bar_foo")));
   }));
@@ -870,11 +870,11 @@ Cactus.UnitTest.Web.Validation = function () {
     setValue(this.foo, "1234");
     this.foo.onblur();
     this.validation.failVisible("bar_foo", "Temporary message.");
-      this.assertEqual(stringify(["Temporary message."]),
+    this.assertEqual(stringify(["Temporary message."]),
                        stringify(this.validation.getViolationMessagesFor("bar_foo")));
     this.foo.onblur();
     this.assertEqual(stringify(["Temporary message."]),
-                       stringify(this.validation.getViolationMessagesFor("bar_foo")));
+                     stringify(this.validation.getViolationMessagesFor("bar_foo")));
   });
 
   return [tc];

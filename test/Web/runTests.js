@@ -16,7 +16,8 @@
     "Web/EventManager",
     "Web/Validation",
     "Web/TemplateValueTransformer",
-    "Web/Template"
+    "Web/Template",
+    "Web/ListTemplate"
   ];
 
   // If GET parameters are specified, only those tests are run.
