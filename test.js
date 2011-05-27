@@ -21,7 +21,7 @@ global.ok = function (v, msg) { assert.ok(v, msg); };
 global.not = function (v, msg) { assert.ok(v === false, msg); };
 global.equal = function (a, b, msg) { assert.strictEqual(a, b, msg); };
 global.notequal = function (a, b, msg) { assert.notStrictEqual(a, b, msg); };
-global.eql = function (a, b, msg) { assert.eql(a, b, msg); };
+global.eql = function (a, b, msg) { a.should.eql(b, msg); };
 var Assertion = Cactus.Dev.Assertion;
 global.exception = Assertion.exception.bind(Assertion, assert);
 global.instance = function (a, b, msg) { a.should.instanceof(b, msg); };

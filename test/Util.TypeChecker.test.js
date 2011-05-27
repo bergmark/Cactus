@@ -564,6 +564,26 @@ module.exports = (function () {
       ok(object.isEmpty(h));
       h = o.parse({});
       ok(object.isEmpty(h));
+
+      // Skip properties not in definition.
+      o = new TypeChecker({
+        allowUndefined : true,
+        type : {
+          a : { type : "number" }
+        }
+      });
+      o.parse({}, false);
+      eql({
+        a : ["Missing property"]
+      }, o.getErrors());
+      o.parse({ a : 1 });
+      o.parse({ a : 1, b : 2 });
+      o.parse({ b : 2 }, false);
+      eql({
+        a : ["Missing property"]
+      }, o.getErrors());
+      // Remove skipped props that are undefined.
+      eql({ a : 1 }, o.parse({ a : 1 }));
     },
     T_Map : function () {
       var o = new TypeChecker({
@@ -613,6 +633,7 @@ module.exports = (function () {
     "recursive definition" : function () {
       var o = new TypeChecker({
         type : {
+          // type
           type : {
             required : false,
             type : "mixed",
@@ -621,7 +642,11 @@ module.exports = (function () {
                 if (typeof v === "string") {
                   return collection.hasValue(["string", "number", "object", "function", "boolean", "mixed"], v);
                 } else if (v instanceof Array) {
+                  // Flat check only.
                   return v.length === 1;
+                } else if (v instanceof Object) {
+                  // Flat check only.
+                  return true;
                 }
                 return false;
               }
@@ -651,6 +676,10 @@ module.exports = (function () {
           enumerable : {
             required : false,
             type : Array
+          },
+          allowUndefined : {
+            defaultValue : false,
+            type : "boolean"
           }
         }
       });
@@ -698,10 +727,13 @@ module.exports = (function () {
         type : "number",
         enumerable : [1,2,3]
       });
-
-      // Fails until properties can constrain each other.
-      // exception(/./i,
-      //           o.parse.bind(o, {}));
+      o.parse({
+        type : {}
+      });
+      o.parse({
+        allowUndefined : true,
+        type : {}
+      });
     }
   };
 })();
