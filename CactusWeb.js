@@ -17,4 +17,5 @@ require("./lib/Web/Template");
 require("./lib/Web/Template/Transformer");
 require("./lib/Web/Template/ClassNameConditions");
 require("./lib/Web/Template/EventBinding");
+require("./lib/Web/Template/Mode");
 require("./lib/Web/ListTemplate");
