@@ -139,6 +139,31 @@ module.exports = (function () {
       assert.eql(0, ac.size());
       ac.clear();
       assert.eql(0, ac.size());
+    },
+    "onEmptied/onFilled" : function () {
+      var ac = new AC();
+      var emptiedTriggered = false;
+      ac.subscribe("Emptied", function () {
+        emptiedTriggered = true;
+      });
+      var filledTriggered = false;
+      ac.subscribe("Filled", function () {
+        filledTriggered = true;
+      });
+      ac.add(1);
+      ok(filledTriggered);
+      not(emptiedTriggered);
+      filledTriggered = false;
+      ac.add(2);
+      not(filledTriggered);
+
+      ac.remove(1);
+      not(emptiedTriggered);
+      not(filledTriggered);
+      ac.remove(2);
+      ok(emptiedTriggered);
+      not(filledTriggered);
+
     }
   };
 })();

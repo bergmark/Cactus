@@ -122,6 +122,38 @@ module.exports = (function () {
       acd.addAtIndex(0, 4);
       assert.strictEqual("4,3,1,2", objs(acd));
       assert.strictEqual("4,3,1,2", objs(ac));
+    },
+
+    "OnEmptied/OnFilled" : function () {
+      var ac = new AC();
+      var acd = new ACD(ac);
+
+      var acEmptied = false;
+      var acFilled = false;
+      var acdEmptied = false;
+      var acdFilled = false;
+
+      ac.subscribe("Emptied", function () { acEmptied = true; });
+      ac.subscribe("Filled", function () { acFilled = true; });
+      acd.subscribe("Emptied", function () { acdEmptied = true; });
+      acd.subscribe("Filled", function () { acdFilled = true; });
+
+      ac.add(1);
+      ok(acdFilled);
+      ac.remove(1);
+      ok(acdEmptied);
+
+      acEmptied = false;
+      acFilled = false;
+      acdEmptied = false;
+      acdFilled = false;
+
+      acd.add(1);
+      ok(acFilled);
+      ok(acdFilled);
+      acd.remove(1);
+      ok(acEmptied);
+      ok(acdEmptied);
     }
   };
 })();
