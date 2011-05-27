@@ -16,6 +16,9 @@ module.exports = {
         },
         _modelDetached : function () {
           detachTriggers++;
+        },
+        _clone : function (view) {
+          return new M(view);
         }
       }
     });
@@ -42,6 +45,6 @@ module.exports = {
     m.detach();
     eql([2, 2], [attachTriggers, detachTriggers]);
 
-
+    instance(m._clone({}), M);
   }
 };
