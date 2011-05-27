@@ -32,5 +32,15 @@ module.exports = {
 
     assert.eql([2,3,4], sa.map(function (v) { return v + 1; }));
     assert.eql([1,3], sa.select(M.odd));
+  },
+  equality : function () {
+    var sa1 = new SA([1,2,3]);
+    var sa2 = new SA([1,2,3]);
+    var sa3 = new SA([]);
+    var sa4 = new SA([2,3]);
+
+    ok(sa1.equals(sa2));
+    not(sa1.equals(sa3));
+    not(sa1.equals(sa4));
   }
 };
