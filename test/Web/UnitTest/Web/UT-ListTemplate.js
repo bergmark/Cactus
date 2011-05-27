@@ -382,9 +382,8 @@ Cactus.UnitTest.Web.ListTemplate = function () {
       method : "removeAtIndex"
     }]);
 
-    lt.onObjectRemovedTriggered = function () {
-      ListTemplate.prototype.onObjectRemovedTriggered.apply(this,
-                                                            arguments);
+    lt.onRemovedTriggered = function () {
+      ListTemplate.prototype.onRemovedTriggered.apply(this, arguments);
     };
 
     var removeButton = $f(".remove", lt.getRootElement());

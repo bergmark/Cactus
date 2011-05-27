@@ -28,7 +28,7 @@ module.exports = (function () {
         assert.eql(5, object);
         assert.eql(4, index);
       }
-      ac.subscribe("ObjectAdded", added);
+      ac.subscribe("Added", added);
       ac.add(5);
       assert.ok(addedTriggered, "added was not triggered");
     },
@@ -45,7 +45,7 @@ module.exports = (function () {
         assert.eql(3, object);
         assert.eql(1, index);
       }
-      ac.subscribe("ObjectRemoved", removed);
+      ac.subscribe("Removed", removed);
       ac.remove(3);
       assert.ok(removedTriggered, "removed was not triggered");
       assert.eql("1", ac.getRange().join(","));
@@ -70,7 +70,7 @@ module.exports = (function () {
         assert.ok(indexA < indexB, "indexA >= indexB");
       }
 
-      ac.subscribe("ObjectSwap", onSwap);
+      ac.subscribe("Swapped", onSwap);
       ac.swap(2, 1);
       assert.ok(swapTriggered);
     },
@@ -118,9 +118,9 @@ module.exports = (function () {
         ac.replace(5, 4);
       });
 
-      // Should send out onObjectReplaced.
+      // Should send out onReplaced.
       var triggered = false;
-      ac.subscribe("ObjectReplaced",
+      ac.subscribe("Replaced",
                    function (controller, index, oldObject, newObject) {
                      triggered = true;
                      assert.eql(ac, controller);
@@ -131,7 +131,7 @@ module.exports = (function () {
 
       ac.replace(5, 7);
       assert.eql("746", ac.getRange().join(""));
-      assert.ok(triggered, "ObjectReplaced did not trigger");
+      assert.ok(triggered, "Replaced did not trigger");
     },
     "clear" : function () {
       var ac = new AC([1,2,3]);
