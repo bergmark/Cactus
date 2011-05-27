@@ -90,11 +90,11 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
   // data is displayed in as well as by key path.
   tc.add(function () {
     var t = Template.create('\
-<div class="root">\
-<div class="foo"><div class="x"></div></div>\
-<div class="bar"><div class="x"></div></div>\
-</div>\
-');
+      <div class="root">\
+      <div class="foo"><div class="x"></div></div>\
+      <div class="bar"><div class="x"></div></div>\
+      </div>\
+      ');
 
     var o = new O(5);
 
@@ -215,7 +215,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
         }],
         kvcBinding : new O(4, -9)
       });
-    var root = t.getRootElement()
+    var root = t.getRootElement();
     this.assertEqual("2", Element.getValue($f(".x", root)));
     this.assertEqual("3", Element.getValue($f(".y", root)));
   });
@@ -284,36 +284,34 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     o.z = 1;
     o.w = 16;
     var t = Template.create('\
-<div>\
-<input class="x" type="text">\
-<input class="y" type="text">\
-<input class="z" type="text">\
-<input class="w" type="text">\
-</div>', {
-  valueTransformers : [{
-    keyPath : "x",
-    transform : Math.abs,
-    reverse : Math.sqrt
-  }, {
-    selector : ".y",
-    transform : Math.abs,
-    reverse : Math.sqrt
-  }, {
-    selector : ".z"
-    // Omitting both transformers.
-  },
-                       // Both types of reverse transformers.
-                       {
-                         keyPath : "w",
-                         reverse : function (v) {
-                           return -v;
-                         }
-                       }, {
-                         selector : ".w",
-                         reverse : Math.sqrt
-                       }],
-  kvcBinding : o
-});
+      <div>\
+      <input class="x" type="text">\
+      <input class="y" type="text">\
+      <input class="z" type="text">\
+      <input class="w" type="text">\
+      </div>', {
+        valueTransformers : [{
+          keyPath : "x",
+          transform : Math.abs,
+          reverse : Math.sqrt
+        }, {
+          selector : ".y",
+          transform : Math.abs,
+          reverse : Math.sqrt
+        }, {
+          selector : ".z"
+          // Omitting both transformers.
+        }, /* Both types of reverse transformers. */ {
+          keyPath : "w",
+          reverse : function (v) {
+            return -v;
+          }
+        }, {
+          selector : ".w",
+          reverse : Math.sqrt
+        }],
+        kvcBinding : o
+      });
 
     // Key path transformer.
     this.assertEqual(4, valueOf(t, ".x"));
