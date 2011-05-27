@@ -11,13 +11,13 @@ module.exports = (function () {
       var test = this;
       var a = [1, 2, 3];
       var ac = new AC(a);
-      assert.eql(3, ac.count());
+      assert.eql(3, ac.size());
       assert.eql("1,2,3", ac.getRange().join(","));
       // Make sure a shallow copy of the array controllers array is returned.
       assert.ok(!(a === ac.getRange()));
 
       ac.add(4);
-      assert.eql(4, ac.count());
+      assert.eql(4, ac.size());
       assert.eql("1,2,3,4", ac.getRange().join(","));
 
       var addedTriggered = false;
@@ -83,9 +83,9 @@ module.exports = (function () {
       assert.eql("x123", ac.getRange().join(""));
 
       // Add as the last element.
-      ac.addAtIndex(ac.count(), "y");
+      ac.addAtIndex(ac.size(), "y");
       assert.eql("x123y", ac.getRange().join(""));
-      assert.eql(5, ac.count());
+      assert.eql(5, ac.size());
 
       // Add as the last element's position.
       ac.addAtIndex(4, "z");
@@ -132,9 +132,9 @@ module.exports = (function () {
     "clear" : function () {
       var ac = new AC([1,2,3]);
       ac.clear();
-      assert.eql(0, ac.count());
+      assert.eql(0, ac.size());
       ac.clear();
-      assert.eql(0, ac.count());
+      assert.eql(0, ac.size());
     }
   };
 })();
