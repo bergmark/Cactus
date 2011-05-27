@@ -72,7 +72,7 @@ module.exports = (function () {
       assert.ok(!CN.has(o, "-b"));
 
     },
-    "get" : function () {
+    get : function () {
       var o = { className : "a b c" };
       var p = { className : "" };
       var q = { className : "a" };
@@ -80,6 +80,20 @@ module.exports = (function () {
       assert.eql("a,b,c", CN.get(o).join(","));
       assert.eql("", CN.get(p).join(","));
       assert.eql("a", CN.get(q).join(","));
+    },
+    toggle : function () {
+      var o = { className : "a b c" };
+      CN.toggle(o, "b");
+      eql(["a", "c"], CN.get(o));
+      CN.toggle(o, "d");
+      eql(["a", "c", "d"], CN.get(o));
+    },
+    toggleCond : function () {
+      var o = { className : "a b c" };
+      CN.toggleCond(o, "b", false);
+      not(CN.has(o, "b"));
+      CN.toggleCond(o, "b", true);
+      ok(CN.has(o, "b"));
     }
   };
 })();
