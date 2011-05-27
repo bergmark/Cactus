@@ -1137,10 +1137,10 @@ Cactus.UnitTest.Web.Template = function () {
     this.assertFalse(has("c-false"), "c-true.");
 
     // The create interface
-    var o = new KVC();
+    o = new KVC();
     o.a = true;
     o.b = false;
-    var t = Template.create('<div><div class="x"></div></div>', {
+    t = Template.create('<div><div class="x"></div></div>', {
       classNameConditions : [{
         keyPath : "a",
         className : "a-trueDefaultNegation"
@@ -1181,12 +1181,12 @@ Cactus.UnitTest.Web.Template = function () {
 
   // It should be possible to exclude a key path from being bound.
   templateTC.add(function () {
-      var t = Template.create('<div>\
-<div class="x">10</div>\
-<div class="y">20</div>\
-</div>', {
-    skipKeyPaths: ["y"]
-});
+    var t = Template.create('<div>\
+      <div class="x">10</div>\
+      <div class="y">20</div>\
+      </div>', {
+        skipKeyPaths: ["y"]
+      });
 
     var o = new KVC();
     o.x = 1;
@@ -1238,19 +1238,19 @@ Cactus.UnitTest.Web.Template = function () {
     o.y = 1;
     o.z = 1;
     var t = Template.create('<div>\
-<input type="text" class="w" value="0">\
-<input type="text" class="x" value="0">\
-<input type="text" class="y" value="0">\
-<input type="text" class="z" value="0">\
-</div>', {
-  kvcBinding : o,
-  modes : [
-    { keyPath : "w", mode : "both" },
-    { keyPath : "x", mode : "write" },
-    { keyPath : "y", mode : "read" }
-    // z should default to "both"
-  ]
-});
+      <input type="text" class="w" value="0">\
+      <input type="text" class="x" value="0">\
+      <input type="text" class="y" value="0">\
+      <input type="text" class="z" value="0">\
+      </div>', {
+        kvcBinding : o,
+        modes : [
+          { keyPath : "w", mode : "both" },
+          { keyPath : "x", mode : "write" },
+          { keyPath : "y", mode : "read" }
+          // z should default to "both"
+        ]
+      });
     this.assertEqual(1, valueOf(t, ".w"), "w");
     this.assertEqual(0, valueOf(t, ".x"), "x");
     this.assertEqual(1, valueOf(t, ".y"), "y");
@@ -1285,19 +1285,19 @@ Cactus.UnitTest.Web.Template = function () {
       kvcBinding : o
     });
     this.assertEqual("", t.getRootElement().innerHTML);
-    });
+  });
 
   // Cloning of skipKeyPaths.
-    templateTC.add(function () {
-      var t = Template.create('<div class="x">0</div>', {
-        skipKeyPaths : ["x"]
-      });
-      var t2 = Template.create(t);
-      t.bindTo(new O());
-      t2.bindTo(new O());
-      this.assertEqual(0, valueOf(t, "root"));
-      this.assertEqual(0, valueOf(t2, "root"));
+  templateTC.add(function () {
+    var t = Template.create('<div class="x">0</div>', {
+      skipKeyPaths : ["x"]
     });
+    var t2 = Template.create(t);
+    t.bindTo(new O());
+    t2.bindTo(new O());
+    this.assertEqual(0, valueOf(t, "root"));
+    this.assertEqual(0, valueOf(t2, "root"));
+  });
 
   // Cloning of modes.
   templateTC.add(function () {

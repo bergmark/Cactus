@@ -280,7 +280,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     ac.remove (ac.get (0));
     this.assert (hasFirst (0), ".first wasn't reset when an object was removed.");
     resetAC();
-    ac.remove (ac.get (ac.count() - 1));
+    ac.remove (ac.get (ac.size() - 1));
     this.assert (hasLast (1), ".last wasn't reset when an object was removed.");
 
     resetAC();
@@ -288,10 +288,10 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     this.assert(hasFirst(0), ".first wasn't set when addAtIndex(0,_) was called.");
     this.assertFalse(hasFirst(1), ".first wasn't removed from the LI shifted from index 0 on swap.");
     resetAC();
-    ac.addAtIndex(ac.count(), new O(7, 8));
-    this.assertEqual(7, this.valueOf(ac.count() - 1));
-    this.assert(hasLast(ac.count() - 1), ".last was not set when addAtIndex was called.");
-    this.assertFalse(hasLast(ac.count() - 2), ".last was not removed when addAtIndex was called.");
+    ac.addAtIndex(ac.size(), new O(7, 8));
+    this.assertEqual(7, this.valueOf(ac.size() - 1));
+    this.assert(hasLast(ac.size() - 1), ".last was not set when addAtIndex was called.");
+    this.assertFalse(hasLast(ac.size() - 2), ".last was not removed when addAtIndex was called.");
 
     resetAC();
     ac.swap (0, 2);
@@ -304,15 +304,15 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     ac.removeAtIndex (0);
     this.assert (hasFirst (0), ".first not added on removeAtIndex (0) call.");
     resetAC();
-    ac.removeAtIndex (ac.count() - 1);
-    this.assert (hasLast (ac.count() - 1), ".last not added on removeAtIndex (last) call.");
+    ac.removeAtIndex (ac.size() - 1);
+    this.assert (hasLast (ac.size() - 1), ".last not added on removeAtIndex (last) call.");
 
     resetAC();
     ac.replace (ac.get (0), new O (7, 8));
     this.assert (hasFirst (0), ".first not added on replace call.");
     resetAC();
-    ac.replace(ac.get(ac.count() - 1), new O (7, 8));
-    this.assert(hasLast(ac.count() - 1), ".last not added on replace call.");
+    ac.replace(ac.get(ac.size() - 1), new O (7, 8));
+    this.assert(hasLast(ac.size() - 1), ".last not added on replace call.");
 
     resetAC();
     ac.clear();
@@ -399,7 +399,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
 
     removeButton.onclick();
 
-    this.assertEqual(2, ac.count(), "Too many objects in AC.");
+    this.assertEqual(2, ac.size(), "Too many objects in AC.");
     this.assertEqual(2, lt.getRootElement().childNodes.length, "Too many objects in ListTemplate.");
   });
 
