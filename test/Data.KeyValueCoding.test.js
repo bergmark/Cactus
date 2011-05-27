@@ -33,9 +33,10 @@ module.exports = (function () {
       o.p.b = 2;
       o.p.q.c = 3;
 
-      assert.eql(1, o.getValue("a"));
-      assert.eql(2, o.getValue("p.b"));
-      assert.eql(3, o.getValue("p.q.c"));
+      equal(o, o.getValue(""));
+      equal(1, o.getValue("a"));
+      equal(2, o.getValue("p.b"));
+      equal(3, o.getValue("p.q.c"));
 
       o.setValue("a", 4);
       o.setValue("p.b", 5);
@@ -54,11 +55,12 @@ module.exports = (function () {
       o.p.q.c = 3;
 
       // existing keyPaths
-      assert.ok(o.hasKeyPath("a"));
-      assert.ok(o.hasKeyPath("p"));
-      assert.ok(o.hasKeyPath("p.b"));
-      assert.ok(o.hasKeyPath("p.q"));
-      assert.ok(o.hasKeyPath("p.q.c"));
+      ok(o.hasKeyPath(""));
+      ok(o.hasKeyPath("a"));
+      ok(o.hasKeyPath("p"));
+      ok(o.hasKeyPath("p.b"));
+      ok(o.hasKeyPath("p.q"));
+      ok(o.hasKeyPath("p.q.c"));
 
       // non-existing keyPaths
       assert.ok(!o.hasKeyPath("b"));
@@ -122,7 +124,7 @@ module.exports = (function () {
         has : {
           p : null,
           p2 : null,
-          _compounds : { init : function () { return { p : ["p2"] } } }
+          _compounds : { init : function () { return { p : ["p2"] }; } }
         },
         methods : {
           getP2 : function () {
