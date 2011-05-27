@@ -1,4 +1,4 @@
-require("./Cactus");
+require("./CactusNode");
 Joose.C.debug = true;
 global.assert = require("assert");
 global.should = require("should");
