@@ -43,5 +43,12 @@ module.exports = {
     ok(d.contains("b", 3));
     equal(2, d.get("a").length);
     equal(1, d.get("b").length);
+  },
+  keys : function () {
+    var d = new Dictionary({
+      a : [1, 2],
+      b : [3]
+    });
+    eql(["a", "b"], d.keys());
   }
 };
