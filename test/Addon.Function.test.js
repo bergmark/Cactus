@@ -333,8 +333,7 @@ module.exports = {
     assert.ok(triggered, "Inner function did not trigger.");
   },
 
-  "exec" : function () {
-    var test = this;
+  exec : function () {
     var triggers = 0;
     function f() {
       triggers++;
@@ -344,6 +343,14 @@ module.exports = {
     assert.eql(1, triggers);
     assert.eql("foo", f.exec()());
     assert.eql(3, triggers);
+
+    // Pass args and thisArg.
+    var args;
+    function g() {
+      args = C.toArray(arguments);
+    }
+    g.exec(1, 2);
+    eql([1, 2], args);
   },
 
   "partial" : function () {

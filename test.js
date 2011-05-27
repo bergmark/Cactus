@@ -25,3 +25,6 @@ global.eql = function (a, b, msg) { assert.eql(a, b, msg); };
 var Assertion = Cactus.Dev.Assertion;
 global.exception = Assertion.exception.bind(Assertion, assert);
 global.instance = function (a, b, msg) { a.should.instanceof(b, msg); };
+
+// Short hands for imports.
+global.C = Cactus.Data.Collection;

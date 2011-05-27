@@ -2,7 +2,7 @@ module.exports = (function () {
   var EventSubscription = Cactus.Util.EventSubscription;
   var Assertion = Cactus.Dev.Assertion;
 
-  Class("C", {
+  var C = Class({
     does : EventSubscription,
     methods : {
       onFoo : Function.empty,
