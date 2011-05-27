@@ -19,5 +19,12 @@ module.exports = {
     fd.add("key4", 2);
     assert.eql([1], fd.get("key3"));
     assert.eql([2], fd.get("key4"));
+
+    fd = new FD({ a : [1, 2] });
+    eql([1, 2], fd.get("a"));
+
+    // Allow empty arrays.
+    fd = new FD({ a : [] });
+    eql([], fd.get("a"));
   }
 };
