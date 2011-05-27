@@ -146,6 +146,14 @@ module.exports = {
       return 1;
     }).returning(2)());
     assert.eql(3, Function.empty.returning(3)());
+
+    var called = false;
+    (function (a, b) {
+      called = true;
+      assert.strictEqual(5, a);
+      assert.strictEqual(6, b);
+    }).returning(4)(5, 6);
+    assert.ok(called);
   },
 
   // Make sure that returning passes all arguments it gets through
@@ -352,9 +360,34 @@ module.exports = {
     f.partial(o, 0, undefined)(1,2);
   },
 
-  "id" : function () {
+  id : function () {
     assert.eql(1, Function.id(1));
     var o = {};
     assert.eql(o, Function.id({}));
+  },
+
+  freeze : function () {
+    var triggered = false;
+    var o = {};
+    (function () {
+      triggered = true;
+      assert.strictEqual(1, arguments.length);
+      assert.strictEqual(0, arguments[0]);
+      assert.ok(this !== o);
+    }).curry(0).freeze().call(o, 1, 2, 3);
+    assert.ok(triggered);
+  },
+
+  "take/drop" : function () {
+    var f = function () {
+      assert.eql([1,2,3], arguments);
+    };
+    f.drop(0)(1,2,3);
+    f.drop(1)(0,1,2,3);
+    f.drop(2)(-1,1,2,3);
+
+    f.take(3)(1,2,3);
+    f.curry(1,2,3).take(0)(4);
+    f.take(3)(1,2,3,4);
   }
 };

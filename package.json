@@ -8,12 +8,12 @@
     "url": "git://github.com/Raevel/Cactus.git"
   },
   "author": "Adam Bergmark <adam@edea.se> (http://www.edea.se)",
-  "main": "Cactus.js",
+  "main": "CactusNode.js",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "test": "expresso -I . -r test.js"
+    "test": "expresso -I . -r test.js -s"
   },
   "engines": {
     "node": ">=0.4.2"

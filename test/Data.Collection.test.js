@@ -299,6 +299,12 @@ module.exports = (function () {
       assert.eql(["b","c"], Coll.grep(["a","b","c","d"], /[bc]/));
       assert.eql([], Coll.grep([], /nomatch/));
       assert.eql([], Coll.grep(["a","b","c"], /nomatch/));
+    },
+
+    replicate : function () {
+      assert.eql([], Coll.replicate(0, 1));
+      assert.eql([1], Coll.replicate(1, 1));
+      assert.eql([1,1], Coll.replicate(2, 1));
     }
   };
 })();
