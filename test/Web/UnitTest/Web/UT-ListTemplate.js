@@ -347,10 +347,10 @@ Cactus.UnitTest.Web.ListTemplate = function () {
       '<option class="x" value=""></option>', {
         valueTransformers : [{
           keyPath : "x",
-          forward : function (v, o) {
+          forward : function (x) {
             return {
-              value : o.getValue("x")*10,
-              text : o.getValue("y")*10
+              value : x*10,
+              text : x*5
             };
           }
         }]
@@ -360,8 +360,8 @@ Cactus.UnitTest.Web.ListTemplate = function () {
       arrayController : ac
     });
     this.assertEqual(3, $("option", lt.getRootElement()).length);
-    this.assertEqual('{"value":"10","text":"20"}',
-                       JSON.stringify(Element.getValue($f("option", lt.getRootElement()))));
+    this.assertEqual('{"value":"10","text":"5"}',
+                     JSON.stringify(Element.getValue($f("option", lt.getRootElement()))));
   });
 
   // Make sure that the subscription collection isn't shared among instances.
@@ -582,5 +582,6 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     this.assertFalse(has(0, "single"), "single after");
     this.assert(has(0, "_single"), "_single");
   });
+
   return tc;
 };

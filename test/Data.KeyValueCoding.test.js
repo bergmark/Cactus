@@ -33,7 +33,6 @@ module.exports = (function () {
       o.p.b = 2;
       o.p.q.c = 3;
 
-      equal(o, o.getValue(""));
       equal(1, o.getValue("a"));
       equal(2, o.getValue("p.b"));
       equal(3, o.getValue("p.q.c"));
@@ -55,7 +54,6 @@ module.exports = (function () {
       o.p.q.c = 3;
 
       // existing keyPaths
-      ok(o.hasKeyPath(""));
       ok(o.hasKeyPath("a"));
       ok(o.hasKeyPath("p"));
       ok(o.hasKeyPath("p.b"));

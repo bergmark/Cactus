@@ -71,19 +71,6 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     o.setValue ("y", 20);
     // (20 + 1) * -1 * 3 = 21*-3 = -63.
     this.assertEqual ("-63", Element.getValue(h2));
-
-    // The second argument to a transform function should be the KVC object.
-    var test = this;
-    var triggered = false;
-    t.setValueTransformer({
-      keyPath : "y",
-      forward : function (v, kvc) {
-        test.assertEqual(o, kvc);
-        triggered = true;
-        return v;
-      }
-    });
-    this.assert(triggered, "Value transformer did not trigger.");
   }));
 
   // Value transformers should be able to be set based on the selector the
