@@ -2,7 +2,8 @@ var SFD = Cactus.Data.StrictFlushDictionary;
 
 module.exports = {
   test : function () {
-    var sfd = new SFD(["key"]);
+    var sfd = new SFD();
+    sfd.define("key");
     assert.ok(!sfd.has("key"));
     sfd.add("key", "val");
     assert.ok(sfd.has("key"));
@@ -26,5 +27,11 @@ module.exports = {
     assert.throws(sfd.has.bind(sfd, "u"), /undefined key/i);
 
     new SFD();
+
+    sfd = new SFD({ a : [1] });
+    ok(sfd.has("a"));
+
+    exception(/non empty Array value/i,
+              function () { return new SFD({ a : [] }); });
   }
 };

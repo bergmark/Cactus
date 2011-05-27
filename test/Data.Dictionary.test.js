@@ -32,5 +32,16 @@ module.exports = {
     ok(d.contains("k1", "v2"));
     not(d.contains("k1", "v3"));
     not(d.contains("undef", "v"));
+  },
+  constructor : function () {
+    var d = new Dictionary({
+      a : [1,2],
+      b : [3]
+    });
+    ok(d.contains("a", 1));
+    ok(d.contains("a", 2));
+    ok(d.contains("b", 3));
+    equal(2, d.get("a").length);
+    equal(1, d.get("b").length);
   }
 };
