@@ -1102,11 +1102,11 @@ Cactus.UnitTest.Web.Template = function () {
     o.b = false;
     o.c = true;
     // Try adding before binding.
-    t.classNameConditions.addClassNameCondition("a", "a-trueDefaultNegation");
-    t.classNameConditions.addClassNameCondition("a", "a-true", false);
-    t.classNameConditions.addClassNameCondition("a", "a-false", true);
-    t.classNameConditions.addClassNameCondition("b", "b-true",  false);
-    t.classNameConditions.addClassNameCondition("b", "b-false", true);
+    t.addClassNameCondition("a", "a-trueDefaultNegation");
+    t.addClassNameCondition("a", "a-true", false);
+    t.addClassNameCondition("a", "a-false", true);
+    t.addClassNameCondition("b", "b-true",  false);
+    t.addClassNameCondition("b", "b-false", true);
     t.bindTo(o);
 
     var root = t.getRootElement();
@@ -1131,8 +1131,8 @@ Cactus.UnitTest.Web.Template = function () {
     this.assert(has("b-true"), "No b-true.");
 
     // Add condition after binding.
-    t.classNameConditions.addClassNameCondition("c", "c-true", false);
-    t.classNameConditions.addClassNameCondition("c", "c-false", true);
+    t.addClassNameCondition("c", "c-true", false);
+    t.addClassNameCondition("c", "c-false", true);
     this.assert(has("c-true"), "No c-true.");
     this.assertFalse(has("c-false"), "c-true.");
 
@@ -1170,7 +1170,7 @@ Cactus.UnitTest.Web.Template = function () {
     var t = Template.create('<div></div>');
     var o = new O(3);
     o.a = true;
-    t.classNameConditions.addClassNameCondition("a", "a-true");
+    t.addClassNameCondition("a", "a-true");
     var t2 = Template.create(t);
     t2.bindTo(o);
     this.assert(CN.has(t2.getRootElement(), "a-true"),
