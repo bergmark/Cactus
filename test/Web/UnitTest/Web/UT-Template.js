@@ -1093,9 +1093,10 @@ Cactus.UnitTest.Web.Template = function () {
   });
 */
 
+  var classNameConditionTC = new TestCase("Web.Template.ClassNameConditions");
   // The template should be able to tag its root with a className, based on a
   // boolean property.
-  templateTC.add(function () {
+  classNameConditionTC.add(function () {
     var t = Template.create('<div><div class="x"></div></div>');
     var o = new KVC();
     o.a = true;
@@ -1336,5 +1337,5 @@ Cactus.UnitTest.Web.Template = function () {
     this.assertEqual(2, valueOf(t2, "root"));
   });
 
-  return [templateTC, eventBindingTC];
+  return [templateTC, eventBindingTC, classNameConditionTC];
 };
