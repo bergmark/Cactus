@@ -186,38 +186,38 @@ module.exports = (function () {
       assert.eql("1,2,3,4", Coll.sliceWithRange(a, r).join(","));
     },
 
-    "some" : function () {
-      assert.ok(Coll.some([1, 5, 3, 6], function (el) {
+    "any" : function () {
+      assert.ok(Coll.any([1, 5, 3, 6], function (el) {
         return el > 3;
       }));
-      assert.ok(!Coll.some([1, 5, 3, 6], function (el) {
+      assert.ok(!Coll.any([1, 5, 3, 6], function (el) {
         return el > 13;
       }));
     },
 
-    "every" : function () {
-      assert.ok(Coll.every([1, 5, 3, 6], function (el) {
+    "all" : function () {
+      assert.ok(Coll.all([1, 5, 3, 6], function (el) {
         return el > 0;
       }));
-      assert.ok(!Coll.every([1, 5, 3, 6], function (el) {
+      assert.ok(!Coll.all([1, 5, 3, 6], function (el) {
         return el < 6;
       }));
     },
 
-    "notAny" : function () {
-      assert.ok(Coll.notAny([1, 2, 3, 0], function (el) {
+    "none" : function () {
+      assert.ok(Coll.none([1, 2, 3, 0], function (el) {
         return el > 3;
       }));
-      assert.ok(!Coll.notAny([1, 2, 3, 0], function (el) {
+      assert.ok(!Coll.none([1, 2, 3, 0], function (el) {
         return el >= 3;
       }));
     },
 
-    "notEvery" : function () {
-      assert.ok(Coll.notEvery([1, 5, 3, 6], function (el) {
+    "notAll" : function () {
+      assert.ok(Coll.notAll([1, 5, 3, 6], function (el) {
         return el < 6;
       }));
-      assert.ok(!Coll.notEvery([1, 5, 3, 6], function (el) {
+      assert.ok(!Coll.notAll([1, 5, 3, 6], function (el) {
         return el <= 6;
       }));
     },
