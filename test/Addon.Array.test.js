@@ -59,6 +59,11 @@ module.exports = (function () {
       assert.strictEqual(-1, ca.compare(0, 1));
       assert.strictEqual(0, ca.compare(0, 0));
       assert.strictEqual(1, ca.compare(1, 0));
+    },
+
+    "new" : function () {
+      instance(ca.new(), Array);
+      notequal(ca.new(), ca.new());
     }
   };
 })();

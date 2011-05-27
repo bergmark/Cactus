@@ -85,6 +85,11 @@ module.exports = (function () {
       var b = object.remove(a, 1);
       ({ y : 2 }).should.eql(b);
       b.should.not.equal(a);
+    },
+
+    new : function () {
+      instance(object.new(), Object);
+      notequal(object.new(), object.new());
     }
   };
 })();
