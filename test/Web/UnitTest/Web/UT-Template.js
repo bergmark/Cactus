@@ -40,9 +40,9 @@ Cactus.UnitTest.Web.Template = function () {
 
   function get(template, selector) {
     if (selector === "root") {
-      return template.getRootElement();
+      return template.getView();
     }
-    return $f(selector, template.getRootElement());
+    return $f(selector, template.getView());
   }
   function valueOf(template, selector) {
     return parseInt(Element.getValue(get(template, selector)), 10);
@@ -56,18 +56,18 @@ Cactus.UnitTest.Web.Template = function () {
   // Test Template.create.
   templateTC.add (new Test (null, function  () {
     var t = Template.create("<div><p></p></div>");
-    this.assertEqual ("div", t.getRootElement().tagName.toLowerCase());
+    this.assertEqual ("div", t.getView().tagName.toLowerCase());
     var t2 = Template.create(t);
     this.assertFalse (t === t2, "t was not cloned to t2");
-    this.assertEqual ("div", t2.getRootElement().tagName.toLowerCase());
+    this.assertEqual ("div", t2.getView().tagName.toLowerCase());
 
     var t3 = Template.create (tag ("div", {}, tag ("p")));
-    this.assertEqual ("div", t3.getRootElement().tagName.toLowerCase());
+    this.assertEqual ("div", t3.getView().tagName.toLowerCase());
 
     var o = new O();
     var t4 = Template.create(t);
-    t4.bindTo(o);
-    this.assertEqual (o, t4._getDataSource());
+    t4.attach(o);
+    this.assertEqual (o, t4._getModel());
   }));
 
   // Make sure Template.create(element) does not clone element.
@@ -76,7 +76,7 @@ Cactus.UnitTest.Web.Template = function () {
 
     var t = Template.create(o);
 
-    this.assert (o === t.getRootElement(),
+    this.assert (o === t.getView(),
                  "Template.create(element) clones the element");
   });
 
@@ -87,9 +87,9 @@ Cactus.UnitTest.Web.Template = function () {
 
     var t = Template.create(
       '<div><h1 class="x"></h1><h2 class="y"></h2></div>');
-    t.bindTo(dataSource);
-    this.assertEqual(dataSource, t._getDataSource());
-    var root = t.getRootElement();
+    t.attach(dataSource);
+    this.assertEqual(dataSource, t._getModel());
+    var root = t.getView();
 
     var h1 = $f("h1", root);
     var h2 = $f("h2", root);
@@ -110,8 +110,8 @@ Cactus.UnitTest.Web.Template = function () {
       '<div><input type="text" name="foo" class="foo" value=""></div>');
     var kvc = new KVC();
     kvc.foo = "bar";
-    t.bindTo(kvc);
-    var foo = $(".foo", t.getRootElement())[0];
+    t.attach(kvc);
+    var foo = $(".foo", t.getView())[0];
     this.assertEqual("bar", Element.getValue(foo));
 
     foo.value = "baz";
@@ -126,8 +126,8 @@ Cactus.UnitTest.Web.Template = function () {
       '<div><input type="password" name="foo" class="foo" value=""></div>');
     var kvc = new KVC();
     kvc.foo = "bar";
-    t.bindTo(kvc);
-    var foo = $(".foo", t.getRootElement())[0];
+    t.attach(kvc);
+    var foo = $(".foo", t.getView())[0];
     this.assertEqual("bar", Element.getValue(foo));
 
     foo.value = "baz";
@@ -144,9 +144,9 @@ Cactus.UnitTest.Web.Template = function () {
       </div>');
     var kvc = new KVC();
     kvc.foo = true;
-    t.bindTo (kvc);
+    t.attach (kvc);
 
-    var box = $(".foo", t.getRootElement())[0];
+    var box = $(".foo", t.getView())[0];
 
     function simulateClick() {
       box.checked = !box.checked;
@@ -192,7 +192,7 @@ Cactus.UnitTest.Web.Template = function () {
 
     var kvc = new KVC();
     kvc.foo = true;
-    t.bindTo(kvc);
+    t.attach(kvc);
 
     this.assert(kvc.foo);
     this.assertFalse(box.checked);
@@ -216,15 +216,15 @@ Cactus.UnitTest.Web.Template = function () {
       ');
     var kvc = new KVC();
       kvc.foo = [];
-    t.bindTo (kvc);
+    t.attach (kvc);
 
     function click(box) {
       box.checked = !box.checked;
       box.onclick();
     }
 
-    var a = $(".foo", t.getRootElement())[0];
-    var b = $(".foo", t.getRootElement())[1];
+    var a = $(".foo", t.getView())[0];
+    var b = $(".foo", t.getView())[1];
 
     kvc.setValue ("foo", ["a", "b"]);
     this.assert (a.checked, "a is not checked");
@@ -260,10 +260,10 @@ Cactus.UnitTest.Web.Template = function () {
       </form>\
       </div>');
     var kvc = new KVC();
-    var root = t.getRootElement();
+    var root = t.getView();
     var radios = $("input", root);
     kvc.a = "2";
-    t.bindTo(kvc);
+    t.attach(kvc);
     this.assertEqual("2", kvc.a);
     this.assertEqual("2", Element.getValue(radios[0]));
 
@@ -284,9 +284,9 @@ Cactus.UnitTest.Web.Template = function () {
       </select></div>');
     var kvc = new KVC();
     kvc.foop = "a";
-    t.bindTo (kvc);
+    t.attach (kvc);
 
-    var select = $("select", t.getRootElement())[0];
+    var select = $("select", t.getView())[0];
 
     this.assertEqual ("a", Element.getValue (select));
 
@@ -311,8 +311,8 @@ Cactus.UnitTest.Web.Template = function () {
     kvc.foo = function () {
       fooTriggered = true;
     };
-    t.bindTo (kvc);
-    var foo = $(".foo", t.getRootElement())[0];
+    t.attach (kvc);
+    var foo = $(".foo", t.getView())[0];
 
     this.assertInstance (Function, foo.onclick, "foo.onclick was not set");
 
@@ -331,8 +331,8 @@ Cactus.UnitTest.Web.Template = function () {
     kvc.foo = function () {
       fooTriggered = true;
     };
-    t.bindTo (kvc);
-    var foo = $(".foo", t.getRootElement())[0];
+    t.attach (kvc);
+    var foo = $(".foo", t.getView())[0];
 
     this.assertInstance (Function, foo.onclick, "foo.onclick was not set");
 
@@ -347,8 +347,8 @@ Cactus.UnitTest.Web.Template = function () {
     kvc.foo = function () {
       fooTriggered = true;
     };
-    t.bindTo (kvc);
-    var foo = $(".foo", t.getRootElement())[0];
+    t.attach (kvc);
+    var foo = $(".foo", t.getView())[0];
 
     this.assertInstance (Function, foo.onclick,
                          "foo.onclick was not set on &lt;button&gt;");
@@ -365,10 +365,10 @@ Cactus.UnitTest.Web.Template = function () {
     var kvc = new KVC();
     kvc.foo = true;
     kvc.setValue ("foo", "bar");
-    t.bindTo (kvc);
+    t.attach (kvc);
 
     this.assertEqual ("bar", kvc.getValue ("foo"));
-    this.assertEqual ("bar", t.getRootElement().innerHTML);
+    this.assertEqual ("bar", t.getView().innerHTML);
   });
 
 
@@ -380,7 +380,7 @@ Cactus.UnitTest.Web.Template = function () {
         <div class="x"></div>\
         <div class="y"></div>\
         </div>');
-      this.root = this.t.getRootElement();
+      this.root = this.t.getView();
       this.o = new O();
       this.x = $f(".x", this.root);
       this.y = $f(".y", this.root);
@@ -397,7 +397,7 @@ Cactus.UnitTest.Web.Template = function () {
           xClickTriggered = true;
         }
       }]);
-      this.t.bindTo (this.o);
+      this.t.attach (this.o);
 
       this.x.onclick();
       this.assert (xClickTriggered, "x's onclick did not trigger");
@@ -418,7 +418,7 @@ Cactus.UnitTest.Web.Template = function () {
         event : "click",
         method : "foo"
       }]);
-      this.t.bindTo (this.o);
+      this.t.attach (this.o);
 
       this.x.onclick();
 
@@ -436,7 +436,7 @@ Cactus.UnitTest.Web.Template = function () {
           clickTriggered = true;
         }
       }]);
-      this.t.bindTo (this.o);
+      this.t.attach (this.o);
 
       this.x.onclick();
       this.assert (clickTriggered,
@@ -460,20 +460,20 @@ Cactus.UnitTest.Web.Template = function () {
           callbacksTriggered++;
         }
       }]);
-      this.t.bindTo (this.o);
+      this.t.attach (this.o);
       var p = new O();
-      this.t.bindTo (p);
+      this.t.attach (p);
 
       this.x.onclick();
       this.assertEqual (1, callbacksTriggered,
                         "Events were not detached from this.o");
     });
 
-    // Events should be bound if added after bindTo is called, and refresh
+    // Events should be bound if added after attach is called, and refresh
     // is called.
     eventBindingTC.add (function () {
       var clickTriggered = false;
-      this.t.bindTo (this.o);
+      this.t.attach (this.o);
       this.t.createEventBindings ([{
         selector : ".x",
         callback : function () {
@@ -495,7 +495,7 @@ Cactus.UnitTest.Web.Template = function () {
         t.createEventBindings ([{
           selector : ".x"
         }]);
-        t.bindTo (o);
+        t.attach (o);
       });
     });
 
@@ -510,7 +510,7 @@ Cactus.UnitTest.Web.Template = function () {
           selector : ".x",
           method : "undefinedMethod"
         }]);
-        t.bindTo (o);
+        t.attach (o);
       });
     });
 
@@ -525,7 +525,7 @@ Cactus.UnitTest.Web.Template = function () {
         selector : ".x",
         method : "p.q"
       }]);
-      this.t.bindTo (this.o);
+      this.t.attach (this.o);
 
       this.x.onclick();
       this.assert (clickTriggered,
@@ -535,7 +535,7 @@ Cactus.UnitTest.Web.Template = function () {
     // Cloning templates should copy the event bindings.
     eventBindingTC.add (function () {
       var triggered;
-      this.t.bindTo (this.o);
+      this.t.attach (this.o);
       this.t.createEventBindings ([{
         selector : ".x",
         callback : function () {
@@ -544,9 +544,9 @@ Cactus.UnitTest.Web.Template = function () {
       }]);
 
       var t = Template.create (this.t);
-      t.bindTo (this.o);
+      t.attach (this.o);
 
-      var x = $f(".x", t.getRootElement());
+      var x = $f(".x", t.getView());
       this.assertInstance (Function, x.onclick, "onclick not set on .x");
       x.onclick();
       this.assert (triggered, "Inherited event binding did not trigger");
@@ -561,7 +561,7 @@ Cactus.UnitTest.Web.Template = function () {
         selector : ".x",
         callback : Function.empty
       }]);
-      var x = $f(".x", t.getRootElement());
+      var x = $f(".x", t.getView());
       this.assertInstance(Function, x.onclick,
                           "onclick not set on .x when adding events after the KVC bind.");
     });
@@ -579,12 +579,12 @@ Cactus.UnitTest.Web.Template = function () {
       p.trigger = function () {
         pTriggered = true;
       };
-      this.t.bindTo (o);
+      this.t.attach (o);
       this.t.createEventBindings ([{
         selector : ".x",
         method : "trigger"
       }]);
-      this.t.bindTo (p);
+      this.t.attach (p);
       this.x.onclick();
       this.assertFalse (oTriggered, "o's onclick triggered");
       this.assert (pTriggered, "p's onclick did not trigger");
@@ -600,8 +600,8 @@ Cactus.UnitTest.Web.Template = function () {
           triggered = true;
         }
       }]);
-      this.t.bindTo (o);
-      this.t.getRootElement().onclick();
+      this.t.attach (o);
+      this.t.getView().onclick();
       this.assert (triggered, "Event not bound on root.");
     });
 
@@ -619,9 +619,9 @@ Cactus.UnitTest.Web.Template = function () {
     }
   }]
 });
-      var root = t.getRootElement();
+      var root = t.getView();
       var o = new O();
-      t.bindTo(o);
+      t.attach(o);
         var x = $f(".x", root);
       x.onclick();
       this.assert(triggered);
@@ -633,7 +633,7 @@ Cactus.UnitTest.Web.Template = function () {
         selector : ".z",
           callback : Function.empty
       }]);
-      this.assertException(/no element with the selector/i, object.bound(this.t, "bindTo", this.o));
+      this.assertException(/no element with the selector/i, object.bound(this.t, "attach", this.o));
     });
   })();
 
@@ -641,7 +641,7 @@ Cactus.UnitTest.Web.Template = function () {
   // element should be returned.
   templateTC.add (function () {
     var t = Template.create ('       <div class="foo"></div>');
-    this.assertEqual ("foo", CN.get (t.getRootElement()).join (""));
+    this.assertEqual ("foo", CN.get (t.getView()).join (""));
   });
 
   // Don't set the value of a button if the key path is a function.
@@ -651,10 +651,10 @@ Cactus.UnitTest.Web.Template = function () {
     var kvc = new KVC();
     kvc.foo = Function.empty;
 
-    t.bindTo (kvc);
+    t.attach (kvc);
 
     this.assertEqual ("bar",
-                      Element.getValue($(".foo", t.getRootElement())[0]));
+                      Element.getValue($(".foo", t.getView())[0]));
   });
 
   // All events should be removed from the kvc object when the template is
@@ -668,12 +668,12 @@ Cactus.UnitTest.Web.Template = function () {
       p.y = 4;
     var t = Template.create(
       '<div><h1 class="x"></h1><h2 class="y"></h2></div>');
-    t.bindTo(o);
+    t.attach(o);
 
-    var x = $(".x", t.getRootElement())[0];
-    var y = $(".y", t.getRootElement())[0];
+    var x = $(".x", t.getView())[0];
+    var y = $(".y", t.getView())[0];
 
-    t.bindTo(p);
+    t.attach(p);
 
     this.assertEqual("3", Element.getValue (x));
     this.assertEqual("4", Element.getValue (y));
@@ -689,7 +689,7 @@ Cactus.UnitTest.Web.Template = function () {
   // is exchanged the template needs to refresh the child values as well.
   templateTC.add (function () {
     var t = Template.create('<div class="a_b"></div>');
-    var root = t.getRootElement();
+    var root = t.getView();
 
     var o = new KVC();
     var p = new KVC();
@@ -699,7 +699,7 @@ Cactus.UnitTest.Web.Template = function () {
 
     o.a = p;
 
-    t.bindTo (o);
+    t.attach (o);
 
     this.assertEqual (1, o.getValue("a.b"));
     this.assertEqual ("1", Element.getValue(root));
@@ -714,15 +714,15 @@ Cactus.UnitTest.Web.Template = function () {
   // Create a template with a TR root element.
   templateTC.add (function () {
     var t = Template.create('<tr><td></td></tr>');
-    this.assertEqual ("tr", t.getRootElement().tagName.toLowerCase());
+    this.assertEqual ("tr", t.getView().tagName.toLowerCase());
   });
 
 
-  // bindTo should throw an error if argument isn't KVC compatible.
+  // attach should throw an error if argument isn't KVC compatible.
   templateTC.add(function () {
     var t = Template.create("<div></div>");
     this.assertException(/KVC compliant/, function () {
-      t.bindTo({});
+      t.attach({});
     });
   });
 
@@ -733,9 +733,9 @@ Cactus.UnitTest.Web.Template = function () {
     o.p.q = "r";
 
     var t = Template.create('<div class="p_q"></div>');
-    t.bindTo(o);
+    t.attach(o);
 
-    this.assertEqual("r", Element.getValue(t.getRootElement()));
+    this.assertEqual("r", Element.getValue(t.getView()));
   });
 
   // Templates should be able to expect a prefix on DOM class names.
@@ -744,14 +744,14 @@ Cactus.UnitTest.Web.Template = function () {
     o.q = "r";
     var t = Template.create('<input type="text" class="p_q"></div>');
     t.setClassNamePrefix("p_");
-    t.bindTo(o);
+    t.attach(o);
 
     // keyPath -> className
-    this.assertEqual("r", Element.getValue(t.getRootElement()));
+    this.assertEqual("r", Element.getValue(t.getView()));
 
     // className -> keyPath
-    t.getRootElement().value = "s";
-    t.getRootElement().onchange();
+    t.getView().value = "s";
+    t.getView().onchange();
 
     this.assertEqual("s", o.getValue("q"));
   });
@@ -761,8 +761,8 @@ Cactus.UnitTest.Web.Template = function () {
     var t = Template.create('<div class="foo_x"></div>');
     t.setClassNamePrefix("foo_");
     var t2 = Template.create(t);
-    t2.bindTo(new O());
-    this.assertEqual("1", Element.getValue(t2.getRootElement()));
+    t2.attach(new O());
+    this.assertEqual("1", Element.getValue(t2.getView()));
   });
 
   // Classnames without the prefix should not be updated.
@@ -774,8 +774,8 @@ Cactus.UnitTest.Web.Template = function () {
 </div>');
     t.setClassNamePrefix("foo_");
     var o = new O();
-    t.bindTo(o);
-    var root = t.getRootElement();
+    t.attach(o);
+    var root = t.getView();
 
     var x = $f(".x", root);
     var foo_x = $f(".foo_x", root);
@@ -795,9 +795,9 @@ Cactus.UnitTest.Web.Template = function () {
 ');
     var o = new O();
     t.setClassNamePrefix("foo_");
-    t.bindTo(o);
+    t.attach(o);
 
-    var root = t.getRootElement();
+    var root = t.getView();
     var input = $f("input", root);
     var span = $f("span", root);
 
@@ -818,9 +818,9 @@ Cactus.UnitTest.Web.Template = function () {
   templateTC.add(function () {
     var t = Template.create('<textarea class="x"></textarea>');
     var o = new O();
-      t.bindTo(o);
+      t.attach(o);
 
-    var root = t.getRootElement();
+    var root = t.getView();
 
     root.value = "a";
     root.onchange();
@@ -846,17 +846,17 @@ Cactus.UnitTest.Web.Template = function () {
 
     var t = Template.create(
       '<div><input type="button" class="save" value="Save"></div>');
-    var saveButton = $f(".save", t.getRootElement());
+    var saveButton = $f(".save", t.getView());
     var a = new C("a");
     var b = new C("b");
 
     saves = [];
-    t.bindTo(a);
+    t.attach(a);
     saveButton.onclick();
     this.assertEqual("a", saves.join(""));
 
     saves = [];
-    t.bindTo(b);
+    t.attach(b);
     saveButton.onclick();
     this.assertEqual("b", saves.join(""));
   });
@@ -866,7 +866,7 @@ Cactus.UnitTest.Web.Template = function () {
   function ProgressBar() {
   } ProgressBar.prototype = {
     _setup : function () {
-      var rootElement = this._getRootElement();
+      var rootElement = this._getView();
       rootElement.innerHTML = "";
 
       var barContainer = tag("div", {
@@ -904,7 +904,7 @@ Cactus.UnitTest.Web.Template = function () {
 <div class="a_b"></div>\
 </div>\
 ');
-    this.root = this.t.getRootElement();
+    this.root = this.t.getView();
     this.container = function (className, root) {
       root = root || this.root;
       return $f(".%s .widget_progressBar_container".format(className),
@@ -927,8 +927,8 @@ Cactus.UnitTest.Web.Template = function () {
 
     var o = new this.WidgetO();
 
-    t.bindTo(o);
-    var root = t.getRootElement();
+    t.attach(o);
+    var root = t.getView();
 
     // Add the widget.
     t.addWidget(".x", new ProgressBar());
@@ -940,7 +940,7 @@ Cactus.UnitTest.Web.Template = function () {
     // Make sure the widget has been added, this test breaks encapsulation
     // somewhat, but the widget would document that it adds this class name,
     // so it's OK.
-    var root = t.getRootElement();
+    var root = t.getView();
     var bar = $f(".x .widget_progressBar_bar", root);
     var barContainer = $f(".x .widget_progressBar_container", root);
     this.assert(!!bar, "Could not find bar.");
@@ -963,7 +963,7 @@ Cactus.UnitTest.Web.Template = function () {
   widgetTC.add(function () {
     var t = this.t
     var o = new this.WidgetO();
-    t.bindTo(o);
+    t.attach(o);
     var root = this.root;
 
     t.addWidget(".x", new ProgressBar());
@@ -984,7 +984,7 @@ Cactus.UnitTest.Web.Template = function () {
   widgetTC.add(function () {
     var t = this.t;
     var o = new this.WidgetO();
-      t.bindTo(o);
+      t.attach(o);
     var root = this.root;
 
     t.addWidget(".a_b", new ProgressBar());
@@ -995,7 +995,7 @@ Cactus.UnitTest.Web.Template = function () {
   // Adding a widget before the template is bound to a KVC should work.
   widgetTC.add(function () {
     var o = new this.WidgetO();
-    this.t.bindTo(o);
+    this.t.attach(o);
     this.t.addWidget(".x", new ProgressBar());
 
     this.container("x").style.width = "200px";
@@ -1006,7 +1006,7 @@ Cactus.UnitTest.Web.Template = function () {
   // Rebinding the template should cause a set to be sent to the widget.
   widgetTC.add(function () {
     var o = new this.WidgetO();
-    this.t.bindTo(o);
+    this.t.attach(o);
     this.t.addWidget(".x", new ProgressBar());
 
     this.container("x").style.width = "200px";
@@ -1014,7 +1014,7 @@ Cactus.UnitTest.Web.Template = function () {
 
     var p = new this.WidgetO();
     p.x = 0.25;
-    this.t.bindTo(p);
+    this.t.attach(p);
     this.assertEqual(50, this.bar("x").offsetWidth);
   });
 
@@ -1027,10 +1027,10 @@ Cactus.UnitTest.Web.Template = function () {
     o.x = 0.5;
     var o2 = new this.WidgetO();
     o2.x = 0.25;
-    t.bindTo(o);
-    t2.bindTo(o2);
-    var tRoot = t.getRootElement();
-    var t2Root = t2.getRootElement();
+    t.attach(o);
+    t2.attach(o2);
+    var tRoot = t.getView();
+    var t2Root = t2.getView();
     $f("#sandbox").appendChild(t2Root);
 
     this.container("x", tRoot).style.width = "200px";
@@ -1060,7 +1060,7 @@ Cactus.UnitTest.Web.Template = function () {
     var o = new this.WidgetO();
     o.x = 0.25;
     this.container("x").style.width = "200px";
-    t.bindTo(o);
+    t.attach(o);
     this.assertEqual(100, this.bar("x").offsetWidth);
   });
 
@@ -1082,7 +1082,7 @@ Cactus.UnitTest.Web.Template = function () {
   kvcBinding : new this.WidgetO()
 });
 
-    var root = t.getRootElement();
+    var root = t.getView();
     $f("#sandbox").appendChild(root);
 
     this.container("z0 .x", root).style.width = "200px";
@@ -1109,10 +1109,10 @@ Cactus.UnitTest.Web.Template = function () {
     t.addClassNameCondition("b", "b-true",  false);
     t.addClassNameCondition("b", "b-false", true);
     this.assertFalse(t.classNameConditions.hasModel(), "Should not have model here");
-    t.bindTo(o);
+    t.attach(o);
     this.assert(t.classNameConditions.hasModel(), "Should have data model here");
 
-    var root = t.getRootElement();
+    var root = t.getView();
     var has = CN.has.curry(root);
     var cn = root.className;
 
@@ -1174,10 +1174,10 @@ Cactus.UnitTest.Web.Template = function () {
     o.a = true;
     t.addClassNameCondition("a", "a-true");
     var t2 = Template.create(t);
-    t2.bindTo(o);
-    this.assert(CN.has(t2.getRootElement(), "a-true"),
+    t2.attach(o);
+    this.assert(CN.has(t2.getView(), "a-true"),
                 "Class name properties were not inherited.CN=\"%s\"".format(
-                  CN.get(t2.getRootElement()).join(" ")
+                  CN.get(t2.getView()).join(" ")
                 ));
   });
 
@@ -1193,7 +1193,7 @@ Cactus.UnitTest.Web.Template = function () {
     var o = new KVC();
     o.x = 1;
     o.y = 2;
-    t.bindTo(o);
+    t.attach(o);
 
     this.assertEqual(1, valueOf(t, ".x"));
     this.assertEqual(20, valueOf(t, ".y"));
@@ -1208,7 +1208,7 @@ Cactus.UnitTest.Web.Template = function () {
     t.setOnBound(function () {
       triggered = true;
     });
-    t.bindTo(o);
+    t.attach(o);
 
     this.assert(triggered, "Did not trigger.");
 
@@ -1223,7 +1223,7 @@ Cactus.UnitTest.Web.Template = function () {
 
     triggered2 = false;
     var t3 = Template.create(t2);
-    t3.bindTo(o);
+    t3.attach(o);
     this.assert(triggered2, "t3's onBound did not trigger.");
   });
 
@@ -1286,7 +1286,7 @@ Cactus.UnitTest.Web.Template = function () {
     var t = Template.create('<div class="x"></div>', {
       kvcBinding : o
     });
-    this.assertEqual("", t.getRootElement().innerHTML);
+    this.assertEqual("", t.getView().innerHTML);
   });
 
   // Cloning of skipKeyPaths.
@@ -1295,8 +1295,8 @@ Cactus.UnitTest.Web.Template = function () {
       skipKeyPaths : ["x"]
     });
     var t2 = Template.create(t);
-    t.bindTo(new O());
-    t2.bindTo(new O());
+    t.attach(new O());
+    t2.attach(new O());
     this.assertEqual(0, valueOf(t, "root"));
     this.assertEqual(0, valueOf(t2, "root"));
   });
@@ -1312,7 +1312,7 @@ Cactus.UnitTest.Web.Template = function () {
       kvcBinding : o
     });
     var t2 = Template.create(t);
-    t2.bindTo(o);
+    t2.attach(o);
     o.setValue("x", 8);
     this.assertEqual(0, valueOf(t, "root"), "t");
     this.assertEqual(0, valueOf(t2, "root"), "t2");

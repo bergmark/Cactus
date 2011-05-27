@@ -111,7 +111,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     this.assertEqual (1, this.valueOf (1));
 
     this.ac = makeAC();
-    this.listTemplate.bindTo (this.ac);
+    this.listTemplate.attach (this.ac);
     this.ac.swap (0, 2);
     this.assertEqual (5, this.valueOf (0));
     this.assertEqual (1, this.valueOf (2));
@@ -129,13 +129,13 @@ Cactus.UnitTest.Web.ListTemplate = function () {
                       "LI not replaced in ListTemplate.");
   });
 
-  // Should have a bindTo method.
+  // Should have a attach method.
   tc.add (function () {
     var lt = this.listTemplate;
-    this.assertInstance (Function, lt.bindTo, "No bindTo method.");
+    this.assertInstance (Function, lt.attach, "No attach method.");
 
     var ac = new ArrayController ([new O (11, 12)]);
-    lt.bindTo (ac);
+    lt.attach (ac);
 
     this.assertEqual (11, this.valueOf (0));
   });
@@ -171,7 +171,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     // Add an event to .x to make it onclick:able, mock event propagation
     // until real simulations can be done.
     Events.add (x, "click", function () {
-      lt.getRootElement().onclick (e);
+      lt.getView().onclick (e);
     });
 
     x.onclick();
@@ -199,7 +199,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     }]);
 
     Events.add (y, "click", function () {
-      lt.getRootElement().onclick ({
+      lt.getView().onclick ({
         target : this
       });
     });
@@ -226,7 +226,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
 
     function simulateClick (element) {
       Events.add (element, "click", function () {
-        lt.getRootElement().onclick ({
+        lt.getView().onclick ({
           target : this
         });
       });
@@ -246,7 +246,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
 
     function resetAC () {
       ac = makeAC();
-      lt.bindTo(ac);
+      lt.attach(ac);
     }
 
     function has (index, className) {
@@ -359,9 +359,9 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     var lt = ListTemplate.create(optionTemplate, select, {
       arrayController : ac
     });
-    this.assertEqual(3, $("option", lt.getRootElement()).length);
+    this.assertEqual(3, $("option", lt.getView()).length);
     this.assertEqual('{"value":"10","text":"5"}',
-                     JSON.stringify(Element.getValue($f("option", lt.getRootElement()))));
+                     JSON.stringify(Element.getValue($f("option", lt.getView()))));
   });
 
   // Make sure that the subscription collection isn't shared among instances.
@@ -386,9 +386,9 @@ Cactus.UnitTest.Web.ListTemplate = function () {
       ListTemplate.prototype.onRemovedTriggered.apply(this, arguments);
     };
 
-    var removeButton = $f(".remove", lt.getRootElement());
+    var removeButton = $f(".remove", lt.getView());
     Events.add(removeButton, "click", function () {
-      lt.getRootElement().onclick({
+      lt.getView().onclick({
         target : this
       });
     });
@@ -399,7 +399,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     removeButton.onclick();
 
     this.assertEqual(2, ac.size(), "Too many objects in AC.");
-    this.assertEqual(2, lt.getRootElement().childNodes.length, "Too many objects in ListTemplate.");
+    this.assertEqual(2, lt.getView().childNodes.length, "Too many objects in ListTemplate.");
   });
 
   // Event bindings should return false to halt the event.
@@ -412,9 +412,9 @@ Cactus.UnitTest.Web.ListTemplate = function () {
       callback : Function.empty
     }]);
 
-    var root = lt.getRootElement();
+    var root = lt.getView();
 
-    var x = $f(".x", lt.getRootElement());
+    var x = $f(".x", lt.getView());
 
     // This code breaks in IE, for unknown reasons, so it's left commented
     // out for now.
@@ -507,7 +507,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     var ac2 = makeAC();
 
     ac.removeAtIndex(0);
-    this.assertEqual(2, lt.getRootElement().childNodes.length);
+    this.assertEqual(2, lt.getView().childNodes.length);
 
     var triggered = false;
     lt.createEventBindings([{
@@ -517,9 +517,9 @@ Cactus.UnitTest.Web.ListTemplate = function () {
         test.assertEqual(ac2, ac);
       }
     }]);
-    lt.bindTo(ac2);
-    this.assertEqual(3, lt.getRootElement().childNodes.length);
-    lt.getRootElement().onclick({
+    lt.attach(ac2);
+    this.assertEqual(3, lt.getView().childNodes.length);
+    lt.getView().onclick({
       target : $f(".x", lt.getListItem(0))
     });
 
@@ -534,7 +534,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
       lastClassName : "lst",
       singleClassName : "sngl"
     });
-    lt.bindTo(ac);
+    lt.attach(ac);
 
     function has(index, className) {
       return ClassNames.has(lt.getListItem(index), className);

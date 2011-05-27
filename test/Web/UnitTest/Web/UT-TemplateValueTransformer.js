@@ -33,7 +33,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
   });
 
   function get(template, selector) {
-    return $f(selector, template.getRootElement());
+    return $f(selector, template.getView());
   }
   function valueOf(template, selector) {
     return parseInt(Element.getValue(get(template, selector)), 10);
@@ -47,8 +47,8 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
                             +  '<h1 class="x"></h1>'
                             +  '<h2 class="y"></h2>'
                             + '</div>');
-    t.bindTo(o);
-    var root = t.getRootElement();
+    t.attach(o);
+    var root = t.getView();
 
     var h1 = $f("h1", root);
     var h2 = $f("h2", root);
@@ -93,8 +93,8 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
         return v * 10;
       }
     });
-    t.bindTo(o);
-    var root = t.getRootElement();
+    t.attach(o);
+    var root = t.getView();
     this.assertEqual("50", Element.getValue($f(".foo .x", root)));
     this.assertEqual("5", Element.getValue($f(".bar .x", root)));
 
@@ -125,9 +125,9 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
       }
     });
     var o = new O(-4);
-    t.bindTo(o);
+    t.attach(o);
 
-    this.assertEqual("2", Element.getValue($f(".x", t.getRootElement())));
+    this.assertEqual("2", Element.getValue($f(".x", t.getView())));
   });
 
   // All selectors should be able to include the root.
@@ -138,8 +138,8 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
       forward : Math.sqrt
     });
     var o = new O(4);
-    t.bindTo(o);
-    this.assertEqual("2", Element.getValue(t.getRootElement()));
+    t.attach(o);
+    this.assertEqual("2", Element.getValue(t.getView()));
   });
 
 
@@ -152,8 +152,8 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     });
     var o = new O(4);
     var t2 = Template.create(t);
-    t2.bindTo(o);
-    this.assertEqual("2", Element.getValue($f(".x", t2.getRootElement())));
+    t2.attach(o);
+    this.assertEqual("2", Element.getValue($f(".x", t2.getView())));
   });
 
   // Several transformers should not be able to exist for the same
@@ -186,7 +186,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
         return v + "c";
       }
     });
-    this.assertEqual("_cd", Element.getValue($f(".x", t.getRootElement())));
+    this.assertEqual("_cd", Element.getValue($f(".x", t.getView())));
   });
 
   // Create syntax for both selector and keypath.
@@ -202,7 +202,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
         }],
         kvcBinding : new O(4, -9)
       });
-    var root = t.getRootElement();
+    var root = t.getView();
     this.assertEqual("2", Element.getValue($f(".x", root)));
     this.assertEqual("3", Element.getValue($f(".y", root)));
   });
@@ -220,7 +220,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
         }],
         kvcBinding : new O(-4)
       });
-    this.assertEqual("2", Element.getValue($f(".x", t.getRootElement())));
+    this.assertEqual("2", Element.getValue($f(".x", t.getView())));
   });
 
   // Value transformers should be cloned when the template is cloned.
@@ -229,7 +229,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
 
     var t = Template.create(
       '<div><h1 class="x"></h1><h2 class="y"></h2></div>');
-      t.bindTo(o);
+      t.attach(o);
     t.setValueTransformer({
       keyPath : "x",
       forward : function (v) {
@@ -237,12 +237,12 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
       }
     });
     this.assertEqual("20",
-                     Element.getValue($("h1", t.getRootElement())[0]));
+                     Element.getValue($("h1", t.getView())[0]));
 
     var t2 = Template.create(t);
-    t2.bindTo(o);
+    t2.attach(o);
     this.assertEqual(String(10 * 2),
-                     Element.getValue($("h1", t2.getRootElement())[0]));
+                     Element.getValue($("h1", t2.getView())[0]));
   });
 
   // Value transformers should be able to be set before the template is bound
@@ -257,10 +257,10 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
       }
     });
     var o = new O();
-    t.bindTo(o);
+    t.attach(o);
     o.setValue("x", 10);
     this.assertEqual("20",
-                     Element.getValue($(".x", t.getRootElement())[0]));
+                     Element.getValue($(".x", t.getView())[0]));
   });
 
   // Transformations should be reversible.
@@ -322,7 +322,7 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     // Cloning of backward transformers,
     // checking both selector and value transformers.
     var t2 = Template.create(t);
-    t2.bindTo(o);
+    t2.attach(o);
     o.setValue("w", 16);
     this.assertEqual(16, valueOf(t2, ".w"));
     get(t2, ".w").onchange();
