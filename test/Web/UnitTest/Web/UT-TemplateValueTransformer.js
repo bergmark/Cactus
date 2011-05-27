@@ -329,8 +329,8 @@ Cactus.UnitTest.Web.TemplateValueTransformer = function () {
     // key path transformers.
     this.assertEqual(16, valueOf(t, ".w"));
     get(t, ".w").onchange();
-    this.assertEqual(-4, o.getValue("w"));
-    this.assertEqual(-4, valueOf(t, ".w"));
+    this.assertEqual(-4, o.getValue("w"), "keyPath w not set to -4");
+    this.assertEqual(-4, valueOf(t, ".w"), "selector .w not sot to -4");
 
     // Cloning of backward transformers,
     // checking both selector and value transformers.
