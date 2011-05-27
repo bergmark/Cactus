@@ -1108,9 +1108,9 @@ Cactus.UnitTest.Web.Template = function () {
     t.addClassNameCondition("a", "a-false", true);
     t.addClassNameCondition("b", "b-true",  false);
     t.addClassNameCondition("b", "b-false", true);
-    this.assertFalse(t.classNameConditions.hasDataSource(), "Should not have data source here");
+    this.assertFalse(t.classNameConditions.hasModel(), "Should not have model here");
     t.bindTo(o);
-    this.assert(t.classNameConditions.hasDataSource(), "Should have data source here");
+    this.assert(t.classNameConditions.hasModel(), "Should have data model here");
 
     var root = t.getRootElement();
     var has = CN.has.curry(root);
