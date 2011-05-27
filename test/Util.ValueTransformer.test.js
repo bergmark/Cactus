@@ -19,5 +19,19 @@ module.exports = {
     var idTransformer = new ValueTransformer();
     equal(1, idTransformer.transform(1));
     equal(1, idTransformer.reverse(1));
+  },
+  "getting the transformers" : function () {
+    function toString() {
+      return "" + v;
+    }
+    function toInt() {
+      return parseInt(v, 10);
+    }
+    var intToString = new ValueTransformer({
+      transform : toString,
+      reverse : toInt
+    });
+    equal(toString, intToString.getTransform());
+    equal(toInt, intToString.getReverse());
   }
 };
