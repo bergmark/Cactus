@@ -21,11 +21,12 @@ module.exports = (function () {
       assert.eql("1,2,3,4", ac.getRange().join(","));
 
       var addedTriggered = false;
-      function added(controller, index) {
+      function added(controller, object, index) {
         addedTriggered = true;
         assert.eql(ac, controller);
-        assert.eql(4, index);
         assert.eql(5, controller.get(4));
+        assert.eql(5, object);
+        assert.eql(4, index);
       }
       ac.subscribe("ObjectAdded", added);
       ac.add(5);
