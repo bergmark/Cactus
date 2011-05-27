@@ -13,4 +13,5 @@ require("./lib/Web/Validation");
 require("./lib/Web/AbstractTemplate");
 require("./lib/Web/TemplateValueTransformer");
 require("./lib/Web/Template");
+require("./lib/Web/Template/ClassNameConditions");
 require("./lib/Web/ListTemplate");
