@@ -186,10 +186,15 @@ module.exports = (function () {
                             c.subscribe.bind(null, "Bax", Function.empty));
     },
 
+    "throw error immediately if subscriber doesn't implement onTriggered method" : function () {
+      var c = new C();
+      exception(/does not implement onFooTriggered/i, c.subscribe.bind(c, "Foo", {}));
+    },
+
     // Test hasSubscriber method.
     "hasSubscriber" : function () {
       var c = new C();
-      var o = {};
+      var o = new S();
       assert.ok(!c.hasSubscriber(o, "Foo"),
                 "hasSubscriber false positive");
       c.subscribe("Foo", o);
@@ -204,8 +209,8 @@ module.exports = (function () {
     // subscribe should return the subscription ID.
     "subscribe return id" : function () {
       var c = new C();
-      var id1 = c.subscribe("Foo", {});
-      var id2 = c.subscribe("Foo", {});
+      var id1 = c.subscribe("Foo", new S());
+      var id2 = c.subscribe("Foo", new S());
       assert.ok(id1 !== id2,
                 "ID's were equal (%s)".format(id1));
     },
