@@ -70,7 +70,8 @@ Cactus.UnitTest.Web.ListTemplate = function () {
   tc.add (function () {
     var ac = new ArrayController();
     var rootElement = tag ("ul");
-      var listTemplate = new ListTemplate (ac, templateP, rootElement);
+    var listTemplate = new ListTemplate(templateP, rootElement);
+    listTemplate.attach(ac);
 
     this.assertEqual (0, rootElement.childNodes.length);
   });
@@ -341,7 +342,8 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     var root = tag("tbody");
     table.appendChild(root);
 
-    var lt = new ListTemplate(ac, trTemplate, root);
+    var lt = new ListTemplate(trTemplate, root);
+    lt.attach(ac);
     this.assertEqual(3, root.childNodes.length);
   });
 
@@ -381,7 +383,8 @@ Cactus.UnitTest.Web.ListTemplate = function () {
 
     var ac = makeAC();
 
-    var lt = new ListTemplate(ac, t, tag("ul"));
+    var lt = new ListTemplate(t, tag("ul"));
+    lt.attach(ac);
     lt.createEventBindings([{
       selector : ".remove",
       method : "removeAtIndex"
@@ -398,8 +401,8 @@ Cactus.UnitTest.Web.ListTemplate = function () {
       });
     });
 
-    var lt2 = new ListTemplate(makeAC(),
-                               Template.create('<li class="x"></li>'), tag("ul"));
+    var lt2 = new ListTemplate(Template.create('<li class="x"></li>'), tag("ul"));
+    lt2.attach(makeAC());
 
     removeButton.onclick();
 
@@ -449,13 +452,14 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     var b = new B(2);
     var ac = new ArrayController([a, b]);
 
-    var lt = new ListTemplate(ac, [{
+    var lt = new ListTemplate([{
       constructor : A,
       template : t1
     }, {
       constructor : B,
       template : t2
     }], root);
+    lt.attach(ac);
 
     var li1 = $("li", root)[0];
     var li2 = $("li", root)[1];
@@ -468,10 +472,10 @@ Cactus.UnitTest.Web.ListTemplate = function () {
 
     // Throw an error if the array isn't well formed.
     this.assertException(/should be/i, function () {
-      new ListTemplate(new ArrayController(), null, tag("ul"));
+      new ListTemplate(null, tag("ul"));
     });
     this.assertException(/malformed/i, function () {
-      new ListTemplate(new ArrayController(), [{
+      new ListTemplate([{
         constructor : KVC
       }], tag("ul"));
     });
