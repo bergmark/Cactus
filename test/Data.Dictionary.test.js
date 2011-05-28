@@ -70,5 +70,16 @@ module.exports = {
     ok(d.hasValue(2));
     ok(d.hasValue(3));
     not(d.hasValue(4));
+  },
+  clear : function () {
+    var d = new Dictionary();
+    ok(d.isEmpty());
+    d = new Dictionary({
+      a : [1, 2],
+      b : [3]
+    });
+    ok(!d.isEmpty());
+    d.clear();
+    ok(d.isEmpty());
   }
 };
