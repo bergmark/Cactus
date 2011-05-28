@@ -8,7 +8,7 @@
     "url": "git://github.com/Raevel/Cactus.git"
   },
   "author": "Adam Bergmark <adam@edea.se> (http://www.edea.se)",
-  "main": "CactusNode.js",
+  "main": "CactusNPM.js",
   "directories": {
     "lib": "lib"
   },
