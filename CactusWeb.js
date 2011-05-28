@@ -1,4 +1,3 @@
-require("./Cactus");
 require("./lib/Web/ClassNames");
 require("./lib/Web/Browser");
 require("./lib/Web/select");
@@ -20,3 +19,4 @@ require("./lib/Web/Template/ClassNameConditions");
 require("./lib/Web/Template/EventBinding");
 require("./lib/Web/Template/Mode");
 require("./lib/Web/ListTemplate");
+require("./lib/Web/ListTemplate/helpers");
