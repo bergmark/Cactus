@@ -15,6 +15,7 @@ require("./lib/Web/ViewHandler");
 require("./lib/Web/Mediator");
 require("./lib/Web/Template");
 require("./lib/Web/Template/Transformer");
+require("./lib/Web/Template/Transformer/helpers");
 require("./lib/Web/Template/ClassNameConditions");
 require("./lib/Web/Template/EventBinding");
 require("./lib/Web/Template/Mode");

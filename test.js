@@ -1,4 +1,25 @@
-require("./CactusNode");
+// Mock window for web modules.
+global.document = {
+  createElement : function (tagName) {
+    var tag = {
+      tagName : tagName
+    };
+    if (tagName === "select") {
+      tagName.length = 0;
+    }
+  }
+};
+global.navigator = {};
+global.window = {
+  document : document,
+  navigator : navigator
+};
+
+require("./CactusWeb");
+require("./lib/Application/DtoFactory");
+require("./lib/Application/Dto");
+require("./lib/Application/Renderer");
+
 Joose.C.debug = true;
 global.assert = require("assert");
 global.should = require("should");
@@ -28,3 +49,5 @@ global.instance = function (a, b, msg) { a.should.instanceof(b, msg); };
 
 // Short hands for imports.
 global.C = Cactus.Data.Collection;
+global.TTransformer = Cactus.Web.Template.Transformer;
+global.KVC = Cactus.Data.KeyValueCoding;
