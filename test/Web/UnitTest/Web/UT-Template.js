@@ -11,6 +11,7 @@ Cactus.UnitTest.Web.Template = function () {
   var Widget = Cactus.Web.Widget;
   var $f = Cactus.Web.selectFirst;
   var object = Cactus.Addon.Object;
+  var CNC = Template.ClassNameConditions;
 
 
   var templateTC = new TestCase("Web.Template");
@@ -1165,6 +1166,26 @@ Cactus.UnitTest.Web.Template = function () {
         }],
       kvcBinding : o
     });
+  });
+
+  classNameConditionTC.add(function () {
+    // Remove class names on unbind.
+    var t = Template.create('<div><div class="a"></div></div>');
+    var view = t.getView();
+
+    var cncond = new CNC(view);
+    cncond.add("a", "a-true");
+    cncond.add("b", "b-false", true);
+    var o = new KVC();
+    o.a = true;
+    o.b = false;
+
+    cncond.attach(o);
+    this.assert(CN.has(view, "a-true"));
+    this.assert(CN.has(view, "b-false"));
+    cncond.detach();
+    this.assertFalse(CN.has(view, "a-true"));
+    this.assertFalse(CN.has(view, "b-false"));
   });
 
   // Class name conditions should be inherited.
