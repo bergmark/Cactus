@@ -176,7 +176,7 @@ module.exports = {
     }).returning(0).call(o);
   },
 
-  "filter" : function () {
+  filter : function () {
     var called = false;
     function f() {
       called = true;
@@ -208,7 +208,16 @@ module.exports = {
     called = false;
     f.filter(undefined)(1);
     assert.ok(called, "undefined 1 called f");
-    },
+
+    // Keep scope.
+    var o = {};
+    called = false;
+    (function () {
+      called = true;
+      equal(o, this);
+    }).filter(1).call(o, 1);
+    ok(called, "not called");
+  },
 
   "filter 2" : function () {
     var t = this;

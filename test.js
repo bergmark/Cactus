@@ -104,7 +104,7 @@ global.contEx = function (cont, reg) {
 };
 global.ok = function (v, msg) { true.should.equal(v, msg); };
 global.not = function (v, msg) { false.should.equal(v, msg); };
-global.equal = function (a, b, msg) { if (!a) { assert.strictEqual(a, b, msg) } else { a.should.equal(b, msg); }};
+global.equal = function (a, b, msg) { if (!a) { assert.strictEqual(a, b, msg); } else { a.should.equal(b, msg); }};
 global.notequal = function (a, b, msg) { a.should.not.equal(b, msg); };
 global.eql = function (a, b, msg) { a.should.eql(b, msg); };
 var Assertion = Cactus.Dev.Assertion;
