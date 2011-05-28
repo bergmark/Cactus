@@ -124,6 +124,16 @@ module.exports = (function () {
       assert.strictEqual("4,3,1,2", objs(ac));
     },
 
+    "OnAdded" : function () {
+      var ac = new AC();
+      var acd = new ACD(ac);
+      var acd2 = new ACD(acd);
+      ac.add("x");
+      equal("x", acd2.get(0));
+      acd2.add("y");
+      equal("y", ac.get(1));
+    },
+
     "OnEmptied/OnFilled" : function () {
       var ac = new AC();
       var acd = new ACD(ac);
