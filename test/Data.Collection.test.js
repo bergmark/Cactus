@@ -305,6 +305,14 @@ module.exports = (function () {
       assert.eql([], Coll.replicate(0, 1));
       assert.eql([1], Coll.replicate(1, 1));
       assert.eql([1,1], Coll.replicate(2, 1));
+    },
+
+    zip : function () {
+      eql([[1,"a"],[2,"b"]], Coll.zip([1,2],["a","b"]));
+      eql([], Coll.zip([1], []));
+      eql([], Coll.zip([], [1]));
+      eql([[1,"a"]], Coll.zip([1,2],["a"]));
+      eql([[1,"a"]], Coll.zip([1],["a","b"]));
     }
   };
 })();
