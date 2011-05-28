@@ -8,7 +8,9 @@ Cactus.UnitTest.Web.ListTemplate = function () {
   var $ = Cactus.Web.select;
   var $f = Cactus.Web.selectFirst;
   var ListTemplate = Cactus.Web.ListTemplate;
+  var LT = Cactus.Web.ListTemplate;
   var ArrayController = Cactus.Data.ArrayController;
+  var AC = Cactus.Data.ArrayController;
   var tag = Cactus.Web.tag;
   var Element = Cactus.Web.Element;
   var Events = Cactus.Web.Events;
@@ -56,6 +58,9 @@ Cactus.UnitTest.Web.ListTemplate = function () {
      *
      * @return int
      */
+    this.valueOfWithRoot = function (rootElement, listItemIndex) {
+      return parseInt(Element.getValue($("li .x", rootElement)[listItemIndex]), 10);
+    };
     this.valueOf = function (listItemIndex) {
       return parseInt(Element.getValue($("li .x", this.rootElement)[listItemIndex]), 10);
     };
@@ -581,6 +586,26 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     lt.setSingleClassName("_single");
     this.assertFalse(has(0, "single"), "single after");
     this.assert(has(0, "_single"), "_single");
+  });
+
+  // Helpers
+  tc.add(function () {
+    var ul = tag("ul", {
+      id : "helperul",
+      contents : [
+      ]
+    });
+    ul.appendChild(tag("li", {
+      className : "x"
+    }));
+    document.body.appendChild(ul);
+    var ac = new AC([
+      new O({ x : 1, y : 1 })
+    ]);
+    var lt = LT.createWithTemplate("#helperul", ac);
+    this.assertEqual(1, ul.childNodes.length);
+    var v = parseInt(Element.getValue($(".x", ul)[0]), 10);
+    document.body.removeChild(ul);
   });
 
   return tc;
