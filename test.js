@@ -100,7 +100,6 @@ global.contEx = function (cont, reg) {
     if (!e) {
       throw new Error("assertContEx: No error was thrown.");
     }
-    console.log(e);
     assert.ok(reg.test(e.message), "assertContEx: Caught unexpected: " + e.message);
     this.CONTINUE();
   });

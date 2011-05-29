@@ -374,5 +374,35 @@ module.exports = {
     // Should be default value for getWithDefault.
     dto = df.newDto();
     "adam".should.eql(dto.getWithDefault("name"));
+  },
+  "prepare dtos with values" : function (done) {
+    var id = 0;
+    var helpers = {
+      makeId : function () { return ++id; }
+    };
+
+    var createUserDF = new DtoFactory({
+      id : { type : "number", required : false,
+             outTransformerCont : function (CONTINUE, v, o) { CONTINUE(o.makeId()); } },
+      name : { type : "string" },
+      password : { type : "string" }
+    });
+
+    createUserDF.prepareDto({
+      name : "name",
+      password : "password",
+      id : null
+    }, helpers).then(function (fields) {
+      eql({
+        id : 1,
+        name : "name",
+        password : "password"
+      }, fields);
+
+      // Missing fields.
+      contEx(createUserDF.prepareDto({
+        name : "name"
+      }), /"password".+missing/i).now();
+    }).thenRun(done);
   }
 };
