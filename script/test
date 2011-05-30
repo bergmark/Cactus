@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-expresso -I . -r test.js -s $*
+expresso -s -I . -r build/test.js -d build/test/ $*
