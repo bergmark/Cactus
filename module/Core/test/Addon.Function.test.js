@@ -409,5 +409,16 @@ module.exports = {
     ok(called); called = false;
     f.curry(1,2,3).take(0)(4);
     f.take(3)(1,2,3,4);
+  },
+  range : function () {
+    var called = false;
+    var f = function () {
+      return C.toArray(arguments);
+    };
+
+    eql([0], f.range(0,0)(0,1,2));
+    eql([0,1], f.range(0,1)(0,1,2));
+    eql([1,2], f.range(1,2)(0,1,2));
+    eql([2], f.range(2,2)(0,1,2));
   }
 };

@@ -335,8 +335,8 @@ Function.prototype.freeze = function () {
   };
 };
 /**
- * Given a function f and an int i,
- * return a function g that calls f without g's first i arguments.
+ * Given a function f and an index i,
+ * returns a function g that calls without g's first i arguments.
  *
  * @param int i
  * @return Function
@@ -348,8 +348,8 @@ Function.prototype.drop = function (i) {
   };
 };
 /**
- * Given a function f and an int i,
- * return a function g that calls f with only g's first i arguments.
+ * Given a function f and an index i,
+ * returns a function g that calls f with only g's first i arguments.
  *
  * @param int i
  * @return Function
@@ -358,5 +358,19 @@ Function.prototype.take = function (i) {
   var f = this;
   return function () {
     return f.apply(this, Array.prototype.slice.call(arguments, 0, i));
+  };
+};
+/**
+ * Given a function f and a range of indices i and j,
+ * returns a function g that calls f with the arguments for g within the range.
+ *
+ * @param int i
+ * @param int j
+ * @return Function
+ */
+Function.prototype.range = function (i, j) {
+  var f = this;
+  return function () {
+    return f.apply(this, Array.prototype.slice.call(arguments, i, j+1));
   };
 };
