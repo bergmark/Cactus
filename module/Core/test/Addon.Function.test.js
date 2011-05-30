@@ -395,14 +395,18 @@ module.exports = {
   },
 
   "take/drop" : function () {
+    var called = false;
     var f = function () {
-      assert.eql([1,2,3], arguments);
+      called = true;
+      assert.eql([1,2,3], C.toArray(arguments));
     };
     f.drop(0)(1,2,3);
+    ok(called); called = false;
     f.drop(1)(0,1,2,3);
-    f.drop(2)(-1,1,2,3);
+    f.drop(2)(0,-1,1,2,3);
 
     f.take(3)(1,2,3);
+    ok(called); called = false;
     f.curry(1,2,3).take(0)(4);
     f.take(3)(1,2,3,4);
   }

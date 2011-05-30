@@ -344,7 +344,7 @@ Function.prototype.freeze = function () {
 Function.prototype.drop = function (i) {
   var f = this;
   return function () {
-    return Array.prototype.slice.call(arguments, i);
+    return f.apply(this, Array.prototype.slice.call(arguments, i));
   };
 };
 /**
@@ -357,6 +357,6 @@ Function.prototype.drop = function (i) {
 Function.prototype.take = function (i) {
   var f = this;
   return function () {
-    return Array.prototype.slice.call(0, arguments);
+    return f.apply(this, Array.prototype.slice.call(arguments, 0, i));
   };
 };
