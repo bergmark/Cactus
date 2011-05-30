@@ -191,11 +191,11 @@ Module("Cactus.Application", function (m) {
           dto.reversePopulate(vals, helpers).then(function () {
             try {
               var fields = dto.get();
+              this.CONTINUE(fields);
             } catch (e) {
               this.THROW(e);
               return;
             }
-            this.CONTINUE(fields);
           }).now();
         }
       }
