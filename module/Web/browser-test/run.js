@@ -6,32 +6,28 @@
   var Events = Cactus.Web.Events;
 
   var tests = [
-    "Web/Events",
-    "Web/Element",
-    "Web/Event",
-    "Web/Events",
-    "Web/select",
-    "Web/selectFirst",
-    "Web/tag",
-    "Web/EventManager",
-    "Web/Validation",
-    "Web/TemplateValueTransformer",
-    "Web/Template",
-    "Web/ListTemplate"
+    "Web.Events",
+    "Web.Element",
+    "Web.Event",
+    "Web.Events",
+    "Web.select",
+    "Web.selectFirst",
+    "Web.tag",
+    "Web.EventManager",
+    "Web.Validation",
+    "Web.TemplateValueTransformer",
+    "Web.Template",
+    "Web.ListTemplate"
   ];
 
   // If GET parameters are specified, only those tests are run.
   if (location.search) {
-    tests = location.search.substr(1).replace(/\./g, "/").split("&");
+    tests = location.search.substr(1).split("&");
   }
 
   // Load all unit test files.
   for (var i = 0; i < tests.length; i++) {
-    var file = tests[i];
-    var split = file.split("/");
-    var utFile = "./test/Web/UnitTest/" +
-      split.slice(0, split.length - 1).join("/") +
-      "/UT-" + split.slice(split.length - 1);
+    var utFile = "./browser-test/test/" + tests[i] + ".test";
     require(utFile);
   }
 

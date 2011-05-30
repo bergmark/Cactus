@@ -3,7 +3,9 @@ mkdir -p build/lib build/test
 rsync -avz module/Core/lib/* build/lib/
 rsync -avz module/Core/test/* build/test/
 rsync -avz module/Web/lib/* build/lib/
-rsync -avz module/Web/test/* build/lib/
+rsync -avz module/Web/test/* build/test/
 rsync -avz module/Node/lib/* build/lib/
-rsync -avz module/Node/test/* build/lib/
+rsync -avz module/Node/test/* build/test/
 cp Cactus.js CactusNode.js CactusNPM.js CactusWeb.js test.js build/
+rsync -avz module/Web/browser-test build/
+

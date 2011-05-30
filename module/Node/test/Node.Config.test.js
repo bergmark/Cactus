@@ -1,6 +1,6 @@
 exports.initial = function () {
-  var configPath = "./test/files/config.test.json";
-  var tmpdirPath = "./test/tmp";
+  var configPath = "./build/test/files/config.test.json";
+  var tmpdirPath = "./build/test/tmp";
   var newPath = tmpdirPath + "/config.test.json";
   try {
     fs.mkdirSync(tmpdirPath, "777");
