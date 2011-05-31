@@ -257,4 +257,15 @@ Module("Cactus.Data", function (m) {
     }
     return false;
   };
+  m.KeyValueCoding.addToInstance = function (o) {
+    if (!o || typeof o !== "object") {
+      return o;
+    }
+
+    var newO = new m.KeyValueCoding();
+    for (var p in o) if (o.hasOwnProperty(p)) {
+      newO[p] = m.KeyValueCoding.addToInstance(o[p]);
+    }
+    return newO;
+  };
 });

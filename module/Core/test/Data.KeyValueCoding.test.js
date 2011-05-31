@@ -249,6 +249,22 @@ module.exports = (function () {
       assert.eql(1, o.getValue("p","q","r"));
       assert.eql(1, o.getValue("p.q","r"));
       assert.eql(1, o.getValue("p","q.r"));
+    },
+
+    addToInstance : function () {
+      var o = KVC.addToInstance({ x : 1, y : { z : 2 } });
+
+      // Getting.
+      equal(1, o.getValue("x"));
+      equal(o.y, o.getValue("y"));
+      equal(2, o.getValue("y.z"));
+
+      // Setting.
+      o.setValue("x", 3);
+      o.setValue("y.z", 4);
+      equal(3, o.getValue("x"));
+      equal(4, o.getValue("y.z"));
+      o.setValue("y", 3);
     }
   };
 })();
