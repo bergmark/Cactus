@@ -219,6 +219,17 @@ Module("Cactus.Web", function (m) {
     this.mode = new Template.Mode();
   } Template.prototype = {
     /**
+     * @type string
+     * The delimeter used to separate class names into key paths.
+     * Default is "_", meaning class name "a_b" would translate to the key
+     * path "a.b".
+     * May not be changed after Template creation.
+     */
+    keyPathDelimiter : "_",
+    __setKeyPathDelimiter : function (delimiter) {
+      this.keyPathDelimiter = delimiter || "_";
+    },
+    /**
      * @type Dictionary<KeyPath,[HTMLElement]>
      *   Stores references between keypaths and their respective elements.
      */
@@ -246,7 +257,7 @@ Module("Cactus.Web", function (m) {
      */
     _classNameToKeyPath : function (className) {
       className = className.replace(this.classNamePrefix, "");
-      return className.replace(/_/g, ".");
+      return className.replace(this.keyPathDelimiter, ".", "g");
     },
     /**
      * Turns a key path into its corresponding CSS class name.
@@ -255,7 +266,7 @@ Module("Cactus.Web", function (m) {
      * @return string
      */
     _keyPathToClassName : function (keyPath) {
-      return this.classNamePrefix + keyPath.replace(/\./g, "_");
+      return this.classNamePrefix + keyPath.replace(".", this.keyPathDelimiter, "g");
     },
     /*
      * @param string className
@@ -584,9 +595,11 @@ Module("Cactus.Web", function (m) {
      *
      * @return Template
      */
-    _clone : function () {
+    clone : function () {
       var rootElement = this.getView().cloneNode(true);
       var newTemplate = new Template(rootElement);
+
+      newTemplate.__setKeyPathDelimiter(this.keyPathDelimiter);
 
       // Class name prefix.
       newTemplate.setClassNamePrefix(this.classNamePrefix);
@@ -750,6 +763,7 @@ Module("Cactus.Web", function (m) {
     var options = new TypeChecker({
       defaultValueFunc : function () { return {}; },
       type : {
+        keyPathDelimiter : { type : "string", required : false },
         eventBindings : {
           defaultValueFunc : function () { return []; },
           type : [{
@@ -811,30 +825,33 @@ Module("Cactus.Web", function (m) {
 
     var template;
     if (source instanceof Template) {
-      template = source._clone();
-      } else if (typeof source === "string") {
-        var el = tag("div");
-        var selector;
-        if (/^<tr/.test(source)) {
-          el.innerHTML = "<table><tbody>%s</tbody></table>"
-            .format(source);
-          selector = "tr";
-        } else if (/^<option/.test(source)) {
-          el.innerHTML = "<select>%s</select>".format(source);
-          selector = "option";
-        } else {
-          el.innerHTML = source;
-          selector = "*";
-        }
-        template = new Template($f(selector, el));
-      } else if ("tagName" in source) {
-        template = new Template(source);
+      template = source.clone();
+    } else if (typeof source === "string") {
+      var el = tag("div");
+      var selector;
+      if (/^<tr/.test(source)) {
+        el.innerHTML = "<table><tbody>%s</tbody></table>"
+          .format(source);
+        selector = "tr";
+      } else if (/^<option/.test(source)) {
+        el.innerHTML = "<select>%s</select>".format(source);
+        selector = "option";
+      } else {
+        el.innerHTML = source;
+        selector = "*";
       }
+      template = new Template($f(selector, el));
+    } else if ("tagName" in source) {
+      template = new Template(source);
+    }
 
     if (!template) {
       throw new Error("Invalid template source specified");
     }
 
+    if (settings.keyPathDelimiter) {
+      template.__setKeyPathDelimiter(settings.keyPathDelimiter);
+    }
     if (settings.classNamePrefix) {
       template.setClassNamePrefix(settings.classNamePrefix);
     }

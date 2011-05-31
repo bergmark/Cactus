@@ -105,6 +105,35 @@ Cactus.UnitTest.Web.Template = function () {
     this.assertEqual ("-10", Element.getValue(h2), "h2");
   }));
 
+  // Change the delimiter on class names for key path.
+  templateTC.add(function () {
+    var t = Template.create(
+      '<div>\
+         <div class="foo_bar"></div>\
+         <div class="foo-bar"></div>\
+       </div>', {
+        keyPathDelimiter : "-"
+      });
+    this.assertEqual("-", t.keyPathDelimiter, "Did not set property");
+    this.assertEqual("a.b.c", t._classNameToKeyPath("a-b-c"));
+    this.assertEqual("a_b_c", t._classNameToKeyPath("a_b_c"));
+    this.assertEqual("a-b-c", t._keyPathToClassName("a.b.c"));
+
+
+    var kvc = new KVC();
+    kvc.foo_bar = 1;
+    kvc.foo = new KVC();
+    kvc.foo.bar = 2;
+    t.attach(kvc);
+    this.assertEqual("1", Element.getValue($f(".foo_bar", t.getView())));
+    this.assertEqual("2", Element.getValue($f(".foo-bar", t.getView())));
+
+
+    // Cloning.
+    var t2 = Template.create(t);
+    this.assertEqual("-", t2.keyPathDelimiter, "did not clone delimiter");
+  });
+
   // Test read/write on text fields.
   templateTC.add(function () {
     var t = Template.create(
