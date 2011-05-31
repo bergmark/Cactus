@@ -14,15 +14,15 @@
    *
    * The list template is bound to an array controller if one is supplied.
    *
-   * @param selector listTemplateRootSelector
+   * @param HTMLElement listTemplateRoot
    * @param optional ArrayController arrayController
    * @param optional Hash templateSettings = {}
    * @param optional Hash listTemplateSettings = {}
    */
-  m.createWithTemplate = function (listTemplateRootSelector, arrayController, templateSettings, listTemplateSettings) {
+  m.createWithTemplate = function (listTemplateRoot, arrayController, templateSettings, listTemplateSettings) {
     templateSettings = templateSettings || {};
     listTemplateSettings = listTemplateSettings || {};
-    var listTemplateRoot = $f(listTemplateRootSelector);
+    console.log(listTemplateRoot);
     var templateRoot = $f("*", listTemplateRoot);
     var t = Template.create(templateRoot, templateSettings);
     if (arrayController) {

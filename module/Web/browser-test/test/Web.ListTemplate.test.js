@@ -594,22 +594,12 @@ Cactus.UnitTest.Web.ListTemplate = function () {
 
   // Helpers
   tc.add(function () {
-    var ul = tag("ul", {
-      id : "helperul",
-      contents : [
-      ]
-    });
-    ul.appendChild(tag("li", {
-      className : "x"
-    }));
-    document.body.appendChild(ul);
-    var ac = new AC([
-      new O({ x : 1, y : 1 })
-    ]);
-    var lt = LT.createWithTemplate("#helperul", ac);
+    var ul = tag("ul");
+    ul.appendChild(tag("li", { className : "x" }));
+    var ac = new AC([new O({ x : 1, y : 1 })]);
+    var lt = LT.createWithTemplate(ul, ac);
     this.assertEqual(1, ul.childNodes.length);
     var v = parseInt(Element.getValue($(".x", ul)[0]), 10);
-    document.body.removeChild(ul);
   });
 
   return tc;

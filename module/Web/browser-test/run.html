@@ -5,12 +5,10 @@
     <style type="text/css">@import "css/reset.css";</style>
     <style type="text/css">@import "css/test.css";</style>
     <script src="/jsan/Task/Joose/Core.js"></script>
-    <script src="../lib/webRequire.js"></script>
     <script>
-      createRequire("../");
+      window.Cactus_pathPrefix = "../";
     </script>
-    <script src="../../Cactus.js"></script>
-    <script src="../../CactusWeb.js"></script>
+    <script src="../webRequire.js"></script>
     <script>
       Cactus.Dev.UnitTest = {};
       Cactus.UnitTest = { Web : {} };

@@ -21,7 +21,8 @@
  */
 Module("Cactus.Util", function (m) {
   var C = Cactus.Data.Collection;
-  var array = Cactus.Addon.Array;
+  var O = Cactus.Addon.Object;
+  var A = Cactus.Addon.Array;
   var Set = Cactus.Data.Set;
   var TypeChecker = Cactus.Util.TypeChecker;
   /**
@@ -31,16 +32,17 @@ Module("Cactus.Util", function (m) {
    */
   function extend(Class, property, options, methods) {
     var o = new TypeChecker({
+      defaultValueFunc : O.new,
       type : {
         privateMethods : {
-          defaultValue : [],
+          defaultValueFunc : A.new,
           type : [{
             enumerable : ["has", "remove", "add", "count", "get"]
           }]
         }
       }
     });
-    options = o.parse(options || {});
+    options = o.parse(options);
 
     function accessPrefix(methodName) {
       if (C.hasValue(options.privateMethods, methodName)) {
@@ -72,7 +74,7 @@ Module("Cactus.Util", function (m) {
           return C.hasValue(this[property], v);
         },
         remove : function (v) {
-          array.remove(this[property], v);
+          A.remove(this[property], v);
         },
         add : function (v) {
           this[property].push(v);
@@ -81,7 +83,7 @@ Module("Cactus.Util", function (m) {
           return this[property].length;
         },
         get : function () {
-          return array.clone(this[property]);
+          return A.clone(this[property]);
         }
       });
     },
