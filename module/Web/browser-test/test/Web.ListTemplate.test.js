@@ -49,8 +49,8 @@ Cactus.UnitTest.Web.ListTemplate = function () {
 
   tc.setup = function () {
     this.ac = makeAC();
-    this.rootElement = tag("ul");
-    this.listTemplate = ListTemplate.create(templateP, this.rootElement, {
+    this.view = tag("ul");
+    this.listTemplate = ListTemplate.create(templateP, this.view, {
       arrayController : this.ac
     });
     /**
@@ -58,27 +58,27 @@ Cactus.UnitTest.Web.ListTemplate = function () {
      *
      * @return int
      */
-    this.valueOfWithRoot = function (rootElement, listItemIndex) {
-      return parseInt(Element.getValue($("li .x", rootElement)[listItemIndex]), 10);
+    this.valueOfWithRoot = function (view, listItemIndex) {
+      return parseInt(Element.getValue($("li .x", view)[listItemIndex]), 10);
     };
     this.valueOf = function (listItemIndex) {
-      return parseInt(Element.getValue($("li .x", this.rootElement)[listItemIndex]), 10);
+      return parseInt(Element.getValue($("li .x", this.view)[listItemIndex]), 10);
     };
   };
 
   // Test initializing with empty array.
   tc.add (function () {
     var ac = new ArrayController();
-    var rootElement = tag ("ul");
-    var listTemplate = new ListTemplate(templateP, rootElement);
+    var view = tag ("ul");
+    var listTemplate = new ListTemplate(templateP, view);
     listTemplate.attach(ac);
 
-    this.assertEqual (0, rootElement.childNodes.length);
+    this.assertEqual (0, view.childNodes.length);
   });
 
   // Test initializing with non-empty array.
   tc.add (function () {
-    this.assertEqual (3, this.rootElement.childNodes.length);
+    this.assertEqual (3, this.view.childNodes.length);
     this.assertEqual (1, this.valueOf (0));
     this.assertEqual (3, this.valueOf (1));
     this.assertEqual (5, this.valueOf (2));
@@ -87,7 +87,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
   // Push an object onto the AC.
   tc.add (function () {
     this.ac.add (new O (7 ,8));
-    this.assertEqual(4, this.rootElement.childNodes.length);
+    this.assertEqual(4, this.view.childNodes.length);
 
     this.assertEqual (7, this.valueOf (3));
   });
@@ -95,19 +95,19 @@ Cactus.UnitTest.Web.ListTemplate = function () {
   // Remove objects.
   tc.add (function () {
     this.ac.removeAtIndex (2);
-    this.assertEqual (2, this.rootElement.childNodes.length);
+    this.assertEqual (2, this.view.childNodes.length);
     this.assertEqual (1, this.valueOf (0));
     this.assertEqual (3, this.valueOf (1));
 
     this.ac.removeAtIndex (0);
-    this.assertEqual (1, this.rootElement.childNodes.length);
+    this.assertEqual (1, this.view.childNodes.length);
     this.assertEqual (3, this.valueOf (0));
   });
 
   // Do a hard refresh.
   tc.add (function () {
     this.listTemplate.refresh();
-    this.assertEqual (3, this.rootElement.childNodes.length);
+    this.assertEqual (3, this.view.childNodes.length);
   });
 
   // Swap two objects.
@@ -210,7 +210,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
       });
     });
 
-      y.onclick();
+    y.onclick();
 
     this.assertFalse (triggered,
                       "Click on inner template's .y triggered the "
@@ -569,7 +569,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     this.assert(has(0, "fst"), "fst");
     this.assertFalse(has(2, "last"), "last");
     this.assert(has(2, "lst"), "lst");
-      ac.removeAtIndex(0);
+    ac.removeAtIndex(0);
     ac.removeAtIndex(0);
     this.assertFalse(has(0, "single"), "single");
     this.assert(has(0, "sngl"), "sngl");
