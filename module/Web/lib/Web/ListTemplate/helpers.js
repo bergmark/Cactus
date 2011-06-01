@@ -22,7 +22,6 @@
   m.createWithTemplate = function (listTemplateRoot, arrayController, templateSettings, listTemplateSettings) {
     templateSettings = templateSettings || {};
     listTemplateSettings = listTemplateSettings || {};
-    console.log(listTemplateRoot);
     var templateRoot = $f("*", listTemplateRoot);
     var t = Template.create(templateRoot, templateSettings);
     if (arrayController) {

@@ -20,3 +20,4 @@ require("./lib/Web/Template/EventBinding");
 require("./lib/Web/Template/Mode");
 require("./lib/Web/ListTemplate");
 require("./lib/Web/ListTemplate/helpers");
+require("./lib/Web/ListTemplate/ClassName");

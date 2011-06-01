@@ -34,7 +34,7 @@ Cactus.Dev.UnitTest.UnitTestController = (function () {
     },
     _testCaseLink : function (testCase) {
       var name = testCase.getName();
-      return tag("a", { href : "./runTests.html?%s".format(name) }, name);
+      return tag("a", { href : "./run.html?%s".format(name) }, name);
     },
     printStarted : function (testSuite, testCase) {
       this.testResults.appendChild(tag("div", {

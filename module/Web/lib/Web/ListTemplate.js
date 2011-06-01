@@ -71,11 +71,6 @@ Module("Cactus.Web", function (m) {
        * @type string
        *   A CSS class name.
        */
-      firstClassName : "first",
-      /**
-       * @type string
-       *   A CSS class name.
-       */
       lastClassName : "last",
       /**
        * @type string
@@ -83,6 +78,7 @@ Module("Cactus.Web", function (m) {
        *   in the list.
        */
       singleClassName : "single",
+      firstClassName : null,
       eventManager : { init : function () { return new EventManager(); } }
     },
     methods : {
@@ -123,6 +119,29 @@ Module("Cactus.Web", function (m) {
           view : view
         };
       },
+      initialize : function () {
+        this.firstClassName = new ListTemplate.ClassName({
+          view : this.getView(),
+          className : "first",
+          shouldApply : function (view) { return view.childNodes.length !== 0; },
+          elementPredicate : function (view, item, index) { return index === 0; }
+        });
+        this.lastClassName = new ListTemplate.ClassName({
+          view : this.getView(),
+          className : "last",
+          shouldApply : function (view) { return view.childNodes.length !== 0; },
+          elementPredicate : function (view, item, index) { return index === view.childNodes.length - 1; }
+        });
+        this.singleClassName = new ListTemplate.ClassName({
+          view : this.getView(),
+          className : "single",
+          shouldApply : function (view) { return view.childNodes.length === 1; },
+          elementPredicate : function (view, item, index) { return true; }
+        });
+
+        // If the LT contains anything initially, remove it.
+        this._clearView();
+      },
       clone : function () {
         throw "Not implemented";
       },
@@ -146,30 +165,33 @@ Module("Cactus.Web", function (m) {
         this._addSubscription("Replaced");
         this._addSubscription("Rearranged");
       },
-      /**
-       * Deletes all templates and clears the HTML list.
-       */
-      _clear : function () {
-        this._modelDetached();
-      },
-      _modelDetached : function () {
-        A.empty(this.templates);
+      _clearView : function () {
         var root = this.getView();
         while (root.firstChild) {
           root.removeChild(root.firstChild);
         }
+      },
+      /**
+       * Deletes all templates and clears the HTML list.
+       */
+      _clear : function () {
+        A.empty(this.templates);
+        this._clearView();
         this.eventManager.detach();
       },
+      _modelDetached : function () {
+        this._clear();
+      },
       _modelAttached : function () {
-        var dataSource = this._getModel();
-        this._addSubscriptions();
-        this._modelDetached();
-        for (var i = 0, ii = dataSource.size(); i < ii; i++) {
-          var template = this._createTemplateForObject(dataSource.get(i));
+        var model = this._getModel();
+        for (var i = 0, ii = model.size(); i < ii; i++) {
+          var template = this._createTemplateForObject(model.get(i));
           this.templates.push(template);
           this.getView().appendChild(template.getView());
         }
-        this._setClassNames();
+        this.firstClassName.attach(model);
+        this.lastClassName.attach(model);
+        this.singleClassName.attach(model);
         this._addSubscriptions();
       },
       /**
@@ -183,65 +205,23 @@ Module("Cactus.Web", function (m) {
        * @param string className
        */
       setFirstClassName : function (className) {
-        var hasElem = this.hasModel() && this._getModel().size() !== 0;
-        if (hasElem) {
-          ClassNames.remove(this.getListItem(0), this.firstClassName);
-        }
-        this.firstClassName = className;
-        if (hasElem) {
-          ClassNames.add(this.getListItem(0), this.firstClassName);
-        }
+        this.firstClassName.set(className);
       },
-      /**
-       * @param string className
-       */
       setLastClassName : function (className) {
-        var size;
-        var hasElem = this.hasModel() && (size = this._getModel().size()) !== 0;
-        if (hasElem) {
-          ClassNames.remove(this.getListItem(size - 1), this.lastClassName);
-        }
-        this.lastClassName = className;
-        if (hasElem) {
-          ClassNames.add(this.getListItem(size - 1), this.lastClassName);
-        }
+        this.lastClassName.set(className);
       },
-      /**
-       * @param string className
-       */
       setSingleClassName : function (className) {
-        var hasElem = this.hasModel() && this._getModel().size() === 1;
-        if (hasElem) {
-          ClassNames.remove(this.getListItem(0), this.singleClassName);
-        }
-        this.singleClassName = className;
-        if (hasElem) {
-          ClassNames.add(this.getListItem(0), this.singleClassName);
-        }
+        this.singleClassName.set(className);
       },
       /**
        * Attaches .first and .last class names to the first and last element
        * of the HTML List, respectively. Also makes sure no other LI's have
        * this class name.
        */
-      _setClassNames : function () {
-        var size = this._getModel().size();
-        if (size) {
-          ClassNames.add(this.getListItem(0), this.firstClassName);
-          ClassNames.add(this.getListItem(size - 1), this.lastClassName);
-        }
-        for (var i = 0; i < size; i++) {
-          if (i !== 0) {
-            ClassNames.remove(this.getListItem(i), this.firstClassName);
-          }
-          if (i !== size - 1) {
-            ClassNames.remove(this.getListItem(i), this.lastClassName);
-          }
-          ClassNames.remove(this.getListItem(i), this.singleClassName);
-        }
-        if (size === 1) {
-          ClassNames.add(this.getListItem(0), this.singleClassName);
-        }
+      _updateClassNames : function () {
+        this.firstClassName.update();
+        this.lastClassName.update();
+        this.singleClassName.update();
       },
       /**
        * @param natural controllerIndex
@@ -250,6 +230,12 @@ Module("Cactus.Web", function (m) {
        *   The LI at the specified index.
        */
       getListItem : function (controllerIndex) {
+        if (controllerIndex < 0) {
+          throw new Error("controllerIndex negative.");
+        }
+        if (controllerIndex >= this.getView().childNodes.length) {
+          throw new Error("controllerIndex too high.");
+        }
         return this.getView().childNodes [controllerIndex];
       },
       /**
@@ -264,19 +250,14 @@ Module("Cactus.Web", function (m) {
         var template = this._createTemplateForObject(this._getModel().get(index));
         this.templates.splice(index, 0, template);
 
-        var li = template.getView();
+        var append = index === this._getModel().size() - 1;
 
-        // Gets the element currently at the position
-        // we're inserting at.
-        var htmlPosition = this.getListItem (index);
-        // If there is no object at this index, we appendChild
-        // otherwise we use insertBefore.
-        if (htmlPosition) {
-          this.getView().insertBefore(li, htmlPosition);
+        if (append) {
+          this.getView().appendChild(template.getView());
         } else {
-          this.getView().appendChild(li);
+          this.getView().insertBefore(template.getView(), this.getListItem(index));
         }
-        this._setClassNames();
+        this._updateClassNames();
       },
       /**
        * Clears the templates and creates new ones for all objects in the
@@ -295,7 +276,7 @@ Module("Cactus.Web", function (m) {
       onRemovedTriggered : function (arrayController, object, controllerIndex) {
         var item = this.getListItem(controllerIndex);
         this.getView().removeChild(item);
-        this._setClassNames();
+        this._updateClassNames();
       },
       /**
        * Swaps the positions of two list items.
@@ -315,7 +296,7 @@ Module("Cactus.Web", function (m) {
             var after = this.getListItem (indexB);
           this.getView().insertBefore(a, after);
         }
-        this._setClassNames();
+        this._updateClassNames();
       },
       /**
        * Replaces a list item with a new one for the newly added object.
@@ -330,7 +311,7 @@ Module("Cactus.Web", function (m) {
         var li = template.getView();
         this.templates[index] = newObject;
         this.getView().replaceChild(li, this.getListItem(index));
-        this._setClassNames();
+        this._updateClassNames();
       },
       /**
        * Clones a template and binds it to the object.

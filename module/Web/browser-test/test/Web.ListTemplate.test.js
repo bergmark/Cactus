@@ -86,10 +86,10 @@ Cactus.UnitTest.Web.ListTemplate = function () {
 
   // Push an object onto the AC.
   tc.add (function () {
-    this.ac.add (new O (7 ,8));
+    this.ac.add(new O(7, 8));
     this.assertEqual(4, this.view.childNodes.length);
 
-    this.assertEqual (7, this.valueOf (3));
+    this.assertEqual(7, this.valueOf(3));
   });
 
   // Remove objects.
@@ -282,7 +282,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
 
     // Later modifications should keep the class name at the first LI.
 
-    resetAC();
+    //resetAC();
     ac.remove (ac.get (0));
     this.assert (hasFirst (0), ".first wasn't reset when an object was removed.");
     resetAC();
@@ -323,12 +323,13 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     resetAC();
     ac.clear();
     ac.add(new O(9,10));
-    this.assert(hasSingle(0), "Missing initial .last.");
+    this.assert(hasSingle(0), "Missing initial .single.");
     ac.add(new O(11,12));
-    this.assertFalse(hasSingle(0));
+    this.assertFalse(hasSingle(0), "Should remove .single after adding a second");
     this.assertFalse(hasSingle(1));
     ac.removeAtIndex(0);
     this.assert(hasSingle(0), "Missing .last after removeAtIndex.");
+
   });
 
   // Allow for other types of "lists", such as a table with a row for each
@@ -465,7 +466,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     var li2 = $("li", root)[1];
 
     this.assert(ClassNames.has(li1, "a"));
-    this.assertEqual("1", Element.getValue(li1));
+    this.assertEqual("1", Element.getValue(li1), "diff");
     this.assert(ClassNames.has(li2, "b"));
     this.assertEqual("2", Element.getValue(li2));
 
@@ -548,6 +549,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     function has(index, className) {
       return ClassNames.has(lt.getListItem(index), className);
     }
+
     this.assertFalse(has(0, "first"), "first");
     this.assert(has(0, "fst"), "fst");
     this.assertFalse(has(2, "last"), "last");
@@ -581,6 +583,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     });
     lt.setFirstClassName("_first");
     lt.setLastClassName("_last");
+
     this.assertFalse(has(0, "first"), "first after");
     this.assert(has(0, "_first"), "_first");
     this.assertFalse(has(2, "last"), "last after");
@@ -600,7 +603,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     var lt = LT.createWithTemplate(ul, ac, {
       keyPathDelimiter : "-"
     });
-    this.assertEqual(1, ul.childNodes.length);
+    this.assertEqual(1, ul.childNodes.length, "helper should attach ac to lt");
     var v = parseInt(Element.getValue($(".x", ul)[0]), 10);
 
     // Setting of Template properties.
