@@ -124,14 +124,13 @@ module.exports = (function () {
 
       // Should send out onReplaced.
       var triggered = false;
-      ac.subscribe("Replaced",
-                   function (controller, index, oldObject, newObject) {
-                     triggered = true;
-                     assert.eql(ac, controller);
-                     assert.eql(0, index);
-                     assert.eql(5, oldObject);
-                     assert.eql(7, newObject);
-                   });
+      ac.subscribe("Replaced", function (controller, index, oldObject, newObject) {
+        triggered = true;
+        assert.eql(ac, controller);
+        assert.eql(0, index);
+        assert.eql(5, oldObject);
+        assert.eql(7, newObject);
+      });
 
       ac.replace(5, 7);
       assert.eql("746", ac.getRange().join(""));
