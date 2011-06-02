@@ -18,7 +18,8 @@
     "Web.TemplateValueTransformer",
     "Web.Template",
     "Web.ListTemplate",
-    "Web.ListTemplate.ClassName"
+    "Web.ListTemplate.ClassName",
+    "Web.stringToDom"
   ];
 
   // If GET parameters are specified, only those tests are run.

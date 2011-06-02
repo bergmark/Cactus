@@ -89,7 +89,8 @@ Cactus.Dev.UnitTest.UnitTestController = (function () {
       messagesUL.className = "messages";
       for (var j = 0; j < messagesArray.length; j++) {
         messageLI = document.createElement("li");
-        messageLI.innerHTML += messagesArray [j];
+        messageLI.innerHTML += messagesArray[j].replace("<", "&lt;", "g").replace(">", "&gt;", "g")
+          .replace("\n", "<br>", "g");
         messagesUL.appendChild(messageLI);
       }
 

@@ -213,7 +213,7 @@ Cactus.Dev.UnitTest.Test = (function () {
        */
       assert : function (expression, message) {
         this.assertions++;
-        message = message ? message + "<br> " : "";
+        message = message ? message + "\n" : "";
         message += "expected: +true+, but got: +" + expression + "+";
         this.lastAssertion = new Assertion(expression === true,
                                            message);

@@ -4,6 +4,7 @@ require("./lib/Web/select");
 require("./lib/Web/selectFirst");
 require("./lib/Web/Events");
 require("./lib/Web/tag");
+require("./lib/Web/stringToDom");
 require("./lib/Web/Event");
 require("./lib/Web/Element");
 require("./lib/Web/EventManager");

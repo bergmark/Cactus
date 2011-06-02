@@ -194,6 +194,7 @@ Module("Cactus.Web", function (m) {
   var O = Cactus.Addon.Object;
   var TypeChecker = Cactus.Util.TypeChecker;
   var Widget = m.TemplateWidget;
+  var stringToDom = Cactus.Web.stringToDom;
   var tag = m.tag;
   var Mediator = Cactus.Web.Mediator;
 
@@ -801,20 +802,7 @@ Module("Cactus.Web", function (m) {
     if (source instanceof Template) {
       template = source.clone();
     } else if (typeof source === "string") {
-      var el = tag("div");
-      var selector;
-      if (/^<tr/.test(source)) {
-        el.innerHTML = "<table><tbody>%s</tbody></table>"
-          .format(source);
-        selector = "tr";
-      } else if (/^<option/.test(source)) {
-        el.innerHTML = "<select>%s</select>".format(source);
-        selector = "option";
-      } else {
-        el.innerHTML = source;
-        selector = "*";
-      }
-      template = new Template($f(selector, el));
+      template = new Template(stringToDom(source));
     } else if ("tagName" in source) {
       template = new Template(source);
     }
