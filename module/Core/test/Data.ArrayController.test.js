@@ -1,6 +1,5 @@
 module.exports = (function () {
   var AC = Cactus.Data.ArrayController;
-  var assertException = Cactus.Dev.Assertion.exception;
 
   return {
     "instantiate with empty array" : function () {
@@ -73,11 +72,16 @@ module.exports = (function () {
       ac.subscribe("Swapped", onSwap);
       ac.swap(2, 1);
       assert.ok(swapTriggered);
+
+      // Don't swap on same index.
+      swapTriggered = false;
+      ac = new AC([1,2,3]);
+      exception(/Both indices were 1/, ac.swap.bind(ac, 1, 1));
     },
     "swap: throw error on invalid indices" : function () {
       var ac = new AC(["a", "b", "c"]);
-      assertException(assert, /swap:.+Index out of bounds.+indexA.+3/i, ac.swap.bind(ac, 3, 0));
-      assertException(assert, /swap:.+Index out of bounds.+indexB.+4/i, ac.swap.bind(ac, 0, 4));
+      exception(/swap:.+Index out of bounds.+indexA.+3/i, ac.swap.bind(ac, 3, 0));
+      exception(/swap:.+Index out of bounds.+indexB.+4/i, ac.swap.bind(ac, 0, 4));
     },
     addAtIndex : function () {
       var ac = new AC([1, 2, 3]);
@@ -114,7 +118,7 @@ module.exports = (function () {
       assert.eql("546", ac.getRange().join(""));
 
       // Throw error if object already in collection.
-      assertException(assert, /(?:)/,function () {
+      exception(/(?:)/,function () {
         ac.replace(5, 4);
       });
 

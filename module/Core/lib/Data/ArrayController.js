@@ -207,6 +207,9 @@ Module("Cactus.Data", function (m) {
         if (!this.hasIndex(indexB)) {
           throw new Error("ArrayController:swap: Index out of bounds: indexB = " + indexB);
         }
+        if (indexA === indexB) {
+          throw new Error("ArrayController:swap: Both indices were " + indexA);
+        }
         var a = this.objects[indexA];
         var b = this.objects[indexB];
 

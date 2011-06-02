@@ -135,7 +135,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
         }
         // Otherwise we remove the old object if it's in the Filterer.
         else if (this.has(oldObject)) {
-          AC.prototype.remove.call(this, oldObjecto);
+          AC.prototype.remove.call(this, oldObject);
         }
       },
       /**
