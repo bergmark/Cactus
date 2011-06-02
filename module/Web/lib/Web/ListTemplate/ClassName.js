@@ -10,11 +10,6 @@ Module("Cactus.Web.ListTemplate", function (m) {
       elementPredicate : { required : true }
     },
     methods : {
-      set : function (className) {
-        this._remove();
-        this.className = className;
-        this._add();
-      },
       _shouldApply : function () {
         return this.hasModel() && this.shouldApply(this.getView());
       },

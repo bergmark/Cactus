@@ -67,18 +67,9 @@ Module("Cactus.Web", function (m) {
        *   subscription ID's in order to be able to remove them.
        */
       subscriptions : null,
-      /**
-       * @type string
-       *   A CSS class name.
-       */
-      lastClassName : "last",
-      /**
-       * @type string
-       *   A CSS class name that's attached to a list item if it's the only one
-       *   in the list.
-       */
-      singleClassName : "single",
-      firstClassName : null,
+      lastClassName : { required : true },
+      singleClassName : { required : true },
+      firstClassName : { required : true },
       eventManager : { init : function () { return new EventManager(); } }
     },
     methods : {
@@ -89,7 +80,8 @@ Module("Cactus.Web", function (m) {
        *   Allows you to provide different templates for different KVC subclasses.
        * @param HTMLListElement view
        */
-      BUILD : function (templatePrototypes, view) {
+      BUILD : function (templatePrototypes, view, settings) {
+        settings = settings || {};
         if (templatePrototypes instanceof Array) {
           // Check the array for well-formedness.
           for (var i = 0; i < templatePrototypes.length; i++) {
@@ -116,29 +108,28 @@ Module("Cactus.Web", function (m) {
           }];
         }
         return {
-          view : view
+          view : view,
+          firstClassName : new ListTemplate.ClassName({
+            view : view,
+            className : settings.firstClassName || "first",
+            shouldApply : function (view) { return view.childNodes.length !== 0; },
+            elementPredicate : function (view, item, index) { return index === 0; }
+          }),
+          lastClassName : new ListTemplate.ClassName({
+            view : view,
+            className : settings.lastClassName || "last",
+            shouldApply : function (view) { return view.childNodes.length !== 0; },
+            elementPredicate : function (view, item, index) { return index === view.childNodes.length - 1; }
+          }),
+          singleClassName : new ListTemplate.ClassName({
+            view : view,
+            className : settings.singleClassName || "single",
+            shouldApply : function (view) { return view.childNodes.length === 1; },
+            elementPredicate : function (view, item, index) { return true; }
+          })
         };
       },
       initialize : function () {
-        this.firstClassName = new ListTemplate.ClassName({
-          view : this.getView(),
-          className : "first",
-          shouldApply : function (view) { return view.childNodes.length !== 0; },
-          elementPredicate : function (view, item, index) { return index === 0; }
-        });
-        this.lastClassName = new ListTemplate.ClassName({
-          view : this.getView(),
-          className : "last",
-          shouldApply : function (view) { return view.childNodes.length !== 0; },
-          elementPredicate : function (view, item, index) { return index === view.childNodes.length - 1; }
-        });
-        this.singleClassName = new ListTemplate.ClassName({
-          view : this.getView(),
-          className : "single",
-          shouldApply : function (view) { return view.childNodes.length === 1; },
-          elementPredicate : function (view, item, index) { return true; }
-        });
-
         // If the LT contains anything initially, remove it.
         this._clearView();
       },
@@ -202,18 +193,6 @@ Module("Cactus.Web", function (m) {
         this._modelAttached();
       },
       /**
-       * @param string className
-       */
-      setFirstClassName : function (className) {
-        this.firstClassName.set(className);
-      },
-      setLastClassName : function (className) {
-        this.lastClassName.set(className);
-      },
-      setSingleClassName : function (className) {
-        this.singleClassName.set(className);
-      },
-      /**
        * Attaches .first and .last class names to the first and last element
        * of the HTML List, respectively. Also makes sure no other LI's have
        * this class name.
@@ -238,14 +217,6 @@ Module("Cactus.Web", function (m) {
         }
         return this.getView().childNodes [controllerIndex];
       },
-      /**
-       * When a new object is added to the array controller a template is
-       * created and displayed at the appropriate position in the HTML list.
-       *
-       * @param ArrayController arrayController
-       * @param mixed object
-       * @param natural index
-       */
       onAddedTriggered : function (arrayController, object, index) {
         var template = this._createTemplateForObject(this._getModel().get(index));
         this.templates.splice(index, 0, template);
@@ -259,32 +230,14 @@ Module("Cactus.Web", function (m) {
         }
         this._updateClassNames();
       },
-      /**
-       * Clears the templates and creates new ones for all objects in the
-       * array controller.
-       *
-       * @param ArrayController arrayController
-       */
       onRearrangedTriggered : function (arrayController) {
         this.refresh();
       },
-      /**
-       * @param ArrayController arrayController
-       * @param KeyValueCoding object
-       * @param natural controllerIndex
-       */
       onRemovedTriggered : function (arrayController, object, controllerIndex) {
         var item = this.getListItem(controllerIndex);
         this.getView().removeChild(item);
         this._updateClassNames();
       },
-      /**
-       * Swaps the positions of two list items.
-       *
-       * @param ArrayController arrayController
-       * @param natural indexA
-       * @param natural indexB
-       */
       onSwappedTriggered : function (arrayController, indexA, indexB) {
         var a = this.getListItem(indexA);
         var b = this.getListItem(indexB);
@@ -298,14 +251,6 @@ Module("Cactus.Web", function (m) {
         }
         this._updateClassNames();
       },
-      /**
-       * Replaces a list item with a new one for the newly added object.
-       *
-       * @param ArrayController arrayController
-       * @param natural index
-       * @param KeyValueCoding oldObject
-       * @param KeyValueCoding newObject
-       */
       onReplacedTriggered : function (arrayController, index, oldObject, newObject) {
         var template = this._createTemplateForObject (newObject);
         var li = template.getView();
@@ -405,20 +350,14 @@ Module("Cactus.Web", function (m) {
   ListTemplate.create = function (template, view, settings) {
     settings = settings || {};
 
-    var listTemplate = new ListTemplate(template, view);
+    var listTemplate = new ListTemplate(template, view, {
+      firstClassName : settings.firstClassName,
+      lastClassName : settings.lastClassName,
+      singleClassName : settings.singleClassName
+    });
 
     if (settings.eventBindings) {
       listTemplate.createEventBindings(settings.eventBindings);
-    }
-
-    if (settings.firstClassName) {
-      listTemplate.setFirstClassName(settings.firstClassName);
-    }
-    if (settings.lastClassName) {
-      listTemplate.setLastClassName(settings.lastClassName);
-    }
-    if (settings.singleClassName) {
-      listTemplate.setSingleClassName(settings.singleClassName);
     }
 
     if (settings.arrayController) {

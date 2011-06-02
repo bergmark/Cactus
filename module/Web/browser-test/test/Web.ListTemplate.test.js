@@ -576,23 +576,6 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     this.assertFalse(has(0, "single"), "single");
     this.assert(has(0, "sngl"), "sngl");
 
-    // After binding has occurred.
-    ac = makeAC();
-    lt = ListTemplate.create(templateP, tag("ul"), {
-      arrayController : ac
-    });
-    lt.setFirstClassName("_first");
-    lt.setLastClassName("_last");
-
-    this.assertFalse(has(0, "first"), "first after");
-    this.assert(has(0, "_first"), "_first");
-    this.assertFalse(has(2, "last"), "last after");
-    this.assert(has(2, "_last"), "_last");
-    ac.removeAtIndex(0);
-    ac.removeAtIndex(0);
-    lt.setSingleClassName("_single");
-    this.assertFalse(has(0, "single"), "single after");
-    this.assert(has(0, "_single"), "_single");
   });
 
   // Helpers
