@@ -36,10 +36,10 @@ Module("Cactus.Web.ListTemplate", function (m) {
         });
       },
       update : function () {
-        this.clear();
+        this._clear();
         this._add();
       },
-      clear : function () {
+      _clear : function () {
         for (var i = 0, ii = this._getModel().size(); i < ii; i++) {
           CN.remove(this.getView().childNodes[i], this.className);
         }
