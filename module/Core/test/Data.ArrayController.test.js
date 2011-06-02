@@ -166,7 +166,6 @@ module.exports = (function () {
       ac.remove(2);
       ok(emptiedTriggered);
       not(filledTriggered);
-
     }
   };
 })();
