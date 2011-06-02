@@ -36,6 +36,7 @@ require('./lib/Data/ArrayController');
 require('./lib/Data/ArrayControllerDecorator');
 require('./lib/Data/ArrayControllerDecorator/Filterer');
 require('./lib/Data/ArrayControllerDecorator/Sorter');
+require('./lib/Data/ArrayControllerDecorator/ReadOnly');
 
 require('./lib/Data/Money');
 require('./lib/Util/IdentityMap');
