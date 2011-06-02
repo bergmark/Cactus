@@ -34,10 +34,10 @@ require('./lib/Data/KeyValueCoding');
 require('./lib/Util/generateComparator');
 require('./lib/Data/ArrayController');
 require('./lib/Data/ArrayControllerDecorator');
+require('./lib/Data/ArrayControllerDecorator/Filterer');
 
 require('./lib/Data/Money');
 require('./lib/Util/IdentityMap');
 require('./lib/Util/CollectionAggregate');
 require('./lib/Util/ValueTransformer');
-
 require('./lib/Util/EventIterator');

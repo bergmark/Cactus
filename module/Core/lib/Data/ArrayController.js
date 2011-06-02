@@ -249,8 +249,7 @@ Module("Cactus.Data", function (m) {
        */
       replace : function (oldObject, newObject) {
         if (this.has (newObject)) {
-          throw new Error("newObject (" + newObject
-                           + ") is already in the collection.");
+          throw new Error("newObject (" + newObject + ") is already in the collection.");
         }
 
         var i = this.indexOf(oldObject);
