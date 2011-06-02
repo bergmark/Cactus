@@ -65,18 +65,12 @@ Cactus.UnitTest.Web.ListTemplate.ClassName = (function () {
       lt.attach(ac);
     }
 
-    function has (index, className) {
+    function has (className, index) {
       return ClassNames.has(lt.getListItem(index), className);
     }
-    function hasFirst (index) {
-      return has(index, "first");
-    }
-    function hasLast (index) {
-      return has(index, "last");
-    }
-    function hasSingle (index) {
-      return has(index, "single");
-    }
+    var hasFirst = has.curry("first");
+    var hasLast = has.curry("last");
+    var hasSingle = has.curry("single");
 
     this.assert (hasFirst (0), ".first not set on first LI.");
     this.assert (hasLast (2), ".last not set on last LI.");

@@ -367,13 +367,18 @@ module.exports = {
     var got;
     var f = function () {
       scope = this;
-      got = arguments;
+      got = C.toArray(arguments);
     };
     var o = {};
     f.partial(o, 0, undefined, 2)(1,3,4);
-    assert.eql("0,1,2,3,4", Array.prototype.join.call(got, ","));
+    eql([0,1,2,3,4], got);
     assert.ok(o === scope);
+
     f.partial(o, 0, undefined)(1,2);
+    eql([0,1,2], got);
+
+    f.partial(o, undefined, 1)(0, 2);
+    eql([0,1,2], got);
   },
 
   id : function () {
