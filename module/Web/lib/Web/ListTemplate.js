@@ -163,7 +163,7 @@ Module("Cactus.Web", function (m) {
         }
       },
       /**
-       * Deletes all templates and clears the HTML list.
+       * Removes all templates and clears the HTML list.
        */
       _clear : function () {
         A.empty(this.templates);

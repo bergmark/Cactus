@@ -17,7 +17,8 @@
     "Web.Validation",
     "Web.TemplateValueTransformer",
     "Web.Template",
-    "Web.ListTemplate"
+    "Web.ListTemplate",
+    "Web.ListTemplate.ClassName"
   ];
 
   // If GET parameters are specified, only those tests are run.
@@ -38,7 +39,7 @@
       test = tests[i];
 
       var utPath = "Cactus.UnitTest." + test.replace(/\//g, ".");
-        var testFunc = eval(utPath);
+      var testFunc = eval(utPath);
       if (!testFunc) {
         throw new Error("Missing UT path for: %s".format(utPath));
       }
