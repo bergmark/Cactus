@@ -47,7 +47,7 @@ Module("Cactus.Data", function (m) {
       },
       /**
        * @param string key
-       * @return mixed
+       * @return Array
        */
       get : function (key) {
         if (!this.hasKey(key)) {
@@ -115,6 +115,19 @@ Module("Cactus.Data", function (m) {
        */
       clear : function () {
         this._map = {};
+      },
+      /**
+       * Returns all values (duplicates may exist) under all keys.
+       *
+       * @return Array
+       */
+      getAllValues : function () {
+        var keys = this.keys();
+        var values = [];
+        for (var i = 0; i < keys.length; i++) {
+          values = values.concat(this.get(keys[i]));
+        }
+        return values;
       }
     }
   });

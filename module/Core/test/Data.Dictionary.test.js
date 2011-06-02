@@ -81,5 +81,12 @@ module.exports = {
     ok(!d.isEmpty());
     d.clear();
     ok(d.isEmpty());
+  },
+  getAllValues : function () {
+    var d = new Dictionary({
+      a : [1, 2],
+      b : [3]
+    });
+    eql([1, 2, 3], d.getAllValues());
   }
 };
