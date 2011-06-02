@@ -163,7 +163,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
       target : x
     };
 
-    lt.createEventBindings ([{
+    lt._createEventBindings ([{
       selector : ".x",
       event : "click",
       callback : function (ac2, objectIndex, e2) {
@@ -196,7 +196,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     var firstListItem = lt.getListItem (0);
     var y = $(".y", firstListItem)[0];
 
-    lt.createEventBindings ([{
+    lt._createEventBindings ([{
       selector : ".x",
       event : "click",
       callback : function () {
@@ -224,7 +224,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     var lt = this.listTemplate;
 
     // Create an event binding for removing a template from the list.
-    lt.createEventBindings([{
+    lt._createEventBindings([{
       selector : ".x",
       event : "click",
       method : "removeAtIndex"
@@ -297,7 +297,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
 
     var lt = new ListTemplate(t, tag("ul"));
     lt.attach(ac);
-    lt.createEventBindings([{
+    lt._createEventBindings([{
       selector : ".remove",
       method : "removeAtIndex"
     }]);
@@ -327,7 +327,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     var lt = this.listTemplate;
     var ac = this.ac;
 
-    lt.createEventBindings([{
+    lt._createEventBindings([{
       selector : ".x",
       callback : Function.empty
     }]);
@@ -431,7 +431,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     this.assertEqual(2, lt.getView().childNodes.length);
 
     var triggered = false;
-    lt.createEventBindings([{
+    lt._createEventBindings([{
       selector : ".x",
       callback : function (ac, index) {
         triggered = true;

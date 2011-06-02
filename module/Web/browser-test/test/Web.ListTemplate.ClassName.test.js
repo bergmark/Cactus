@@ -85,7 +85,6 @@ Cactus.UnitTest.Web.ListTemplate.ClassName = (function () {
 
 
     // Later modifications should keep the class name at the first LI.
-
     resetAC();
     ac.remove (ac.get (0));
     this.assert (hasFirst (0), ".first wasn't reset when an object was removed.");

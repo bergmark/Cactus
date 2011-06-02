@@ -41,9 +41,11 @@ Module("Cactus.Web", function (m) {
   var Events = m.Events;
   var JSON = Cactus.Util.JSON;
   var KVC = Cactus.Data.KeyValueCoding;
-  var Template = m.Template;
-  var tag = m.tag;
   var Mediator = m.Mediator;
+  var O = Cactus.Addon.Object;
+  var Template = m.Template;
+  var TypeChecker = Cactus.Util.TypeChecker;
+  var tag = m.tag;
 
   var ListTemplate = Class("ListTemplate", {
     does : Mediator,
@@ -81,6 +83,17 @@ Module("Cactus.Web", function (m) {
        * @param HTMLListElement view
        */
       BUILD : function (templatePrototypes, view, settings) {
+        var tc = new TypeChecker({
+          defaultValueFunc : O.new,
+          type : {
+            firstClassName : { type : "string", defaultValue : "first" },
+            lastClassName : { type : "string", defaultValue : "last" },
+            singleClassName : { type : "string", defaultValue : "single" },
+            eventBindings : { type : Array, defaultValueFunc : A.new }
+          }
+        });
+        settings = tc.parse(settings);
+
         settings = settings || {};
         if (templatePrototypes instanceof Array) {
           // Check the array for well-formedness.
@@ -126,12 +139,15 @@ Module("Cactus.Web", function (m) {
             className : settings.singleClassName || "single",
             shouldApply : function (view) { return view.childNodes.length === 1; },
             elementPredicate : function (view, item, index) { return true; }
-          })
+          }),
+          eventBindings : settings.eventBindings
         };
       },
-      initialize : function () {
+      initialize : function (args) {
         // If the LT contains anything initially, remove it.
         this._clearView();
+
+        this._createEventBindings(args.eventBindings);
       },
       clone : function () {
         throw "Not implemented";
@@ -293,11 +309,8 @@ Module("Cactus.Web", function (m) {
        * on the ListTemplate, passing along the index of the template where
        * the event occured, and the event object. The same arguments are
        * passed to callbacks.
-       *
-       * @param Array[Hash] bindings
-       *   See AbstractTemplate:createEventBindings.
        */
-      createEventBindings : function (bindings) {
+      _createEventBindings : function (bindings) {
         var that = this;
         var view = that.getView();
         Collection.each (bindings, function (binding) {
@@ -340,7 +353,6 @@ Module("Cactus.Web", function (m) {
             } else {
               that._getModel()[binding.method](elIndex);
             }
-            return false;
           });
         });
       }
@@ -353,12 +365,9 @@ Module("Cactus.Web", function (m) {
     var listTemplate = new ListTemplate(template, view, {
       firstClassName : settings.firstClassName,
       lastClassName : settings.lastClassName,
-      singleClassName : settings.singleClassName
+      singleClassName : settings.singleClassName,
+      eventBindings : settings.eventBindings
     });
-
-    if (settings.eventBindings) {
-      listTemplate.createEventBindings(settings.eventBindings);
-    }
 
     if (settings.arrayController) {
       listTemplate.attach(settings.arrayController);
