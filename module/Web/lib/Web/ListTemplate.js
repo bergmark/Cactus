@@ -49,6 +49,11 @@ Module("Cactus.Web", function (m) {
 
   var ListTemplate = Class("ListTemplate", {
     does : Mediator,
+    my : {
+      has : {
+        modelEventNames : { init : function () { return ["Added", "Removed", "Swapped", "Replaced", "Rearranged"]; } }
+      }
+    },
     has : {
       /**
        * @type Array[Template] templates
@@ -71,8 +76,7 @@ Module("Cactus.Web", function (m) {
       subscriptions : null,
       lastClassName : { required : true },
       singleClassName : { required : true },
-      firstClassName : { required : true },
-      eventManager : { init : function () { return new EventManager(); } }
+      firstClassName : { required : true }
     },
     methods : {
       /**
@@ -152,26 +156,6 @@ Module("Cactus.Web", function (m) {
       clone : function () {
         throw "Not implemented";
       },
-      /**
-       * Adds a single subscription. Helper for _addSubscriptions.
-       * Events are bound to the corresponding onTriggered methods.
-       *
-       * @param string eventName
-       *   The type of event to add.
-       */
-      _addSubscription : function (eventName) {
-        this.eventManager.add(this._getModel(), eventName, this);
-      },
-      /**
-       * Adds subscriptions to the Array Controller.
-       */
-      _addSubscriptions : function () {
-        this._addSubscription("Added");
-        this._addSubscription("Removed");
-        this._addSubscription("Swapped");
-        this._addSubscription("Replaced");
-        this._addSubscription("Rearranged");
-      },
       _clearView : function () {
         var root = this.getView();
         while (root.firstChild) {
@@ -184,7 +168,6 @@ Module("Cactus.Web", function (m) {
       _clear : function () {
         A.empty(this.templates);
         this._clearView();
-        this.eventManager.detach();
       },
       _modelDetached : function () {
         this._clear();
@@ -199,7 +182,6 @@ Module("Cactus.Web", function (m) {
         this.firstClassName.attach(model);
         this.lastClassName.attach(model);
         this.singleClassName.attach(model);
-        this._addSubscriptions();
       },
       /**
        * Clears the templates and creates new ones.

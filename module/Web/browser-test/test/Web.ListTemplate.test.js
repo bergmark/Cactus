@@ -87,7 +87,7 @@ Cactus.UnitTest.Web.ListTemplate = function () {
   // Push an object onto the AC.
   tc.add (function () {
     this.ac.add(new O(7, 8));
-    this.assertEqual(4, this.view.childNodes.length);
+    this.assertEqual(4, this.view.childNodes.length, "Should have 4 childnodes");
 
     this.assertEqual(7, this.valueOf(3));
   });
