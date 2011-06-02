@@ -26,6 +26,9 @@
  *  adding HTML class names for CSS styling.
  */
 Module("Cactus.Web", function (m) {
+  var A = Cactus.Addon.Array;
+  var EventManager = Cactus.Web.EventManager;
+
   Role("Mediator", {
     does : m.ViewHandler,
     /**
@@ -39,12 +42,18 @@ Module("Cactus.Web", function (m) {
      *   View. Call occurs before attach if model is to be set again.
      */
     requires : ["_modelAttached", "_modelDetached"],
+    my : {
+      has : {
+        modelEventNames : { init : A.new }
+      }
+    },
     has : {
       /**
        * @type Model
        *   The data that should be presented in the View.
        */
-      model : null
+      model : null,
+      modelEventManager : { init : function () { return new EventManager(); } }
     }, methods : {
       /**
        * Replaces the model object and calls refresh() to redraw the view.
@@ -56,10 +65,16 @@ Module("Cactus.Web", function (m) {
           return;
         }
         if (this.hasModel()) {
-          this._modelDetached();
+          this.detach();
         }
         this.model = model;
+        this._addSubscriptions();
         this._modelAttached();
+      },
+      _addSubscriptions : function () {
+        for (var i = 0; i < this.my.modelEventNames.length; i++) {
+          this.modelEventManager.add(this._getModel(), this.my.modelEventNames[i], this);
+        }
       },
       __checkModel : function () {
         if (!this.hasModel()) {
@@ -68,6 +83,7 @@ Module("Cactus.Web", function (m) {
       },
       detach : function () {
         this.__checkModel();
+        this.modelEventManager.detach();
         this.model = null;
         this._modelDetached();
       },
