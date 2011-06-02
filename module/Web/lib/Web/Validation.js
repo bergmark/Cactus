@@ -247,8 +247,6 @@ Module("Cactus.Web", function (m) {
        * @param string elementId
        * @return mixed
        *   The value of the form element as returned by Element.getValue.
-       * @throws Error
-       *   If the element can't be found.
        */
       _getValue : function (elementId) {
         return Element.getValue(this._getElement(elementId));
