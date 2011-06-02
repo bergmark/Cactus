@@ -182,7 +182,6 @@ Module("Cactus.Web", function (m) {
   var $ = m.select;
   var $f = m.selectFirst;
   var A = Cactus.Addon.Array;
-  var AbstractTemplate = m.AbstractTemplate;
   var ArrayController = Cactus.Data.ArrayController;
   var C = Cactus.Data.Collection;
   var ClassNames = m.ClassNames;
@@ -196,557 +195,532 @@ Module("Cactus.Web", function (m) {
   var TypeChecker = Cactus.Util.TypeChecker;
   var Widget = m.TemplateWidget;
   var tag = m.tag;
+  var Mediator = Cactus.Web.Mediator;
 
-  /**
-   * @param HTMLElement rootElement
-   *   The DOM structure to display data in.
-   */
-  function Template(rootElement) {
-
-    if (!rootElement) {
-      throw new Error("rootElement was: %s".format(rootElement));
-    }
-
-    this.rootElement = rootElement;
-    this.valueTransformers = new Template.Transformer(rootElement);
-    this.elements = new Dictionary();
-    this.eventBindings = new Template.EventBinding(rootElement);
-    this.writeEventManager = new EventManager();
-    this.widgets = [];
-    this.keyPaths = [];
-    this.classNameConditions = new Template.ClassNameConditions(rootElement);
-    this.skipKeyPaths = [];
-    this.mode = new Template.Mode();
-  } Template.prototype = {
-    /**
-     * @type string
-     * The delimeter used to separate class names into key paths.
-     * Default is "_", meaning class name "a_b" would translate to the key
-     * path "a.b".
-     * May not be changed after Template creation.
-     */
-    keyPathDelimiter : "_",
-    __setKeyPathDelimiter : function (delimiter) {
-      this.keyPathDelimiter = delimiter || "_";
-    },
-    /**
-     * @type Dictionary<KeyPath,[HTMLElement]>
-     *   Stores references between keypaths and their respective elements.
-     */
-    elements : null,
-    /**
-     * @type Array<KeyPath>
-     *   All keypaths found in the view that existed in the model
-     */
-    keyPaths : null,
-    /**
-     * @type string
-     *  This prefix is expected on all class names.
-     */
-    classNamePrefix : "",
-    /**
-     * @type EventManager
-     *   Keeps track of events bound as Write Events.
-     */
-    writeEventManager : null,
-    /**
-     * Turns a class name into its corresponding key path.
-     *
-     * @param string className
-     * @return string
-     */
-    _classNameToKeyPath : function (className) {
-      className = className.replace(this.classNamePrefix, "");
-      return className.replace(this.keyPathDelimiter, ".", "g");
-    },
-    /**
-     * Turns a key path into its corresponding CSS class name.
-     *
-     * @param string keyPath
-     * @return string
-     */
-    _keyPathToClassName : function (keyPath) {
-      return this.classNamePrefix + keyPath.replace(".", this.keyPathDelimiter, "g");
-    },
-    /*
-     * @param string className
-     */
-    _classNameIsPossibleKeyPath : function (className) {
-      if (!this.classNamePrefix) {
-        return true;
+  var Template = Class("Template", {
+    does : Mediator,
+    my : {
+      has : {
+        modelEventNames : { init : function () { return ["ValueChanged"]; } }
       }
-      // Assumption: prefix has no characters regex considers special.
-      return new RegExp("^" + this.classNamePrefix).test(className);
     },
-    /**
-     * Clears elements and keyPaths and iterates through all elements under
-     * the root and sets any values that can be found by getting key paths
-     * from the class names of the nodes.
-     */
-    refresh : function () {
-      this._detachWriteEvents();
-
-      this.elements = new Dictionary();
-      var elements = C.toArray($("*", this.rootElement)).concat(this.rootElement);
-      var keyPath;
-      var keyPaths;
+    has : {
+      valueTransformers : { required : true },
+      /**
+       * @type Dictionary<KeyPath,[HTMLElement]>
+       *   Stores references between keypaths and their respective elements.
+       */
+      elements : { init : function () { return new Dictionary(); } },
+      /**
+       * @type EventManager
+       *   Keeps track of events bound as Write Events.
+       */
+      writeEventManager : { init : function () { return new EventManager(); } },
+      /**
+       * @type Array
+       *   Stores the associations between selectors and widgets.
+       */
+      widgets : { init : A.new },
+      /**
+       * @type Array<KeyPath>
+       *   All keypaths found in the view that existed in the model
+       */
+      keyPaths : { init : A.new },
+      skipKeyPaths : { init : A.new },
+      mode : { init : function () { return new Template.Mode(); } },
+      classNameConditions : { required : true },
+      eventBindings : { required : true },
+      /**
+       * @type string
+       * The delimeter used to separate class names into key paths.
+       * Default is "_", meaning class name "a_b" would translate to the key
+       * path "a.b".
+       * May not be changed after Template creation.
+       */
+      keyPathDelimiter : "_",
+      /**
+       * @type string
+       *  This prefix is expected on all class names.
+       */
+      classNamePrefix : ""
+    },
+    before : {
+      attach : function (model) {
+        if (!KVC.implementsInterface(model)) {
+          throw new Error("Supplied data source is not KVC compliant.");
+        }
+      }
+    },
+    methods : {
+      BUILD : function (view) {
+        if (!view) {
+          throw new Error("view was: %s".format(view));
+        }
+        return {
+          view : view,
+          classNameConditions : new Template.ClassNameConditions(view),
+          eventBindings : new Template.EventBinding(view),
+          valueTransformers : new Template.Transformer(view)
+        };
+      },
+      __setKeyPathDelimiter : function (delimiter) {
+        this.keyPathDelimiter = delimiter || "_";
+      },
+      /**
+       * Turns a class name into its corresponding key path.
+       *
+       * @param string className
+       * @return string
+       */
+      _classNameToKeyPath : function (className) {
+        className = className.replace(this.classNamePrefix, "");
+        return className.replace(this.keyPathDelimiter, ".", "g");
+      },
+      /**
+       * Turns a key path into its corresponding CSS class name.
+       *
+       * @param string keyPath
+       * @return string
+       */
+      _keyPathToClassName : function (keyPath) {
+        return this.classNamePrefix + keyPath.replace(".", this.keyPathDelimiter, "g");
+      },
+      /*
+       * @param string className
+       */
+      _classNameIsPossibleKeyPath : function (className) {
+        if (!this.classNamePrefix) {
+          return true;
+        }
+        // Assumption: prefix has no characters regex considers special.
+        return new RegExp("^" + this.classNamePrefix).test(className);
+      },
+      /**
+       * Clears elements and keyPaths and iterates through all elements under
+       * the root and sets any values that can be found by getting key paths
+       * from the class names of the nodes.
+       */
+      refresh : function () {
+        var elements = C.toArray($("*", this.getView())).concat(this.getView());
+        var keyPath;
+        var keyPaths;
 
         // Loop through all elements.
-      for (var element, i = 0; element = elements[i]; i++) {
-        // Fetch all possible key paths, key paths not having the
-        // specified class name prefix are excluded.
+        for (var element, i = 0; element = elements[i]; i++) {
+          // Fetch all possible key paths, key paths not having the
+          // specified class name prefix are excluded.
 
-        var classNames = C.select(
-          ClassNames.get(element),
-          this._classNameIsPossibleKeyPath.bind(this));
-        keyPaths = C.map(
-          classNames,
-          this._classNameToKeyPath.bind(this));
+          var classNames = C.select(
+            ClassNames.get(element),
+            this._classNameIsPossibleKeyPath.bind(this));
+          keyPaths = C.map(
+            classNames,
+            this._classNameToKeyPath.bind(this));
 
-        // Loop through all key paths for the current element.
-        for (var j = 0; j < keyPaths.length; j++) {
-          keyPath = keyPaths [j];
+          // Loop through all key paths for the current element.
+          for (var j = 0; j < keyPaths.length; j++) {
+            keyPath = keyPaths [j];
 
-          if (this.__shouldSkipKeyPath(keyPath)) {
-            continue;
+            if (this.__shouldSkipKeyPath(keyPath)) {
+              continue;
+            }
+
+            // If the KVC object has a KP that matches the one
+            // found in the template, the HTML element is
+            // given the value of that key path.
+            if (keyPath && this._getModel().hasKeyPath(keyPath)) {
+
+              // Store the key path along with the HTML element.
+              this._addBindingData(keyPath, element);
+
+              this._addWriteEvent(element, keyPath);
+
+              // Set the value.
+              this._setValue(
+                keyPath,
+                this._getModel().getValue (keyPath));
+            }
+
           }
+        }
 
-          // If the KVC object has a KP that matches the one
-          // found in the template, the HTML element is
-          // given the value of that key path.
-          if (keyPath && this._getModel().hasKeyPath(keyPath)) {
+        this.eventBindings.attach(this._getModel());
+      },
+      /**
+       * Adds information that signifies which elements listen to which
+       * key paths. The method may be called several times for the same
+       * key path.
+       *
+       * @param string keyPath
+       * @param HTMLElement element
+       */
+      _addBindingData : function (keyPath, element) {
+        this.elements.add(keyPath, element);
+      },
+      /**
+       * Adds event bindings for form elements so changes in them are
+       * propagated to the KVC object and then back to the for element.
+       *
+       * @param HTMLElement element
+       *   The form element to add the binding to.
+       * @param string keyPath
+       *   The keyPath to bind changes to.
+       */
+      _addWriteEvent : function (element, keyPath) {
+        var template = this;
+        var model = this._getModel();
 
-            // Store the key path along with the HTML element.
-            this._addBindingData(keyPath, element);
+        var addEvent = this.writeEventManager.add.bind(this.writeEventManager);
 
-            this._addWriteEvent(element, keyPath);
+        function addButtonEvent () {
+          addEvent(element, "click", model.getValue(keyPath).bind(model).returning(false));
+        }
 
-            // Set the value.
-            this._setValue(
-              keyPath,
-              this._getModel().getValue (keyPath));
+        var setValue = function (value) {
+          if (!this.mode.mayWriteToModel(keyPath)) {
+            return;
           }
+          if (value === undefined) {
+            value = Element.getValue(element);
+          }
+          value = this.valueTransformers.backwardTransform(keyPath, element, value);
+          template._getModel().setValue(keyPath, value);
+        }.bind(this);
+        var setValueNone = setValue.none();
 
-        }
-      }
 
-      this.eventBindings.attach(this._getModel());
-    },
-    /**
-     * Adds information that signifies which elements listen to which
-     * key paths. The method may be called several times for the same
-     * key path.
-     *
-     * @param string keyPath
-     * @param HTMLElement element
-     */
-    _addBindingData : function (keyPath, element) {
-      this.elements.add(keyPath, element);
-    },
-    /**
-     * Adds event bindings for form elements so changes in them are
-     * propagated to the KVC object and then back to the for element.
-     *
-     * @param HTMLElement element
-     *   The form element to add the binding to.
-     * @param string keyPath
-     *   The keyPath to bind changes to.
-     */
-    _addWriteEvent : function (element, keyPath) {
-      var that = this;
+        switch (element.tagName.toLowerCase()) {
+          case "input":
+          switch (element.type) {
+            case "checkbox":
 
-      var addEvent = this.writeEventManager.add.bind(
-        this.writeEventManager);
+            // If the key value is a bool the checkbox should
+            // present that bool, instead of expecting an
+            // array of values.
+            if (typeof template._getModel().getValue(keyPath) === "boolean") {
+              addEvent(element, "click", function () {
+                setValue(this.checked);
+              });
+            } else {
+              addEvent(element, "click", setValueNone);
+            }
+            break;
 
-      function addButtonEvent () {
-        addEvent(element,
-                 "click",
-                 dataSource.getValue(keyPath)
-                 .bind(dataSource)
-                 .returning(false));
-      }
+            case "radio":
+            var elements = [element];
+            if (element.form) {
+              elements = element.form[element.name];
+            }
+            function f() {
+              setValue(Element.getValue(this));
+            }
+            for (var i = 0; i < elements.length; i++) {
+              addEvent(elements[i], "click", f);
+            }
+            break;
 
-      var setValue = function (value) {
-        if (!this.mode.mayWriteToModel(keyPath)) {
-          return;
-        }
-        if (value === undefined) {
-          value = Element.getValue(element);
-        }
-        value = this.valueTransformers.backwardTransform(keyPath, element, value);
-        template._getModel().setValue(keyPath, value);
-      }.bind(this);
-      var setValueNone = setValue.none();
+            case "text":
+            case "password":
+            var f = element.onchange;
+            addEvent(element, "change", setValueNone);
+            break;
 
-      var template = this;
-      var dataSource = template._getModel();
-
-      switch (element.tagName.toLowerCase()) {
-        case "input":
-        switch (element.type) {
-          case "checkbox":
-
-          // If the key value is a bool the checkbox should
-          // present that bool, instead of expecting an
-          // array of values.
-          if (typeof template._getModel().getValue(keyPath) === "boolean") {
-            addEvent(element, "click", function () {
-              setValue(this.checked);
-            });
-          } else {
-            addEvent(element, "click", setValueNone);
+            case "button":
+            case "submit":
+            addButtonEvent();
+            break;
           }
           break;
-
-          case "radio":
-          var elements = [element];
-          if (element.form) {
-            elements = element.form[element.name];
-          }
-          function f() {
-            setValue(Element.getValue(this));
-          }
-          for (var i = 0; i < elements.length; i++) {
-            addEvent(elements[i], "click", f);
-          }
-          break;
-
-          case "text":
-          case "password":
-          var f = element.onchange;
+          case "select":
           addEvent(element, "change", setValueNone);
           break;
 
           case "button":
-          case "submit":
           addButtonEvent();
           break;
+
+          case "textarea":
+          addEvent(element, "change", setValueNone);
+          break;
         }
-        break;
-        case "select":
-        addEvent(element, "change", setValueNone);
-        break;
+      },
+      /**
+       * Adds a value transformer or replaces an existing one.
+       */
+      setValueTransformer : function (option) {
+        this.valueTransformers.add(option);
 
-        case "button":
-        addButtonEvent();
-        break;
-
-        case "textarea":
-        addEvent(element, "change", setValueNone);
-        break;
-      }
-    },
-    /**
-     * Adds a value transformer or replaces an existing one.
-     */
-    setValueTransformer : function (option) {
-      this.valueTransformers.add(option);
-
-      // If a value transformer is added/modified when a data source
-      // binding exists the value is updated immediately.
-      if (!this.hasModel()) {
-        return;
-      }
-      if (option.selector) {
-        this._updateElements($(option.selector, this.getView()));
-      } else if (option.keyPath) {
-        this.update(option.keyPath);
-      }
-    },
-    /**
-     * Sets up a listener for the given data source and updates the DOM with
-     * the new data. If a data source already exists, the attached listeners
-     * are removed before the new ones are attached.
-     *
-     * @param KeyValueCoding dataSource
-     */
-    attach : function (dataSource) {
-      if (this.hasModel()) {
-        this._getModel().removeSubscriber(this, "ValueChanged");
-      }
-
-      if (!KVC.implementsInterface(dataSource)) {
-        throw new Error("Supplied data source is not KVC compliant.");
-      }
-
-      this._setDataSource(dataSource);
-      this.classNameConditions.attach(dataSource);
-      this.eventBindings.attach(dataSource);
-      this._getModel().subscribe("ValueChanged", this);
-      this.refresh();
-      this._triggerOnBound();
-    },
-    /**
-     * Updates the DOM for a specific key path.
-     *
-     * @param string keyPath
-     */
-    update : function (keyPath) {
-      this._setValue(keyPath, this._getModel().getValue(keyPath));
-    },
-    /**
-     * Sets the given value to the given key path in the DOM. Uses
-     * DOM.Element to support different kinds of elements.
-     * If the template does not have the given key path, no action is taken.
-     * Does not set the value if the key path contains a function.
-     *
-     * @param string keyPath
-     * @param mixed value
-     */
-    _setValue : function (keyPath, value) {
-      // > Why does this have to be at the top of the method body?
-      this.classNameConditions.set(keyPath);
-
-      if (!this.elements.hasKey(keyPath)) {
-        return;
-      }
-
-      if (value instanceof Function) {
-        return;
-      }
-
-      if (!this.mode.mayWriteToView(keyPath)) {
-        return;
-      }
-
-      var transformedValue = this.valueTransformers.forwardForKeyPath(keyPath, value);
-
-      for (var i = 0, elements = this.elements.get(keyPath); i < elements.length; i++) {
-        var element = elements[i];
-        var selectorTransformedValue = this.valueTransformers.forwardForElement(element, transformedValue);
-
-        // null will be printed as the empty string, to make the behavior
-        // consistent between browsers (IE prints as "null", others print as "").
-        if (selectorTransformedValue === null) {
-          selectorTransformedValue = "";
+        // If a value transformer is added/modified when a data source
+        // binding exists the value is updated immediately.
+        if (!this.hasModel()) {
+          return;
         }
-        if (this._elementHasWidget(element)) {
-          this._getWidgetByElement(element).setValue(selectorTransformedValue);
-        } else {
-          Element.setValue(element, selectorTransformedValue);
+        if (option.selector) {
+          this._updateElements($(option.selector, this.getView()));
+        } else if (option.keyPath) {
+          this.update(option.keyPath);
         }
-      }
-    },
-    /**
-     * The template must be bound to a data source for this method to work.
-     *
-     * @param HTMLElement element
-     *   An element in the template that has a matching key path.
-     * @return string
-     *   The matching key path.
-     */
-    _findKeyPathForElement : function (element) {
-      if (!this.hasModel()) {
+      },
+      _modelDetached : function () {
+        this.writeEventManager.detach();
+      },
+      _modelAttached : function () {
+        this.classNameConditions.attach(this._getModel());
+        this.eventBindings.attach(this._getModel());
+        this.elements = new Dictionary();
+        this.refresh();
+        this._triggerOnBound();
+      },
+      /**
+       * Updates the DOM for a specific key path.
+       *
+       * @param string keyPath
+       */
+      update : function (keyPath) {
+        this._setValue(keyPath, this._getModel().getValue(keyPath));
+      },
+      /**
+       * Sets the given value to the given key path in the DOM. Uses
+       * DOM.Element to support different kinds of elements.
+       * If the template does not have the given key path, no action is taken.
+       * Does not set the value if the key path contains a function.
+       *
+       * @param string keyPath
+       * @param mixed value
+       */
+      _setValue : function (keyPath, value) {
+        // > Why does this have to be at the top of the method body?
+        this.classNameConditions.set(keyPath);
+
+        if (!this.elements.hasKey(keyPath)) {
+          return;
+        }
+
+        if (value instanceof Function) {
+          return;
+        }
+
+        if (!this.mode.mayWriteToView(keyPath)) {
+          return;
+        }
+
+        var transformedValue = this.valueTransformers.forwardForKeyPath(keyPath, value);
+
+        for (var i = 0, elements = this.elements.get(keyPath); i < elements.length; i++) {
+          var element = elements[i];
+          var selectorTransformedValue = this.valueTransformers.forwardForElement(element, transformedValue);
+
+          // null will be printed as the empty string, to make the behavior
+          // consistent between browsers (IE prints as "null", others print as "").
+          if (selectorTransformedValue === null) {
+            selectorTransformedValue = "";
+          }
+          if (this._elementHasWidget(element)) {
+            this._getWidgetByElement(element).setValue(selectorTransformedValue);
+          } else {
+            Element.setValue(element, selectorTransformedValue);
+          }
+        }
+      },
+      /**
+       * The template must be bound to a data source for this method to work.
+       *
+       * @param HTMLElement element
+       *   An element in the template that has a matching key path.
+       * @return string
+       *   The matching key path.
+       */
+      _findKeyPathForElement : function (element) {
+        if (!this.hasModel()) {
+          throw new Error("Template:_findKeyPathForElement: "
+                          + "Template not bound to a data source.");
+        }
+        // Look up the value in the dictionary.
+        // > Dictionary:hasValue when implemented.
+        var keyPath = this.elements.findKey(element);
+        if (keyPath !== null) {
+          return keyPath;
+        }
         throw new Error("Template:_findKeyPathForElement: "
-                        + "Template not bound to a data source.");
-      }
-      // Look up the value in the dictionary.
-      // > Dictionary:hasValue when implemented.
-      var keyPath = this.elements.findKey(element);
-      if (keyPath !== null) {
-        return keyPath;
-      }
-      throw new Error("Template:_findKeyPathForElement: "
-                      + "Could not find key path for element "
-                      + "&lt;%s class=\"%s\"&gt;".format(element.tagName, element.className));
-    },
-    /**
-     * @param Array[HTMLElement] elements
-     *   Elements in the table to update values for, using both key path
-     *   transformers and selector transformers.
-     */
-    _updateElements : function (elements) {
-      for (var i = 0; i < elements.length; i++) {
-        var element = elements[i];
+                        + "Could not find key path for element "
+                        + "&lt;%s class=\"%s\"&gt;".format(element.tagName, element.className));
+      },
+      /**
+       * @param Array[HTMLElement] elements
+       *   Elements in the table to update values for, using both key path
+       *   transformers and selector transformers.
+       */
+      _updateElements : function (elements) {
+        for (var i = 0; i < elements.length; i++) {
+          var element = elements[i];
 
-        var vt = this.valueTransformers;
+          var vt = this.valueTransformers;
 
-        var keyPath = this._findKeyPathForElement(element);
-        var value = this._getModel().getValue(keyPath);
-        value = vt.forwardForKeyPath(keyPath, value);
-        value = vt.forwardForElement(element, value);
-        Element.setValue(element, value);
-      }
-    },
-    /**
-     * Updates the html element correspending to
-     * an updated value in the KVC structure.
-     *
-     * @param KeyValueCoding object
-     *   The updated object.
-     * @param string keyPath
-     *   The path to the value that changed
-     */
-    onValueChangedTriggered : function (object, keyPath) {
-      this._setValue(keyPath, object.getValue(keyPath));
-
-      // Find all keypaths that have keyPath as their prefix and update
-      // them as well.
-      for (var i = 0, keys = this.elements.keys(); i < keys.length; i++) {
-        // If keys[i] is a prefix of keyPath it needs to be updated.
-        if (keys[i].hasPrefix(keyPath)) {
-          this.update(keys[i]);
+          var keyPath = this._findKeyPathForElement(element);
+          var value = this._getModel().getValue(keyPath);
+          value = vt.forwardForKeyPath(keyPath, value);
+          value = vt.forwardForElement(element, value);
+          Element.setValue(element, value);
         }
-      }
-    },
-    /**
-     * Copies the template and returns the new instance.
-     * The new instance will not be bound to any data object.
-     *
-     * @return Template
-     */
-    clone : function () {
-      var rootElement = this.getView().cloneNode(true);
-      var newTemplate = new Template(rootElement);
+      },
+      /**
+       * Updates the html element correspending to
+       * an updated value in the KVC structure.
+       *
+       * @param KeyValueCoding object
+       *   The updated object.
+       * @param string keyPath
+       *   The path to the value that changed
+       */
+      onValueChangedTriggered : function (object, keyPath) {
+        this._setValue(keyPath, object.getValue(keyPath));
 
-      newTemplate.__setKeyPathDelimiter(this.keyPathDelimiter);
+        // Find all keypaths that have keyPath as their prefix and update
+        // them as well.
+        for (var i = 0, keys = this.elements.keys(); i < keys.length; i++) {
+          // If keys[i] is a prefix of keyPath it needs to be updated.
+          if (keys[i].hasPrefix(keyPath)) {
+            this.update(keys[i]);
+          }
+        }
+      },
+      /**
+       * Copies the template and returns the new instance.
+       * The new instance will not be bound to any data object.
+       *
+       * @return Template
+       */
+      clone : function () {
+        var view = this.getView().cloneNode(true);
+        var newTemplate = new Template(view);
 
-      // Class name prefix.
-      newTemplate.setClassNamePrefix(this.classNamePrefix);
+        newTemplate.__setKeyPathDelimiter(this.keyPathDelimiter);
 
-      // Value transformers.
-      newTemplate.valueTransformers = this.valueTransformers.clone(rootElement);
+        // Class name prefix.
+        newTemplate.setClassNamePrefix(this.classNamePrefix);
 
-      // Skip key paths.
-      newTemplate.__setSkipKeyPaths(A.clone(this.skipKeyPaths));
+        // Value transformers.
+        newTemplate.valueTransformers = this.valueTransformers.clone(view);
 
-      // Modes.
-      newTemplate.mode = this.mode.clone();
+        // Skip key paths.
+        newTemplate.__setSkipKeyPaths(A.clone(this.skipKeyPaths));
+
+        // Modes.
+        newTemplate.mode = this.mode.clone();
+
+        // Widgets.
+        for (var i = 0; i < this.widgets.length; i++) {
+          var settings = this.widgets[i];
+          newTemplate.addWidget(settings.selector, settings.widget.clone());
+        }
+
+
+        newTemplate.classNameConditions = this.classNameConditions.clone(view);
+
+        // Event bindings.
+        newTemplate.eventBindings = this.eventBindings.clone(view);
+
+        newTemplate.setOnBound(this.onBound);
+
+        return newTemplate;
+      },
+      createEventBindings : function (bindings) {
+        if (!(bindings instanceof Array)) {
+          throw new Error("MVC.View.Template:createEventBindings:" +
+                          "Argument to createEventBindings is not an array.");
+        }
+        this.eventBindings.setBindings(bindings);
+      },
+      /**
+       * @param string prefix
+       */
+      setClassNamePrefix : function (prefix) {
+        this.classNamePrefix = prefix;
+      },
 
       // Widgets.
-      for (var i = 0; i < this.widgets.length; i++) {
-        var settings = this.widgets[i];
-        newTemplate.addWidget(settings.selector, settings.widget.clone());
-      }
+      /**
+       * Adds a widget to the template. It will take control over the
+       * specified key path (or selector and the associated DOM node.
+       *
+       * Cloning the template will clone the widgets as well.
+       *
+       * @param string selector
+       * @param Widget widget
+       */
+      addWidget : function (selector, widget) {
+        var widgetRoot = $f(selector, this.getView());
 
-
-      newTemplate.classNameConditions = this.classNameConditions.clone(rootElement);
-
-      // Event bindings.
-      newTemplate.eventBindings = this.eventBindings.clone(rootElement);
-
-      newTemplate.setOnBound(this.onBound);
-
-      return newTemplate;
-    },
-    createEventBindings : function (bindings) {
-      if (!(bindings instanceof Array)) {
-        throw new Error("MVC.View.Template:createEventBindings:" +
-                        "Argument to createEventBindings is not an array.");
-      }
-      this.eventBindings.setBindings(bindings);
-    },
-    /**
-     * Removes all attached write events.
-     */
-    _detachWriteEvents : function () {
-      this.writeEventManager.detach();
-    },
-    /**
-     * @param string prefix
-     */
-    setClassNamePrefix : function (prefix) {
-      this.classNamePrefix = prefix;
-    },
-
-    // Widgets.
-    /**
-     * @type Array
-     *   Stores the associations between selectors and widgets.
-     */
-    widgets : null,
-    /**
-     * Adds a widget to the template. It will take control over the
-     * specified key path (or selector and the associated DOM node.
-     *
-     * Cloning the template will clone the widgets as well.
-     *
-     * @param string selector
-     * @param Widget widget
-     */
-    addWidget : function (selector, widget) {
-      var widgetRoot = $f(selector, this.getView());
-
-      if (!widgetRoot) {
-        throw new Error("Template:addWidget: Need a selector %s."
-                        .format(selector));
-      }
-
-      widget.attach(widgetRoot);
-      this.widgets.push({
-        selector : selector,
-        widget : widget,
-        element : widgetRoot
-      });
-
-      if (this.hasModel()) {
-        var keyPath = this._findKeyPathForElement(widgetRoot);
-        widget.setValue(
-          this._getModel().getValue(keyPath));
-      }
-    },
-    /**
-     * @param HTMLElement element
-     * @return boolean
-     *   Whether an element is owned by a widget.
-     */
-    _elementHasWidget : function (element) {
-      for (var i = 0; i < this.widgets.length; i++) {
-        var widgetElement = this.widgets[i].element;
-        if (element === widgetElement) {
-          return true;
+        if (!widgetRoot) {
+          throw new Error("Template:addWidget: Need a selector %s."
+                          .format(selector));
         }
-      }
-      // > Missing return value
-    },
-    /**
-     * Finds the widget that owns the specified element, throws an error
-     * if the element isn't found, you can check if it exists by using
-     * _elementHasWidget.
-     *
-     * @param HTMLElement element
-     * @return Widget
-     */
-    _getWidgetByElement : function (element) {
-      for (var i = 0; i < this.widgets.length; i++) {
-        var widgetElement = this.widgets[i].element;
-        var widget = this.widgets[i].widget;
-        if (element === widgetElement) {
-          return widget;
-        }
-      }
-      throw new Error("Template:_getWidgetByElement: The specified " +
-                      "element has no widget associated with it.");
-    },
 
-    skipKeyPaths : null,
-    __setSkipKeyPaths : function (skipKeyPaths) {
-      this.skipKeyPaths = skipKeyPaths;
-    },
-    __shouldSkipKeyPath : function (keyPath) {
-      return C.hasValue(this.skipKeyPaths, keyPath);
-    },
-    onBound : Function.empty,
-    _triggerOnBound : function () {
-      this.onBound(this, this._getModel());
-    },
-    /**
-     * Sets a function that triggers any time the template is bound to a
-     * KVC data source.
-     *
-     * @param Function func
-     *          @param Template template
-     *          @param KVC dataSource
-     */
-    setOnBound : function (func) {
-      this.onBound = func;
-    },
-    addClassNameCondition : function (keyPath, className, negate) {
-      this.classNameConditions.add(keyPath, className, negate);
+        widget.attach(widgetRoot);
+        this.widgets.push({
+          selector : selector,
+          widget : widget,
+          element : widgetRoot
+        });
+
+        if (this.hasModel()) {
+          var keyPath = this._findKeyPathForElement(widgetRoot);
+          widget.setValue(
+            this._getModel().getValue(keyPath));
+        }
+      },
+      /**
+       * @param HTMLElement element
+       * @return boolean
+       *   Whether an element is owned by a widget.
+       */
+      _elementHasWidget : function (element) {
+        for (var i = 0; i < this.widgets.length; i++) {
+          var widgetElement = this.widgets[i].element;
+          if (element === widgetElement) {
+            return true;
+          }
+        }
+        return false;
+      },
+      /**
+       * Finds the widget that owns the specified element, throws an error
+       * if the element isn't found, you can check if it exists by using
+       * _elementHasWidget.
+       *
+       * @param HTMLElement element
+       * @return Widget
+       */
+      _getWidgetByElement : function (element) {
+        for (var i = 0; i < this.widgets.length; i++) {
+          var widgetElement = this.widgets[i].element;
+          var widget = this.widgets[i].widget;
+          if (element === widgetElement) {
+            return widget;
+          }
+        }
+        throw new Error("Template:_getWidgetByElement: The specified " +
+                        "element has no widget associated with it.");
+      },
+
+      __setSkipKeyPaths : function (skipKeyPaths) {
+        this.skipKeyPaths = skipKeyPaths;
+      },
+      __shouldSkipKeyPath : function (keyPath) {
+        return C.hasValue(this.skipKeyPaths, keyPath);
+      },
+      onBound : Function.empty,
+      _triggerOnBound : function () {
+        this.onBound(this, this._getModel());
+      },
+      setOnBound : function (func) {
+        this.onBound = func;
+      },
+      addClassNameCondition : function (keyPath, className, negate) {
+        this.classNameConditions.add(keyPath, className, negate);
+      }
     }
-  };
-
-  Template.extend(AbstractTemplate);
+  });
 
   /**
    * A cleaner way of setting up templates.
@@ -902,6 +876,4 @@ Module("Cactus.Web", function (m) {
 
     return template;
   };
-
-  m.Template = Template;
 });

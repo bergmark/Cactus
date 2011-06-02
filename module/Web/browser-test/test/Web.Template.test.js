@@ -95,14 +95,14 @@ Cactus.UnitTest.Web.Template = function () {
     var h1 = $f("h1", root);
     var h2 = $f("h2", root);
 
-    this.assertEqual (1, dataSource.getValue("x"));
-    this.assertEqual ("1", Element.getValue(h1));
-    this.assertEqual ("-2", Element.getValue(h2)); // >
-    dataSource.setValue ("x", 5);
-    this.assertEqual ("5", Element.getValue(h1));
-    dataSource.setValue ("y", 9);
-    this.assertEqual (-10, dataSource.getValue ("y"));
-    this.assertEqual ("-10", Element.getValue(h2), "h2");
+    this.assertEqual(1, dataSource.getValue("x"), "initial x value");
+    this.assertEqual("1", Element.getValue(h1), "initial x value from view");
+    this.assertEqual("-2", Element.getValue(h2));
+    dataSource.setValue("x", 5);
+    this.assertEqual("5", Element.getValue(h1));
+    dataSource.setValue("y", 9);
+    this.assertEqual(-10, dataSource.getValue ("y"));
+    this.assertEqual("-10", Element.getValue(h2), "h2");
   }));
 
   // Change the delimiter on class names for key path.
@@ -125,7 +125,7 @@ Cactus.UnitTest.Web.Template = function () {
     kvc.foo = new KVC();
     kvc.foo.bar = 2;
     t.attach(kvc);
-    this.assertEqual("1", Element.getValue($f(".foo_bar", t.getView())));
+    this.assertEqual("1", Element.getValue($f(".foo_bar", t.getView())), "class name delimiter should not be _");
     this.assertEqual("2", Element.getValue($f(".foo-bar", t.getView())));
 
 
@@ -298,8 +298,8 @@ Cactus.UnitTest.Web.Template = function () {
     this.assertEqual("2", Element.getValue(radios[0]));
 
     simulateRadioClick(radios[0]);
-    this.assertEqual("1", kvc.a);
-    this.assertEqual("1", Element.getValue(radios[0]));
+    this.assertEqual("1", kvc.a, "kvc.a");
+    this.assertEqual("1", Element.getValue(radios[0]), "radio group value");
 
     simulateRadioClick(radios[1]);
     this.assertEqual("2", kvc.a);
@@ -723,7 +723,7 @@ Cactus.UnitTest.Web.Template = function () {
 
     var o = new KVC();
     var p = new KVC();
-      p.b = 1;
+    p.b = 1;
     var q = new KVC();
     q.b = 2;
 
@@ -731,8 +731,8 @@ Cactus.UnitTest.Web.Template = function () {
 
     t.attach (o);
 
-    this.assertEqual (1, o.getValue("a.b"));
-    this.assertEqual ("1", Element.getValue(root));
+    this.assertEqual (1, o.getValue("a.b"), "a.b");
+    this.assertEqual ("1", Element.getValue(root), "root value");
 
     o.setValue("a", q);
 
@@ -752,6 +752,7 @@ Cactus.UnitTest.Web.Template = function () {
   templateTC.add(function () {
     var t = Template.create("<div></div>");
     this.assertException(/KVC compliant/, function () {
+      console.log("---");
       t.attach({});
     });
   });
@@ -792,16 +793,16 @@ Cactus.UnitTest.Web.Template = function () {
     t.setClassNamePrefix("foo_");
     var t2 = Template.create(t);
     t2.attach(new O());
-    this.assertEqual("1", Element.getValue(t2.getView()));
+    this.assertEqual("1", Element.getValue(t2.getView()), "class name prefix cloning");
   });
 
   // Classnames without the prefix should not be updated.
   templateTC.add(function () {
     var t = Template.create('\
-<div>\
-<div class="foo_x"></div>\
-<div class="x"></div>\
-</div>');
+      <div>\
+        <div class="foo_x"></div>\
+        <div class="x"></div>\
+      </div>');
     t.setClassNamePrefix("foo_");
     var o = new O();
     t.attach(o);
@@ -810,7 +811,7 @@ Cactus.UnitTest.Web.Template = function () {
     var x = $f(".x", root);
     var foo_x = $f(".foo_x", root);
 
-    this.assertEqual("1", Element.getValue(foo_x));
+    this.assertEqual("1", Element.getValue(foo_x), "updated element with prefix");
     this.assertEqual("", Element.getValue(x));
   });
 
@@ -831,9 +832,9 @@ Cactus.UnitTest.Web.Template = function () {
     var input = $f("input", root);
     var span = $f("span", root);
 
-    this.assertEqual(1, o.getValue("x"));
-    this.assertEqual("1", Element.getValue(input));
-    this.assertEqual("1", Element.getValue(span));
+    this.assertEqual(1, o.getValue("x"), "x");
+    this.assertEqual("1", Element.getValue(input), "input value");
+    this.assertEqual("1", Element.getValue(span), "span value");
 
     input.value = "2";
     input.onchange();
@@ -1245,8 +1246,8 @@ Cactus.UnitTest.Web.Template = function () {
     o.y = 2;
     t.attach(o);
 
-    this.assertEqual(1, valueOf(t, ".x"));
-    this.assertEqual(20, valueOf(t, ".y"));
+    this.assertEqual(1, valueOf(t, ".x"), "not excluded path");
+    this.assertEqual(20, valueOf(t, ".y"), "excluded path");
   });
 
   // Send an onBound event.
@@ -1375,7 +1376,7 @@ Cactus.UnitTest.Web.Template = function () {
       classNamePrefix : "foo_",
       kvcBinding : o
     });
-    this.assertEqual(1, valueOf(t, "root"));
+    this.assertEqual(1, valueOf(t, "root"), "prefixed root");
 
     // Cloning.
     var t2 = Template.create(t, {
