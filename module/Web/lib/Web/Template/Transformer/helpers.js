@@ -1,6 +1,5 @@
-(function () {
-  var Transformer = Cactus.Web.Template.Transformer;
-  Transformer.createSelect = function (rootKeyPath, valueKeyPath, textKeyPath) {
+Module("Cactus.Web.Template.Transformer", function (m) {
+  m.createSelect = function (rootKeyPath, valueKeyPath, textKeyPath) {
     return {
       keyPath : rootKeyPath,
       forward : function (kvc) {
@@ -11,4 +10,4 @@
       }
     };
   };
-})();
+});

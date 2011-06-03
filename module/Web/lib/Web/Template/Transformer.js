@@ -1,13 +1,12 @@
-(function () {
-  var Collection = Cactus.Data.Collection;
+Module("Cactus.Web.Template", function (m) {
+  var C = Cactus.Data.Collection;
   var $ = Cactus.Web.select;
   var ViewHandler = Cactus.Web.ViewHandler;
   var A = Cactus.Addon.Array;
   var O = Cactus.Addon.Object;
   var VT = Cactus.Util.ValueTransformer;
-  var m = Cactus.Web.Template;
 
-  m.Transformer = Class({
+  Class("Transformer", {
     does : ViewHandler,
     has : {
       /**
@@ -152,7 +151,7 @@
       add : function (option) {
         var keyPath = option.keyPath || option.selector;
         if (option.selector) {
-          var selectorTransformers = Collection.select(
+          var selectorTransformers = C.select(
             this.selectorTransformers,
             function (v) {
               return v.selector === option.selector;
@@ -196,4 +195,4 @@
       }
     }
   });
-})();
+});

@@ -1,7 +1,6 @@
-(function () {
-  var m = Cactus.Web.Template;
+Module("Cactus.Web.Template", function (m) {
   var O = Cactus.Addon.Object;
-  m.Mode = Class({
+  var Mode = Class("Mode", {
     has : {
       /**
        * @type Map<string keyPath, enum{"both","read","write"}>
@@ -38,7 +37,7 @@
         return mode === "read" || mode === "both";
       },
       clone : function () {
-        var clone = new m.Mode();
+        var clone = new Mode();
         for (var p in this.modes) {
           clone.set(p, this.modes[p]);
         }
@@ -46,4 +45,4 @@
       }
     }
   });
-})();
+});

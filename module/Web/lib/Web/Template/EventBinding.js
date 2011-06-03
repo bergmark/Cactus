@@ -1,10 +1,10 @@
-(function () {
+Module("Cactus.Web.Template", function () {
   var A = Cactus.Addon.Array;
   var EventManager = Cactus.Web.EventManager;
   var $f = Cactus.Web.selectFirst;
   var Mediator = Cactus.Web.Mediator;
 
-  var EventBinding = Class({
+  var EventBinding = Class("EventBinding", {
     does : Mediator,
     has : {
       bindings : { init : A.new },
@@ -115,5 +115,5 @@
       }
     }
   });
-  Cactus.Web.Template.EventBinding = EventBinding;
-})();
+});
+

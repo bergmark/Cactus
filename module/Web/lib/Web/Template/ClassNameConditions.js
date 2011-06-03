@@ -1,11 +1,11 @@
-(function () {
+Module("Cactus.Web.Template", function () {
   var ClassNames = Cactus.Web.ClassNames;
   var Dictionary = Cactus.Data.Dictionary;
   var Mediator = Cactus.Web.Mediator;
   var O = Cactus.Addon.Object;
   var Set = Cactus.Data.Set;
 
-  var ClassNameConditions = Class({
+  var ClassNameConditions = Class("ClassNameConditions", {
     does : Mediator,
     has : {
       /**
@@ -136,5 +136,4 @@
       }
     }
   });
-  Cactus.Web.Template.ClassNameConditions = ClassNameConditions;
-})();
+});
