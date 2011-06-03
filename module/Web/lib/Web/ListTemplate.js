@@ -47,6 +47,24 @@ Module("Cactus.Web", function (m) {
   var TypeChecker = Cactus.Util.TypeChecker;
   var tag = m.tag;
 
+  var classNameDefinitions = {
+    first : {
+      className : "first",
+      shouldApply : function (view) { return view.childNodes.length !== 0; },
+      elementPredicate : function (view, item, index) { return index === 0; }
+    },
+    last : {
+      className : "last",
+      shouldApply : function (view) { return view.childNodes.length !== 0; },
+      elementPredicate : function (view, item, index) { return index === view.childNodes.length - 1; }
+    },
+    single : {
+      className : "single",
+      shouldApply : function (view) { return view.childNodes.length === 1; },
+      elementPredicate : function (view, item, index) { return true; }
+    }
+  };
+
   var ListTemplate = Class("ListTemplate", {
     does : Mediator,
     my : {
@@ -74,9 +92,7 @@ Module("Cactus.Web", function (m) {
        *   subscription ID's in order to be able to remove them.
        */
       subscriptions : null,
-      lastClassName : { required : true },
-      singleClassName : { required : true },
-      firstClassName : { required : true }
+      classNames : { required : true }
     },
     methods : {
       /**
@@ -90,9 +106,15 @@ Module("Cactus.Web", function (m) {
         var tc = new TypeChecker({
           defaultValueFunc : O.new,
           type : {
-            firstClassName : { type : "string", defaultValue : "first" },
-            lastClassName : { type : "string", defaultValue : "last" },
-            singleClassName : { type : "string", defaultValue : "single" },
+            classNames : {
+              defaultValueFunc : A.new,
+              type : [{
+                type : {
+                  type : { type : "string" },
+                  className : { type : "string", required : false }
+                }
+              }]
+            },
             eventBindings : { type : Array, defaultValueFunc : A.new }
           }
         });
@@ -124,28 +146,23 @@ Module("Cactus.Web", function (m) {
             template : templatePrototypes
           }];
         }
-        return {
+        var h = {
           view : view,
-          firstClassName : new ListTemplate.ClassName({
-            view : view,
-            className : settings.firstClassName || "first",
-            shouldApply : function (view) { return view.childNodes.length !== 0; },
-            elementPredicate : function (view, item, index) { return index === 0; }
-          }),
-          lastClassName : new ListTemplate.ClassName({
-            view : view,
-            className : settings.lastClassName || "last",
-            shouldApply : function (view) { return view.childNodes.length !== 0; },
-            elementPredicate : function (view, item, index) { return index === view.childNodes.length - 1; }
-          }),
-          singleClassName : new ListTemplate.ClassName({
-            view : view,
-            className : settings.singleClassName || "single",
-            shouldApply : function (view) { return view.childNodes.length === 1; },
-            elementPredicate : function (view, item, index) { return true; }
-          }),
+          classNames : [],
           eventBindings : settings.eventBindings
         };
+        for (var i = 0; i < settings.classNames.length; i++) {
+          var type = settings.classNames[i].type;
+          var className = settings.classNames[i].className;
+          var def = classNameDefinitions[type];
+          h.classNames.push(new ListTemplate.ClassName({
+              view : view,
+              className : className || def.className,
+              shouldApply : def.shouldApply,
+              elementPredicate : def.elementPredicate
+          }));
+        }
+        return h;
       },
       initialize : function (args) {
         // If the LT contains anything initially, remove it.
@@ -179,9 +196,9 @@ Module("Cactus.Web", function (m) {
           this.templates.push(template);
           this.getView().appendChild(template.getView());
         }
-        this.firstClassName.attach(model);
-        this.lastClassName.attach(model);
-        this.singleClassName.attach(model);
+        for (i = 0; i < this.classNames.length; i++) {
+          this.classNames[i].attach(model);
+        }
       },
       /**
        * Clears the templates and creates new ones.
@@ -196,9 +213,9 @@ Module("Cactus.Web", function (m) {
        * this class name.
        */
       _updateClassNames : function () {
-        this.firstClassName.update();
-        this.lastClassName.update();
-        this.singleClassName.update();
+        for (var i = 0; i < this.classNames.length; i++) {
+          this.classNames[i].update();
+        }
       },
       /**
        * @param natural controllerIndex
@@ -345,10 +362,12 @@ Module("Cactus.Web", function (m) {
     settings = settings || {};
 
     var listTemplate = new ListTemplate(template, view, {
-      firstClassName : settings.firstClassName,
-      lastClassName : settings.lastClassName,
-      singleClassName : settings.singleClassName,
-      eventBindings : settings.eventBindings
+      eventBindings : settings.eventBindings,
+      classNames : [
+        { type : "first", className : settings.firstClassName },
+        { type : "last", className : settings.lastClassName },
+        { type : "single", className : settings.singleClassName }
+      ]
     });
 
     if (settings.arrayController) {

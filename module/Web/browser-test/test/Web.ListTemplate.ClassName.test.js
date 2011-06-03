@@ -34,22 +34,11 @@ Cactus.UnitTest.Web.ListTemplate.ClassName = (function () {
     }
   });
 
-  tc.setup = function () {
-    this.ac = makeAC();
-    this.view = tag("ul");
-    this.listTemplate = ListTemplate.create(templateP, this.view, {
-      arrayController : this.ac
-    });
-    this.valueOf = function (listItemIndex) {
-      return parseInt(Element.getValue($("li .x", this.view)[listItemIndex]), 10);
-    };
-  };
-
-  function makeAC () {
+  function makeAC() {
     return new ArrayController([
-      new O (1, 2),
-      new O (3, 4),
-      new O (5, 6)
+      new O(1, 2),
+      new O(3, 4),
+      new O(5, 6)
     ]);
   }
 
@@ -57,8 +46,13 @@ Cactus.UnitTest.Web.ListTemplate.ClassName = (function () {
   // and the last a .last class name.
   // If there is only one element, it should have the class .single.
   tc.add (function () {
-    var lt = this.listTemplate;
-    var ac = this.ac;
+    var ac = makeAC();
+    var view = tag("ul");
+    var lt = ListTemplate.create(templateP, view, {
+      arrayController : ac,
+      classNames : [{ type : "first" }, { type : "last" }, { type : "single" }]
+    });
+    window.lt = lt;
 
     function resetAC () {
       ac = makeAC();

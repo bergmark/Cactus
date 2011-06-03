@@ -752,7 +752,6 @@ Cactus.UnitTest.Web.Template = function () {
   templateTC.add(function () {
     var t = Template.create("<div></div>");
     this.assertException(/KVC compliant/, function () {
-      console.log("---");
       t.attach({});
     });
   });
