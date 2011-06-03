@@ -51,12 +51,12 @@ Module("Cactus.Web", function (m) {
   var classNameDefinitions = {
     first : {
       className : "first",
-      shouldApply : function (view) { return view.childNodes.length !== 0; },
+      shouldApply : function (view) { return true; },
       elementPredicate : function (view, item, index) { return index === 0; }
     },
     last : {
       className : "last",
-      shouldApply : function (view) { return view.childNodes.length !== 0; },
+      shouldApply : function (view) { return true; },
       elementPredicate : function (view, item, index) { return index === view.childNodes.length - 1; }
     },
     single : {

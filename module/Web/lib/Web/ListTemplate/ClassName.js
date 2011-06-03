@@ -11,7 +11,7 @@ Module("Cactus.Web.ListTemplate", function (m) {
     },
     methods : {
       _shouldApply : function () {
-        return this.hasModel() && this.shouldApply(this.getView());
+        return this.hasModel() && this._getModel().size() !== 0 && this.shouldApply(this.getView());
       },
       _add : function () {
         if (!this._shouldApply()) {
