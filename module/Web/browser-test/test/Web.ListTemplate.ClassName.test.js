@@ -52,7 +52,6 @@ Cactus.UnitTest.Web.ListTemplate.ClassName = (function () {
       arrayController : ac,
       classNames : [{ type : "first" }, { type : "last" }, { type : "single" }]
     });
-    window.lt = lt;
 
     function resetAC () {
       ac = makeAC();
@@ -125,6 +124,37 @@ Cactus.UnitTest.Web.ListTemplate.ClassName = (function () {
     this.assertFalse(hasSingle(1));
     ac.removeAtIndex(0);
     this.assert(hasSingle(0), "Missing .last after removeAtIndex.");
+
+  });
+
+  // even, odd
+  tc.add(function () {
+    var ac = makeAC();
+    var view = tag("ul");
+    var lt = ListTemplate.create(templateP, view, {
+      arrayController : ac,
+      classNames : [{ type : "odd" }, { type : "even" }]
+    });
+    lt.attach(ac);
+
+    function resetAC () {
+      ac = makeAC();
+      lt.attach(ac);
+    }
+
+    function has (className, index) {
+      return ClassNames.has(lt.getListItem(index), className);
+    }
+    var hasEven = function (i) {
+      return has("even", i) && !has("odd", i);
+    };
+    var hasOdd = function (i) {
+      return has("odd", i) && !has("even", i);
+    };
+
+    this.assert(hasEven(0));
+    this.assert(hasOdd(1));
+    this.assert(hasEven(2));
 
   });
 

@@ -41,6 +41,7 @@ Module("Cactus.Web", function (m) {
   var Events = m.Events;
   var JSON = Cactus.Util.JSON;
   var KVC = Cactus.Data.KeyValueCoding;
+  var M = Cactus.Addon.Math;
   var Mediator = m.Mediator;
   var O = Cactus.Addon.Object;
   var Template = m.Template;
@@ -62,6 +63,16 @@ Module("Cactus.Web", function (m) {
       className : "single",
       shouldApply : function (view) { return view.childNodes.length === 1; },
       elementPredicate : function (view, item, index) { return true; }
+    },
+    even : {
+      className : "even",
+      shouldApply : function (view) { return true; },
+      elementPredicate : function (view, item, index) { return M.even(index); }
+    },
+    odd : {
+      className : "odd",
+      shouldApply : function (view) { return true; },
+      elementPredicate : function (view, item, index) { return M.odd(index); }
     }
   };
 
@@ -366,7 +377,9 @@ Module("Cactus.Web", function (m) {
       classNames : [
         { type : "first", className : settings.firstClassName },
         { type : "last", className : settings.lastClassName },
-        { type : "single", className : settings.singleClassName }
+        { type : "single", className : settings.singleClassName },
+        { type : "even", className : settings.even },
+        { type : "odd", className : settings.odd }
       ]
     });
 
