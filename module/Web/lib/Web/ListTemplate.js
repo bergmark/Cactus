@@ -51,12 +51,10 @@ Module("Cactus.Web", function (m) {
   var classNameDefinitions = {
     first : {
       className : "first",
-      shouldApply : function (view) { return true; },
       elementPredicate : function (view, item, index) { return index === 0; }
     },
     last : {
       className : "last",
-      shouldApply : function (view) { return true; },
       elementPredicate : function (view, item, index) { return index === view.childNodes.length - 1; }
     },
     single : {
@@ -66,12 +64,10 @@ Module("Cactus.Web", function (m) {
     },
     even : {
       className : "even",
-      shouldApply : function (view) { return true; },
       elementPredicate : function (view, item, index) { return M.even(index); }
     },
     odd : {
       className : "odd",
-      shouldApply : function (view) { return true; },
       elementPredicate : function (view, item, index) { return M.odd(index); }
     }
   };

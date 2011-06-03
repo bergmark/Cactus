@@ -6,10 +6,16 @@ Module("Cactus.Web.ListTemplate", function (m) {
     does : Mediator,
     has : {
       className : { required : true },
-      shouldApply : { required : true },
+      shouldApply : { init : function () { return function () { return true; }; } },
       elementPredicate : { required : true }
     },
     methods : {
+      BUILD : function (args) {
+        if (!args.shouldApply) {
+          delete args.shouldApply;
+        }
+        return args;
+      },
       _shouldApply : function () {
         return this.hasModel() && this._getModel().size() !== 0 && this.shouldApply(this.getView());
       },
