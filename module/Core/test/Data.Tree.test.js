@@ -1,5 +1,4 @@
 module.exports = (function () {
-  var assertException = Cactus.Dev.Assertion.exception;
   var Tree = Cactus.Data.Tree;
   var CObject = Cactus.Addon.Object;
 
@@ -37,9 +36,9 @@ module.exports = (function () {
       root.addChild(childB);
       assert.strictEqual(childA, root.getChild(0));
       assert.strictEqual(childB, root.getChild(1));
-      assertException(assert, /Tree:getChild:.+index out of bounds/i, CObject.bound(root, "getChild", 2));
-      assertException(assert, /Tree:getChild:.+index out of bounds/i, CObject.bound(root, "getChild", -1));
-      assertException(assert, /Tree:getChild:.+index out of bounds/i, CObject.bound(childA, "getChild", 0));
+      exception(/Tree:getChild:.+index out of bounds/i, CObject.bound(root, "getChild", 2));
+      exception(/Tree:getChild:.+index out of bounds/i, CObject.bound(root, "getChild", -1));
+      exception(/Tree:getChild:.+index out of bounds/i, CObject.bound(childA, "getChild", 0));
     },
     hasChild : function () {
       var root = new Tree();
@@ -64,8 +63,8 @@ module.exports = (function () {
       root.removeChild(childB);
       assert.strictEqual(0, root.childCount());
 
-      assertException(assert, /Tree:removeChild: Node does not have child/i,
-                      CObject.bound(root, "removeChild", childA));
+      exception(/Tree:removeChild: Node does not have child/i,
+                CObject.bound(root, "removeChild", childA));
     },
     removeChildByIndex : function () {
       var root = new Tree();
@@ -75,8 +74,8 @@ module.exports = (function () {
       root.addChild(childB);
       root.removeChildByIndex(1);
       root.removeChildByIndex(0);
-      assertException(assert, /Tree:removeChildByIndex:.+index out of bounds./i,
-                      CObject.bound(root, "removeChildByIndex", 0));
+      exception(/Tree:removeChildByIndex:.+index out of bounds./i,
+                CObject.bound(root, "removeChildByIndex", 0));
     }
   };
 })();

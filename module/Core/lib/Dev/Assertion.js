@@ -12,7 +12,33 @@
  *   An error message to save if the assertion fails.
  */
 Module("Cactus.Dev.Assertion", function (m) {
-  m.exception = function (assert, expectedException, func, message) {
+  var assert = require("assert");
+  m.ok = function (v, msg) { true.should.equal(v, msg); };
+  m.not = function (v, msg) { false.should.equal(v, msg); };
+  m.equal = function (a, b, msg) {
+    if (!a) {
+      assert.strictEqual(a, b, msg);
+    } else {
+      a.should.equal(b, msg);
+    }
+  };
+  m.instance = function (a, b, msg) { a.should.instanceof(b, msg); };
+  m.notequal = function (a, b, msg) { a.should.not.equal(b, msg); };
+  m.eql = function (a, b, msg) { a.should.eql(b, msg); };
+  m.contEx = function (cont, reg) {
+    var e;
+    return cont.except(function (_e) {
+      e = _e;
+      this.CONTINUE();
+    }).ensure(function () {
+      if (!e) {
+        throw new Error("assertContEx: No error was thrown.");
+      }
+      assert.ok(reg.test(e.message), "assertContEx: Caught unexpected: " + e.message);
+      this.CONTINUE();
+    });
+  };
+  m.exception = function (expectedException, func, message) {
     var returnValue = "*not available*";
     var exception = null;
     try {

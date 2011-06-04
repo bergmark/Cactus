@@ -7,24 +7,22 @@ var regs = {
   badMap : /expected map argument/i
 };
 
-
 module.exports = (function () {
   var StrictMap = Cactus.Data.StrictMap;
-  var assertException = Cactus.Dev.Assertion.exception;
   return {
     StrictMap : function () {
       var sh = new StrictMap();
 
-      assertException(assert, regs.getX, sh.get.bind(sh, "x"));
-      assertException(assert, regs.setX, sh.set.bind(sh, "x", 1));
+      exception(regs.getX, sh.get.bind(sh, "x"));
+      exception(regs.setX, sh.set.bind(sh, "x", 1));
       sh.define("x", 2);
-      assertException(assert, regs.define, sh.define.bind(sh, "x", 3));
+      exception(regs.define, sh.define.bind(sh, "x", 3));
       assert.eql(2, sh.get("x"));
       sh.set("x", 4);
       assert.eql(4, sh.get("x"));
 
-      assertException(assert, regs.badMap, function () { new StrictMap(null); });
-      assertException(assert, regs.badMap, function () { new StrictMap(1); });
+      exception(regs.badMap, function () { new StrictMap(null); });
+      exception(regs.badMap, function () { new StrictMap(1); });
     },
     map : function () {
       var sm = new StrictMap();
@@ -39,9 +37,9 @@ module.exports = (function () {
     },
     defineSeveral : function () {
       var sh = new StrictMap({ x : 1 });
-      assertException(assert, regs.getY, sh.get.bind(sh, "y"));
-      assertException(assert, regs.setY, sh.set.bind(sh, "y", 2));
-      assertException(assert, regs.define, sh.define.bind(sh, "x", 2));
+      exception(regs.getY, sh.get.bind(sh, "y"));
+      exception(regs.setY, sh.set.bind(sh, "y", 2));
+      exception(regs.define, sh.define.bind(sh, "x", 2));
       assert.eql(1, sh.get("x"));
       sh.set("x", 2);
       sh.define("y",3);

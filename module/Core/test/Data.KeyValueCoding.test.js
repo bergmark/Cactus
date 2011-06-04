@@ -1,6 +1,5 @@
 module.exports = (function () {
   var KVC = Cactus.Data.KeyValueCoding;
-  var assertException = Cactus.Dev.Assertion.exception;
   return {
     // Test setting and getting values for simple key paths. Reading
     // values right of the properties and using accessor methods.
@@ -96,13 +95,10 @@ module.exports = (function () {
     // checking if "value" exists as a KP.
     "c" : function () {
       var o = new KVC();
+      o.value = 1;
 
-      assertException(assert, /(?:)/, function () {
-        o.setValue("value", "bar");
-      });
-      assertException(assert, /(?:)/, function () {
-        o.getValue("value");
-      });
+      exception(/value.+reserved/, o.setValue.bind(o, "value", "bar"));
+      exception(/value.+reserved/, o.getValue.bind(o, "value"));
     },
 
     // Naming a property "isX" should not interfere with properties named "X".

@@ -69,9 +69,7 @@ Module("Cactus.Web", function (m) {
    *    Array<HTMLElement>: all elements are appended.
    */
   function tag(name, attributes, contents) {
-    if (!attributes) {
-      var attributes = {};
-    }
+    attributes = attributes || {};
 
     // Due to an IE bug the name attribute won't be set unless we
     // create the element like this.

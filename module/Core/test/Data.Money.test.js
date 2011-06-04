@@ -1,7 +1,6 @@
 module.exports = (function () {
   var Money = Cactus.Data.Money;
   var stringify = Cactus.Util.JSON.stringify;
-  var assertException = Cactus.Dev.Assertion.exception;
   var Collection = Cactus.Data.Collection;
 
   return {
@@ -37,10 +36,10 @@ module.exports = (function () {
       assert.strictEqual("-12.85", new Money(20, 00).sub(new Money(32, 85)).toString());
       assert.strictEqual("10.24", new Money(5, 12).mult(2).toString());
 
-      assertException(assert, /dollars is NaN/, function () { new Money(NaN, 13) });
-      assertException(assert, /cents is NaN/, function () { new Money(13, NaN) });
-      assertException(assert, /cents < 0/, function () { new Money(1, -1) });
-      assertException(assert, /cents < 0/, function () { new Money(-1, -1) });
+      exception(/dollars is NaN/, function () { new Money(NaN, 13) });
+      exception(/cents is NaN/, function () { new Money(13, NaN) });
+      exception(/cents < 0/, function () { new Money(1, -1) });
+      exception(/cents < 0/, function () { new Money(-1, -1) });
 
       assert.strictEqual(stringify({ dollars : 1, cents : 2 }),
                        stringify(new Money(1, 2).serialize()));
@@ -71,13 +70,13 @@ module.exports = (function () {
       assert.strictEqual(-12, m.getDollars());
       assert.strictEqual(0, m.getCents());
 
-      assertException(assert, /invalid format/i, Money.fromString.curry("1.5"));
-      assertException(assert, /invalid format/i, Money.fromString.curry("1.123"));
+      exception(/invalid format/i, Money.fromString.curry("1.5"));
+      exception(/invalid format/i, Money.fromString.curry("1.123"));
 
       // Invalid arguments.
-      assertException(assert, /string was empty/i, Money.fromString.curry(""));
-      assertException(assert, /string was null/i, Money.fromString.curry(null));
-      assertException(assert, /invalid format/i, Money.fromString.curry("12."));
+      exception(/string was empty/i, Money.fromString.curry(""));
+      exception(/string was null/i, Money.fromString.curry(null));
+      exception(/invalid format/i, Money.fromString.curry("12."));
 
 
       assert.ok(new Money(12, 34).equals(new Money(12, 34)));

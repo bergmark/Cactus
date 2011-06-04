@@ -91,25 +91,8 @@ global.fs = require("fs");
 global.assert = require("assert");
 global.should = require("should");
 global.log = console.log.bind(console);
-global.contEx = function (cont, reg) {
-  var e;
-  return cont.except(function (_e) {
-    e = _e;
-    this.CONTINUE();
-  }).ensure(function () {
-    if (!e) {
-      throw new Error("assertContEx: No error was thrown.");
-    }
-    assert.ok(reg.test(e.message), "assertContEx: Caught unexpected: " + e.message);
-    this.CONTINUE();
-  });
-};
-global.ok = function (v, msg) { true.should.equal(v, msg); };
-global.not = function (v, msg) { false.should.equal(v, msg); };
-global.equal = function (a, b, msg) { if (!a) { assert.strictEqual(a, b, msg); } else { a.should.equal(b, msg); }};
-global.notequal = function (a, b, msg) { a.should.not.equal(b, msg); };
-global.eql = function (a, b, msg) { a.should.eql(b, msg); };
 var Assertion = Cactus.Dev.Assertion;
 global.exception = Assertion.exception.bind(Assertion, assert);
-global.instance = function (a, b, msg) { a.should.instanceof(b, msg); };
-
+for (var p in Assertion) {
+  global[p] = Assertion[p];
+}

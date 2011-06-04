@@ -1,7 +1,6 @@
 module.exports = (function () {
   var CountMap = Cactus.Data.CountMap;
   var object = Cactus.Addon.Object;
-  var Assertion = Cactus.Dev.Assertion;
   return {
     CountMap : function () {
       var cm = new CountMap();
@@ -23,10 +22,10 @@ module.exports = (function () {
       assert.eql(0, cm.get("key1"));
 
       // Cannot dec if value is 0.
-      Assertion.exception(assert, /:dec:.+value is 0/i, object.bound(cm, "dec", "key1"));
+      exception(/:dec:.+value is 0/i, object.bound(cm, "dec", "key1"));
 
       // Cannot dec if key is undefined.
-      Assertion.exception(assert, /:dec:.+undefined key/i, object.bound(cm, "dec", "undefined key"));
+      exception(/:dec:.+undefined key/i, object.bound(cm, "dec", "undefined key"));
     },
     serialize : function () {
       var cm = new CountMap();
@@ -39,15 +38,15 @@ module.exports = (function () {
     },
     incDecBy : function () {
       var cm = new CountMap();
-      Assertion.exception(assert, /:decBy:.+undefined key/i, object.bound(cm, "decBy", "a", 10));
+      exception(/:decBy:.+undefined key/i, object.bound(cm, "decBy", "a", 10));
       cm.incBy("a", 10);
       assert.strictEqual(10, cm.get("a"));
       cm.decBy("a", 10);
       assert.strictEqual(0, cm.get("a"));
-      Assertion.exception(assert, /:decBy:.+can not decBy to below 0/i, object.bound(cm, "decBy", "a", 1));
+      exception(/:decBy:.+can not decBy to below 0/i, object.bound(cm, "decBy", "a", 1));
       cm.incBy("a", 3);
-      Assertion.exception(assert, /:decBy:.+can not decBy to below 0/i, object.bound(cm, "decBy", "a", 4));
-      Assertion.exception(assert, /:decBy:.+can not decBy to below 0/i, object.bound(cm, "decBy", "a", 5));
+      exception(/:decBy:.+can not decBy to below 0/i, object.bound(cm, "decBy", "a", 4));
+      exception(/:decBy:.+can not decBy to below 0/i, object.bound(cm, "decBy", "a", 5));
     }
   };
 })();

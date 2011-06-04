@@ -1,7 +1,6 @@
 module.exports = (function () {
   var Coll = Cactus.Data.Collection;
   var Range = Cactus.Data.Range;
-  var assertException = Cactus.Dev.Assertion.exception;
   var math = Cactus.Addon.Math;
   return {
     toArray : function () {
@@ -243,7 +242,7 @@ module.exports = (function () {
     },
 
     randElement : function () {
-      assertException(assert, /:randElement:.+empty collection/i, Coll.randElement.bind(Coll, []));
+      exception(/:randElement:.+empty collection/i, Coll.randElement.bind(Coll, []));
       var a = [0,1,2];
       var count = [0,0,0];
       var v;

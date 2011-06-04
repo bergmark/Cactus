@@ -1,6 +1,5 @@
 module.exports = (function () {
   var IdentityMap = Cactus.Util.IdentityMap;
-  var assertException = Cactus.Dev.Assertion.exception;
 
   return {
     "core" : function () {
@@ -9,10 +8,10 @@ module.exports = (function () {
       // Add.
       map.add(1, "a");
       assert.strictEqual("a", map.get(1));
-      assertException(assert, /another object/i, map.add.bind(map, 1, "c"));
-      assertException(assert, /is already stored/i, map.add.bind(map, 1, "a"));
+      exception(/another object/i, map.add.bind(map, 1, "c"));
+      exception(/is already stored/i, map.add.bind(map, 1, "a"));
 
-      assertException(assert, /non-existant ID/i, map.get.bind(map, 2));
+      exception(/non-existant ID/i, map.get.bind(map, 2));
 
       // Has.
       assert.ok(map.has(1));
@@ -20,8 +19,8 @@ module.exports = (function () {
 
       // Remove.
       map.remove("a");
-      assertException(assert, /non-existant ID/i, map.get.bind(map, "a"));
-      assertException(assert, /not in map/i, map.remove.bind(map, "a"));
+      exception(/non-existant ID/i, map.get.bind(map, "a"));
+      exception(/not in map/i, map.remove.bind(map, "a"));
     },
 
     // OnAdd when an abject is added to the ID map.

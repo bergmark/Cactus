@@ -1,9 +1,7 @@
 module.exports = (function () {
   var ObjectMap = Cactus.Data.ObjectMap;
-  var Assertion = Cactus.Dev.Assertion;
   return {
     "test" : function () {
-      var assertException = Assertion.exception.bind(Assertion, assert);
 
       var om = new ObjectMap();
 
@@ -24,8 +22,8 @@ module.exports = (function () {
       assert.ok(!om.has(o));
 
       // Errors.
-      assertException(/ObjectMap:get:.+undefined key/i, om.get.bind(om, o));
-      assertException(/ObjectMap:remove:.+undefined key/i, om.remove.bind(om, o));
+      exception(/ObjectMap:get:.+undefined key/i, om.get.bind(om, o));
+      exception(/ObjectMap:remove:.+undefined key/i, om.remove.bind(om, o));
     },
     map : function () {
       var om = new ObjectMap();

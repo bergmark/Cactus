@@ -1,7 +1,6 @@
 require('../Cactus');
 module.exports = (function () {
   var EventPool = Cactus.Util.EventPool;
-  var assertException = Cactus.Dev.Assertion.exception;
 
   return {
     "create new event, subscribe, trigger" : function () {
@@ -18,7 +17,7 @@ module.exports = (function () {
     "Shall not be able to create an evente that already exists." : function () {
       var pool = new EventPool();
       pool.createEvent("Foo");
-      assertException(assert, /EventPool.+Foo.+exists/, pool.createEvent.bind(pool, "Foo"));
+      exception(/EventPool.+Foo.+exists/, pool.createEvent.bind(pool, "Foo"));
     },
     "Object owning event should get the onEventName function." : function () {
       var pool = new EventPool();

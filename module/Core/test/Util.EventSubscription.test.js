@@ -1,6 +1,5 @@
 module.exports = (function () {
   var EventSubscription = Cactus.Util.EventSubscription;
-  var Assertion = Cactus.Dev.Assertion;
 
   var C = Class({
     does : EventSubscription,
@@ -182,8 +181,7 @@ module.exports = (function () {
       var c = new C();
       assert.ok(!c.implementsEvent("Bax"));
       assert.ok(c.implementsEvent("Foo"));
-        Assertion.exception(assert, Error,
-                            c.subscribe.bind(null, "Bax", Function.empty));
+      exception(Error, c.subscribe.bind(null, "Bax", Function.empty));
     },
 
     "throw error immediately if subscriber doesn't implement onTriggered method" : function () {

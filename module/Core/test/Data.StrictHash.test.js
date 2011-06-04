@@ -1,6 +1,5 @@
 module.exports = (function () {
   var StrictHash = Cactus.Data.StrictHash;
-  var assertException = Cactus.Dev.Assertion.exception;
   return {
     StrictHash : function () {
       var sh = new StrictHash(["x", "y"]);
@@ -8,7 +7,7 @@ module.exports = (function () {
       sh.set("x", 1);
       assert.eql(1, sh.get("x"));
       sh.set("y", 2);
-      assertException(assert, /StrictHash:.+?undefined/i, sh.set.bind(sh, "z"));
+      exception(/StrictHash:.+?undefined/i, sh.set.bind(sh, "z"));
     },
     map : function () {
       var sh = new StrictHash(["x", "y"]);
