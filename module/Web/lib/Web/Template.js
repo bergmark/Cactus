@@ -237,7 +237,7 @@ Module("Cactus.Web", function (m) {
        * path "a.b".
        * May not be changed after Template creation.
        */
-      keyPathDelimiter : "_",
+      classNameDelimiter : "_",
       /**
        * @type string
        *  This prefix is expected on all class names.
@@ -261,7 +261,7 @@ Module("Cactus.Web", function (m) {
           classNameConditions : new Template.ClassNameConditions(view),
           eventBindings : new Template.EventBinding(view),
           valueTransformers : new Template.Transformer(view),
-          keyPathDelimiter : settings.keyPathDelimiter || "_",
+          classNameDelimiter : settings.classNameDelimiter || "_",
           classNamePrefix : settings.classNamePrefix || "",
           skipKeyPaths : settings.skipKeyPaths || []
         };
@@ -290,7 +290,7 @@ Module("Cactus.Web", function (m) {
        */
       _classNameToKeyPath : function (className) {
         className = className.replace(this.classNamePrefix, "");
-        return className.replace(this.keyPathDelimiter, ".", "g");
+        return className.replace(this.classNameDelimiter, ".", "g");
       },
       /**
        * Turns a key path into its corresponding CSS class name.
@@ -299,7 +299,7 @@ Module("Cactus.Web", function (m) {
        * @return string
        */
       _keyPathToClassName : function (keyPath) {
-        return this.classNamePrefix + keyPath.replace(".", this.keyPathDelimiter, "g");
+        return this.classNamePrefix + keyPath.replace(".", this.classNameDelimiter, "g");
       },
       /*
        * @param string className
@@ -592,7 +592,7 @@ Module("Cactus.Web", function (m) {
       clone : function () {
         var view = this.getView().cloneNode(true);
         var newTemplate = new Template(view, {
-          keyPathDelimiter : this.keyPathDelimiter,
+          classNameDelimiter : this.classNameDelimiter,
           classNamePrefix : this.classNamePrefix,
           skipKeyPaths : A.clone(this.skipKeyPaths)
         });
@@ -723,7 +723,7 @@ Module("Cactus.Web", function (m) {
     var options = new TypeChecker({
       defaultValueFunc : function () { return {}; },
       type : {
-        keyPathDelimiter : { type : "string", required : false },
+        classNameDelimiter : { type : "string", required : false },
         eventBindings : {
           defaultValueFunc : function () { return []; },
           type : [{
@@ -788,13 +788,13 @@ Module("Cactus.Web", function (m) {
       template = source.clone();
     } else if (typeof source === "string") {
       template = new Template(stringToDom(source), {
-        keyPathDelimiter : settings.keyPathDelimiter,
+        classNameDelimiter : settings.classNameDelimiter,
         classNamePrefix : settings.classNamePrefix,
         skipKeyPaths : settings.skipKeyPaths
       });
     } else if ("tagName" in source) {
       template = new Template(source, {
-        keyPathDelimiter : settings.keyPathDelimiter,
+        classNameDelimiter : settings.classNameDelimiter,
         classNamePrefix : settings.classNamePrefix,
         skipKeyPaths : settings.skipKeyPaths
       });

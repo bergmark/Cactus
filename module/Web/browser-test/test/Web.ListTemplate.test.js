@@ -495,13 +495,13 @@ Cactus.UnitTest.Web.ListTemplate = function () {
     ul.appendChild(tag("li", { className : "x" }));
     var ac = new AC([new O({ x : 1, y : 1 })]);
     var lt = LT.createWithTemplate(ul, ac, {
-      keyPathDelimiter : "-"
+      classNameDelimiter : "-"
     });
     this.assertEqual(1, ul.childNodes.length, "helper should attach ac to lt");
     var v = parseInt(Element.getValue($(".x", ul)[0]), 10);
 
     // Setting of Template properties.
-    this.assertEqual("-", lt.templates[0].keyPathDelimiter);
+    this.assertEqual("-", lt.templates[0].classNameDelimiter);
   });
 
   return tc;
