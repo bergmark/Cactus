@@ -88,14 +88,11 @@ global.O = Cactus.Addon.Object;
 global.StrictMap = Cactus.Data.StrictMap;
 global.TTransformer = Cactus.Web.Template.Transformer;
 global.env = Cactus.Util.environment;
+global.Assertion = Cactus.Dev.Assertion;
 
 global.fs = require("fs");
 
 global.assert = require("assert");
 global.should = require("should");
 global.log = console.log.bind(console);
-var Assertion = Cactus.Dev.Assertion;
-global.exception = Assertion.exception.bind(Assertion, assert);
-for (var p in Assertion) {
-  global[p] = Assertion[p];
-}
+O.copy(Assertion, global);
