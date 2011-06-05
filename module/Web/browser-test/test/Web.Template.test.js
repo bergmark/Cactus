@@ -764,7 +764,6 @@ Cactus.UnitTest.Web.Template = function () {
 
     var t = Template.create('<div class="p_q"></div>');
     t.attach(o);
-
     this.assertEqual("r", Element.getValue(t.getView()));
   });
 
@@ -772,8 +771,9 @@ Cactus.UnitTest.Web.Template = function () {
   templateTC.add(function () {
     var o = new KVC();
     o.q = "r";
-    var t = Template.create('<input type="text" class="p_q"></div>');
-    t.setClassNamePrefix("p_");
+    var t = Template.create('<input type="text" class="p_q"></div>', {
+      classNamePrefix : "p_"
+    });
     t.attach(o);
 
     // keyPath -> className
@@ -788,8 +788,9 @@ Cactus.UnitTest.Web.Template = function () {
 
   // Cloning should keep the class name prefix.
   templateTC.add(function () {
-    var t = Template.create('<div class="foo_x"></div>');
-    t.setClassNamePrefix("foo_");
+    var t = Template.create('<div class="foo_x"></div>', {
+      classNamePrefix : "foo_"
+    });
     var t2 = Template.create(t);
     t2.attach(new O());
     this.assertEqual("1", Element.getValue(t2.getView()), "class name prefix cloning");
@@ -801,8 +802,9 @@ Cactus.UnitTest.Web.Template = function () {
       <div>\
         <div class="foo_x"></div>\
         <div class="x"></div>\
-      </div>');
-    t.setClassNamePrefix("foo_");
+      </div>', {
+      classNamePrefix : "foo_"
+    });
     var o = new O();
     t.attach(o);
     var root = t.getView();
@@ -818,13 +820,13 @@ Cactus.UnitTest.Web.Template = function () {
   // present as well.
   templateTC.add(function () {
     var t = Template.create('\
-<div>\
-<input type="text" class="foo_x"></textarea>\
-<span class="foo_x"></span>\
-</div>\
-');
+      <div>\
+        <input type="text" class="foo_x"></textarea>\
+        <span class="foo_x"></span>\
+      </div>', {
+        classNamePrefix : "foo_"
+      });
     var o = new O();
-    t.setClassNamePrefix("foo_");
     t.attach(o);
 
     var root = t.getView();

@@ -252,7 +252,7 @@ Module("Cactus.Web", function (m) {
       }
     },
     methods : {
-      BUILD : function (view) {
+      BUILD : function (view, settings) {
         if (!view) {
           throw new Error("view was: %s".format(view));
         }
@@ -260,11 +260,27 @@ Module("Cactus.Web", function (m) {
           view : view,
           classNameConditions : new Template.ClassNameConditions(view),
           eventBindings : new Template.EventBinding(view),
-          valueTransformers : new Template.Transformer(view)
+          valueTransformers : new Template.Transformer(view),
+          keyPathDelimiter : settings.keyPathDelimiter || "_",
+          classNamePrefix : settings.classNamePrefix || "",
+          skipKeyPaths : settings.skipKeyPaths || []
         };
       },
-      __setKeyPathDelimiter : function (delimiter) {
-        this.keyPathDelimiter = delimiter || "_";
+      initialize : function () {
+        this.allElements = [];
+        var elements = C.toArray($("*", this.getView())).concat(this.getView());
+        for (var i = 0; i < elements.length; i++) {
+          var classNames = C.select(ClassNames.get(elements[i]), this._classNameIsPossibleKeyPath.bind(this));
+          // Fetch all possible key paths, key paths not having the
+          // specified class name prefix are excluded.
+          var keyPaths = C.map(classNames, this._classNameToKeyPath.bind(this));
+          keyPaths = C.reject(keyPaths, this.__shouldSkipKeyPath.bind(this));
+          this.allElements.push({
+            element : elements[i],
+            classNames : classNames,
+            keyPaths : keyPaths
+          });
+        }
       },
       /**
        * Turns a class name into its corresponding key path.
@@ -301,21 +317,6 @@ Module("Cactus.Web", function (m) {
        * from the class names of the nodes.
        */
       refresh : function () {
-        this.allElements = [];
-        var elements = C.toArray($("*", this.getView())).concat(this.getView());
-        for (var i = 0; i < elements.length; i++) {
-          var classNames = C.select(ClassNames.get(elements[i]), this._classNameIsPossibleKeyPath.bind(this));
-          // Fetch all possible key paths, key paths not having the
-          // specified class name prefix are excluded.
-          var keyPaths = C.map(classNames, this._classNameToKeyPath.bind(this));
-          keyPaths = C.reject(keyPaths, this.__shouldSkipKeyPath.bind(this));
-          this.allElements.push({
-            element : elements[i],
-            classNames : classNames,
-            keyPaths : keyPaths
-          });
-        }
-
         // Loop through all elements.
         for (var el, i = 0; el = this.allElements[i]; i++) {
           var element = el.element;
@@ -590,18 +591,14 @@ Module("Cactus.Web", function (m) {
        */
       clone : function () {
         var view = this.getView().cloneNode(true);
-        var newTemplate = new Template(view);
-
-        newTemplate.__setKeyPathDelimiter(this.keyPathDelimiter);
-
-        // Class name prefix.
-        newTemplate.setClassNamePrefix(this.classNamePrefix);
+        var newTemplate = new Template(view, {
+          keyPathDelimiter : this.keyPathDelimiter,
+          classNamePrefix : this.classNamePrefix,
+          skipKeyPaths : A.clone(this.skipKeyPaths)
+        });
 
         // Value transformers.
         newTemplate.valueTransformers = this.valueTransformers.clone(view);
-
-        // Skip key paths.
-        newTemplate.__setSkipKeyPaths(A.clone(this.skipKeyPaths));
 
         // Modes.
         newTemplate.mode = this.mode.clone();
@@ -628,12 +625,6 @@ Module("Cactus.Web", function (m) {
                           "Argument to createEventBindings is not an array.");
         }
         this.eventBindings.setBindings(bindings);
-      },
-      /**
-       * @param string prefix
-       */
-      setClassNamePrefix : function (prefix) {
-        this.classNamePrefix = prefix;
       },
 
       // Widgets.
@@ -701,9 +692,6 @@ Module("Cactus.Web", function (m) {
                         "element has no widget associated with it.");
       },
 
-      __setSkipKeyPaths : function (skipKeyPaths) {
-        this.skipKeyPaths = skipKeyPaths;
-      },
       __shouldSkipKeyPath : function (keyPath) {
         return C.hasValue(this.skipKeyPaths, keyPath);
       },
@@ -757,7 +745,7 @@ Module("Cactus.Web", function (m) {
             }
           }]
         },
-        classNamePrefix : { defaultValue : "", type : "string" },
+        classNamePrefix : { type : "string", required : false },
         modes : {
           defaultValueFunc : function () { return []; },
           type : [{
@@ -799,21 +787,23 @@ Module("Cactus.Web", function (m) {
     if (source instanceof Template) {
       template = source.clone();
     } else if (typeof source === "string") {
-      template = new Template(stringToDom(source));
+      template = new Template(stringToDom(source), {
+        keyPathDelimiter : settings.keyPathDelimiter,
+        classNamePrefix : settings.classNamePrefix,
+        skipKeyPaths : settings.skipKeyPaths
+      });
     } else if ("tagName" in source) {
-      template = new Template(source);
+      template = new Template(source, {
+        keyPathDelimiter : settings.keyPathDelimiter,
+        classNamePrefix : settings.classNamePrefix,
+        skipKeyPaths : settings.skipKeyPaths
+      });
     }
 
     if (!template) {
       throw new Error("Invalid template source specified");
     }
 
-    if (settings.keyPathDelimiter) {
-      template.__setKeyPathDelimiter(settings.keyPathDelimiter);
-    }
-    if (settings.classNamePrefix) {
-      template.setClassNamePrefix(settings.classNamePrefix);
-    }
     var v = settings.valueTransformers;
     for (var i = 0; i < v.length; i++) {
       if ("keyPath" in v[i]) {
@@ -842,9 +832,6 @@ Module("Cactus.Web", function (m) {
     }
     if (settings.eventBindings.length > 0) {
       template.createEventBindings(settings.eventBindings);
-    }
-    if (settings.skipKeyPaths) {
-      template.__setSkipKeyPaths(settings.skipKeyPaths);
     }
     if (settings.onBound) {
       template.setOnBound(settings.onBound);
