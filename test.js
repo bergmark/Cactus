@@ -77,14 +77,17 @@ require("./CactusNode");
 require("./CactusWeb");
 
 // Short hands for imports.
+global.A = Cactus.Addon.Array;
 global.AC = Cactus.Data.ArrayController;
 global.C = Cactus.Data.Collection;
 global.Config = Cactus.Node.Config;
 global.Dictionary = Cactus.Data.Dictionary;
 global.KVC = Cactus.Data.KeyValueCoding;
 global.LT = Cactus.Web.ListTemplate;
+global.O = Cactus.Addon.Object;
 global.StrictMap = Cactus.Data.StrictMap;
 global.TTransformer = Cactus.Web.Template.Transformer;
+global.env = Cactus.Util.environment;
 
 global.fs = require("fs");
 

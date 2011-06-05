@@ -1,5 +1,6 @@
 require('task-joose-nodejs');
 
+require('./lib/Util/environment');
 require('./lib/Addon/Array');
 require('./lib/Addon/Function');
 require('./lib/Addon/Math');

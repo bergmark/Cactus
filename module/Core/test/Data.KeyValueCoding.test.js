@@ -113,7 +113,7 @@ module.exports = (function () {
     // A root should listen to its aggregates for changes, so that
     // onValueChanged can be triggered for it (along with compounds).
     f : function () {
-      var O = Class("O", {
+      var O = Class({
         does : KVC,
         has : {
           p : null,
@@ -127,7 +127,7 @@ module.exports = (function () {
         }
       });
 
-      var P = Class("P", {
+      var P = Class({
         does : KVC,
         has : {
           q : null
@@ -171,7 +171,7 @@ module.exports = (function () {
 
     // Setters should not prevent events from occurring.
     g : function () {
-      Class("Q", {
+      var Q = Class({
         does : KVC,
         has : {
           y : {
@@ -206,7 +206,7 @@ module.exports = (function () {
     // as an old value.
     h : function () {
 
-      var R = Class("R", {
+      var R = Class({
         has : {
           x : null
         },
