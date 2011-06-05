@@ -227,8 +227,7 @@ Module("Cactus.Data", function (m) {
             return false;
           }
 
-          if (!(typeof nextObject === "object" &&
-                ("hasKeyPath" in nextObject))) {
+          if (!(nextObject instanceof Object && ("hasKeyPath" in nextObject))) {
             return false;
           }
           return nextObject.hasKeyPath(keys.join("."));

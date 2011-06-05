@@ -44,13 +44,14 @@ module.exports = (function () {
       assert.eql(5, o.getValue("p.b"));
       assert.eql(6, o.getValue("p.q.c"));
     },
-    "b" : function () {
+    hasKeyPath : function () {
       var o   = new KVC();
       o.p     = new KVC();
       o.p.q   = new KVC();
       o.a     = 1;
       o.p.b   = 2;
       o.p.q.c = 3;
+      o.d     = null;
 
       // existing keyPaths
       ok(o.hasKeyPath("a"));
@@ -65,6 +66,10 @@ module.exports = (function () {
       assert.ok(!o.hasKeyPath("p.q.b"));
       assert.ok(!o.hasKeyPath("p.q.p"));
       assert.ok(!o.hasKeyPath("q.p"));
+
+      // null paths
+      ok(o.hasKeyPath("d"));
+      not(o.hasKeyPath("d.e"));
     },
 
     "onValueChanged" : function () {
