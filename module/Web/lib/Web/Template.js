@@ -786,18 +786,17 @@ Module("Cactus.Web", function (m) {
     var template;
     if (source instanceof Template) {
       template = source.clone();
-    } else if (typeof source === "string") {
-      template = new Template(stringToDom(source), {
+    } else {
+      var h = {
         classNameDelimiter : settings.classNameDelimiter,
         classNamePrefix : settings.classNamePrefix,
         skipKeyPaths : settings.skipKeyPaths
-      });
-    } else if ("tagName" in source) {
-      template = new Template(source, {
-        classNameDelimiter : settings.classNameDelimiter,
-        classNamePrefix : settings.classNamePrefix,
-        skipKeyPaths : settings.skipKeyPaths
-      });
+      };
+      if (typeof source === "string") {
+        template = new Template(stringToDom(source), h);
+      } else if ("tagName" in source) {
+        template = new Template(source, h);
+      }
     }
 
     if (!template) {
