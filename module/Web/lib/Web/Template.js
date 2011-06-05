@@ -256,14 +256,22 @@ Module("Cactus.Web", function (m) {
         if (!view) {
           throw new Error("view was: %s".format(view));
         }
+        var tc = new TypeChecker({
+          type : {
+            classNameDelimiter : { type : "string", defaultValue : "_" },
+            classNamePrefix : { type : "string", defaultValue : "" },
+            skipKeyPaths : { type : [{ type : "string" }], defaultValueFunc : A.new }
+          }
+        });
+        settings = tc.parse(settings);
         return {
           view : view,
           classNameConditions : new Template.ClassNameConditions(view),
           eventBindings : new Template.EventBinding(view),
           valueTransformers : new Template.Transformer(view),
-          classNameDelimiter : settings.classNameDelimiter || "_",
-          classNamePrefix : settings.classNamePrefix || "",
-          skipKeyPaths : settings.skipKeyPaths || []
+          classNameDelimiter : settings.classNameDelimiter,
+          classNamePrefix : settings.classNamePrefix,
+          skipKeyPaths : settings.skipKeyPaths
         };
       },
       initialize : function () {
