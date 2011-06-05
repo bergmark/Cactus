@@ -190,7 +190,6 @@ Module("Cactus.Web", function (m) {
   var EventManager = m.EventManager;
   var Events = Cactus.Web.Events;
   var KVC = Cactus.Data.KeyValueCoding;
-  var ListTemplate = null; // Circular dependency, set later.
   var O = Cactus.Addon.Object;
   var TypeChecker = Cactus.Util.TypeChecker;
   var Widget = m.TemplateWidget;
@@ -302,29 +301,29 @@ Module("Cactus.Web", function (m) {
        * from the class names of the nodes.
        */
       refresh : function () {
+        this.allElements = [];
         var elements = C.toArray($("*", this.getView())).concat(this.getView());
-        var keyPath;
-        var keyPaths;
-
-        // Loop through all elements.
-        for (var element, i = 0; element = elements[i]; i++) {
+        for (var i = 0; i < elements.length; i++) {
+          var classNames = C.select(ClassNames.get(elements[i]), this._classNameIsPossibleKeyPath.bind(this));
           // Fetch all possible key paths, key paths not having the
           // specified class name prefix are excluded.
+          var keyPaths = C.map(classNames, this._classNameToKeyPath.bind(this));
+          keyPaths = C.reject(keyPaths, this.__shouldSkipKeyPath.bind(this));
+          this.allElements.push({
+            element : elements[i],
+            classNames : classNames,
+            keyPaths : keyPaths
+          });
+        }
 
-          var classNames = C.select(
-            ClassNames.get(element),
-            this._classNameIsPossibleKeyPath.bind(this));
-          keyPaths = C.map(
-            classNames,
-            this._classNameToKeyPath.bind(this));
+        // Loop through all elements.
+        for (var el, i = 0; el = this.allElements[i]; i++) {
+          var element = el.element;
+          var keyPaths = el.keyPaths;
 
           // Loop through all key paths for the current element.
           for (var j = 0; j < keyPaths.length; j++) {
-            keyPath = keyPaths [j];
-
-            if (this.__shouldSkipKeyPath(keyPath)) {
-              continue;
-            }
+            var keyPath = keyPaths [j];
 
             // If the KVC object has a KP that matches the one
             // found in the template, the HTML element is
@@ -337,9 +336,7 @@ Module("Cactus.Web", function (m) {
               this._addWriteEvent(element, keyPath);
 
               // Set the value.
-              this._setValue(
-                keyPath,
-                this._getModel().getValue (keyPath));
+              this._setValue(keyPath, this._getModel().getValue (keyPath));
             }
 
           }
