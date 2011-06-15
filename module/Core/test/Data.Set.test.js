@@ -8,8 +8,11 @@ module.exports = (function () {
 
       assert.ok(set.add("a"));
       assert.eql(1, set.size());
+      ok(set.has("a"));
 
       set.add("b");
+      ok(set.has("b"));
+      ok(set.has("a"));
       assert.eql(2, set.size());
 
       // Add an element already in the set, the length should not change.

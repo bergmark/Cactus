@@ -10,10 +10,6 @@ Module("Cactus.Data", function (m) {
   var Enumerable = Cactus.Data.Enumerable;
   var Array = Cactus.Addon.Array;
 
-  function defaultEquality(a, b) {
-    return a === b;
-  }
-
   var Set = Class("Set", {
     does : Enumerable,
     has : {
@@ -31,10 +27,13 @@ Module("Cactus.Data", function (m) {
        *   Defaults to identity checks (===).
        */
       BUILD : function (elements, equality) {
-        return {
-          elements : elements || [],
-          _equality : equality || defaultEquality
+        var h = {
+          elements : elements || []
         };
+        if (equality) {
+          h._equality = equality;
+        }
+        return h;
       },
       initialize : function (args) {
         for (var i = 0; i < args.elements.length; i++) {
@@ -86,6 +85,11 @@ Module("Cactus.Data", function (m) {
         }
         return this.collection[index];
       },
+      _getEquality : function (a, b) {
+        return (this._equality || function (a, b) {
+          return a === b;
+        })(a, b);
+      },
       /**
        * @param mixed element
        * @return boolean
@@ -93,7 +97,7 @@ Module("Cactus.Data", function (m) {
        */
       has : function (element) {
         for (var i = 0; i < this.size(); i++) {
-          if (this._equality(element, this.collection[i])) {
+          if (this._getEquality(element, this.collection[i])) {
             return true;
           }
         }

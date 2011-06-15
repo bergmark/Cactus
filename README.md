@@ -38,6 +38,30 @@ Code Conventions (work in progress)
 
  * Lines should not be wider than ~120 characters.
 
+ * Functions that may return null, or variables that may contain null
+   as well as the intended type should be suffixed with maybe.
+   `var userMaybe = getUserMaybe();`.
+
+ * Boolean names should have a predicate prefix. `hasUser` and
+   `isAdmin`.
+
+ * Use hungarian notation instead of constraining a value's type
+   implicitly. Use `plainPassword` and `hashedPassword` over
+   `password`.
+
+Don't use these constructs:
+
+ * `with`. Confusing. Instead do `var o = longName; o.x = 1;`.
+
+ * `new Boolean`/`new String`/`new Number`, messes up `typeof` and comparisons.
+
+ * `typeof x === "object"`, since `typeof null => "object"`, use `instanceof` instead.
+
+ * `[new] Array()`. `new Array(1)` vs `new Array(1,2)` is
+   confusing. `[1]`, `[1,2]` is not. And `[]` is more concise.
+
+ * `[new] Object()`. `{}` is more concise.
+
 Types in documentation
 
  * primitive types (number, boolean, string) => as is
@@ -48,7 +72,7 @@ Types in documentation
  * map => Object where each property has the same type
  * entity => any value that can be compared with ===
  * Object => any non-primitive value
- * null/undefined is never allowed for any type unless explicitly said
+ * null/undefined is never allowed for any type unless explicitly stated in documentation.
  * Number/Boolean/String => don't use.
 
 * Exceptions
