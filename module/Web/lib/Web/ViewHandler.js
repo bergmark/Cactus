@@ -14,6 +14,13 @@ Module("Cactus.Web", function (m) {
        *   and may not change afterwards.
        */
       view : { is : "ro", required : true }
+    },
+    methods : {
+      BUILD : function (view) {
+        return {
+          view : view
+        };
+      }
     }
   });
 });

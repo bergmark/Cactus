@@ -148,7 +148,8 @@ module.exports = {
       dto = df.newDto();
       dto.reversePopulate({}).now();
     }).then(function () {
-      assert.throws(dto.get.bind(dto), /a or b/i);
+      exception(/a or b/i, dto.get.bind(dto));
+
       // should get defaultValues etc.
       var o = {};
       df = new DtoFactory({
@@ -164,11 +165,28 @@ module.exports = {
       });
       dto = df.newDto();
       dto.reversePopulate({}).then(function () {
-        this.CONTINUE(o);
+        try { dto.get(); } catch (e) { }
+        ({}).should.eql(o.hash);
+
+        this.CONTINUE();
       }).now();
-    }).then(function (o) {
-      try { dto.get(); } catch (e) { }
-      ({}).should.eql(o.hash);
+    }).then(function () {
+
+      // Should pass helpers to validators
+      var helpers = { helpers : true };
+      var called = false;
+      df = new DtoFactory({
+        __validators : [{
+          func : function (v, _helpers) {
+            called = true;
+            equal(helpers, _helpers);
+            return true;
+          }
+        }]
+      });
+      var dto = df.newDto();
+      dto.get(helpers);
+      ok(called);
       done();
     }).now();
   },
