@@ -25,6 +25,16 @@ Module("Cactus.Dev.Assertion", function (m) {
   m.instance = function (a, b, msg) { a.should.instanceof(b, msg); };
   m.notequal = function (a, b, msg) { a.should.not.equal(b, msg); };
   m.eql = function (a, b, msg) { a.should.eql(b, msg); };
+  m.reg = function (reg, str, msg) {
+    assert.ok(reg.test(str), msg || reg + " !~ " + str);
+  };
+  m.listreg = function (regs, list, msgs) {
+    msgs = msgs || [];
+    m.equal(regs.length, list.length);
+    for (var i = 0; i < regs.length; i++) {
+      m.reg(regs[i], list[i], msgs[i]);
+    }
+  };
   m.contEx = function (cont, reg) {
     var e;
     return cont.except(function (_e) {
