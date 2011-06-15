@@ -190,7 +190,7 @@ Module("Cactus.Application", function (m) {
           var dto = this.newDto();
           dto.reversePopulate(vals, helpers).then(function () {
             try {
-              var fields = dto.get();
+              var fields = dto.get(helpers);
               this.CONTINUE(fields);
             } catch (e) {
               this.THROW(e);

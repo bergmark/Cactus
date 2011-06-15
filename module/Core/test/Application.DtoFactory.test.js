@@ -172,7 +172,7 @@ module.exports = {
       }).now();
     }).then(function () {
 
-      // Should pass helpers to validators
+      // Should pass helpers all the way from prepareDto to get call.
       var helpers = { helpers : true };
       var called = false;
       df = new DtoFactory({
@@ -184,11 +184,11 @@ module.exports = {
           }
         }]
       });
-      var dto = df.newDto();
-      dto.get(helpers);
-      ok(called);
-      done();
-    }).now();
+      df.prepareDto({}, helpers).then(function () {
+        ok(called);
+        this.CONTINUE();
+      }).now();
+    }).thenRun(done);
   },
   globalValidation : function (done) {
     var fh = new DtoFactory({
