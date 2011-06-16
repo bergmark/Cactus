@@ -112,6 +112,12 @@ Module("Cactus.Data", function (m) {
         Array.remove(this.collection, element);
       },
       /**
+       * Removes all elements from the set.
+       */
+      clear : function () {
+        Array.empty(this.collection);
+      },
+      /**
        * @return Array
        */
       toArray : function () {

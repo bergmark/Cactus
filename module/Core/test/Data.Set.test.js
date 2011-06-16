@@ -97,6 +97,15 @@ module.exports = (function () {
     select : function () {
       var s = Set.fromArray([1, 2, 3]);
       assert.strictEqual("1,3", Set.fromArray([1,2,3]).select(CMath.odd.bind(CMath)).toArray().sort().join(","));
+    },
+
+    clear : function () {
+      var s = Set.fromArray([1, 2, 3]);
+      equal(3, s.size());
+      s.clear();
+      equal(0, s.size());
+      s.clear();
+      equal(0, s.size());
     }
   };
 })();
