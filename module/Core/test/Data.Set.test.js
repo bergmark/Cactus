@@ -106,6 +106,14 @@ module.exports = (function () {
       equal(0, s.size());
       s.clear();
       equal(0, s.size());
+    },
+
+    equals : function () {
+      var s1 = new Set([1,2,3]);
+      ok(s1.equals(s1));
+      var s2 = new Set([1,2]);
+      not(s1.equals(s2));
+      not(s2.equals(s1));
     }
   };
 })();

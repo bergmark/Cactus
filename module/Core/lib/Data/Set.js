@@ -91,6 +91,23 @@ Module("Cactus.Data", function (m) {
         })(a, b);
       },
       /**
+       * Unordered comparison of all elements in the two sets.
+       *
+       * @param Set s
+       * @return boolean
+       */
+      equals : function (set) {
+        if (this.size() !== set.size()) {
+          return false;
+        }
+        for (var i = 0; i < this.size(); i++) {
+          if (!set.has(this.get(i))) {
+            return false;
+          }
+        }
+        return true;
+      },
+      /**
        * @param mixed element
        * @return boolean
        *   Whether the element is in the set.
