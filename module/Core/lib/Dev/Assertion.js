@@ -12,6 +12,7 @@
  *   An error message to save if the assertion fails.
  */
 Module("Cactus.Dev.Assertion", function (m) {
+  var C = Cactus.Data.Collection;
   var assert = require("assert");
   m.ok = function (v, msg) { true.should.equal(v, msg); };
   m.not = function (v, msg) { false.should.equal(v, msg); };
@@ -34,6 +35,11 @@ Module("Cactus.Dev.Assertion", function (m) {
     for (var i = 0; i < regs.length; i++) {
       m.reg(regs[i], list[i], msgs[i]);
     }
+  };
+  m.unorderedeql = function (a, b, msg) {
+    var intersection = C.intersection(a, b);
+    assert.ok(intersection.length === a.length && a.length === b.length,
+              msg || intersection.length + " elements intersecting.");
   };
   m.contEx = function (cont, reg) {
     var e;
