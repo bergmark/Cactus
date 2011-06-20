@@ -59,6 +59,13 @@ module.exports = (function () {
       var sh = new StrictMap({ x : 1 });
       assert.ok(sh.has("x"));
       assert.ok(!sh.has("y"));
+    },
+    removeKey : function () {
+      var sh = new StrictMap({ x : 1 });
+      sh.removeKey("x");
+      exception(/undefined key/i, sh.get.bind(sh, "x"));
+
+      exception(/undefined key/i, sh.removeKey.bind(sh, "y"));
     }
   };
 })();

@@ -106,6 +106,15 @@ Module("Cactus.Data", function (m) {
         return this._map[key];
       },
       /**
+       * Removes a key if it's defined.
+       *
+       * @param string key
+       */
+      removeKey : function (key) {
+        this.__checkKeyExistence("removeKey", key);
+        delete this._map[key];
+      },
+      /**
        * @param Function
        *          @param mixed value
        * @return StrictMap
