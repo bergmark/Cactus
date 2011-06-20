@@ -195,7 +195,10 @@ Module("Cactus.Application", function (m) {
               this.THROW(e);
               return;
             }
-            this.CONTINUE(fields);
+            var cont = this.getCONTINUE();
+            setTimeout(function () {
+              cont(fields);
+            }, 0);
           }).now();
         }
       }
