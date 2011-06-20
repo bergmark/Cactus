@@ -47,11 +47,14 @@ Module("Cactus.Dev.Assertion", function (m) {
       e = _e;
       this.CONTINUE();
     }).ensure(function () {
-      if (!e) {
-        throw new Error("assertContEx: No error was thrown.");
-      }
-      assert.ok(reg.test(e.message), "assertContEx: Caught unexpected: " + e.message);
-      this.CONTINUE();
+      var cont = this.getCONTINUE();
+      setTimeout(function () {
+        if (!e) {
+          throw new Error("assertContEx: No error was thrown.");
+        }
+        assert.ok(reg.test(e.message), "assertContEx: Caught unexpected: " + e.message);
+        cont();
+      }, 0);
     });
   };
   m.exception = function (expectedException, func, message) {
