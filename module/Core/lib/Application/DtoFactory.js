@@ -192,13 +192,10 @@ Module("Cactus.Application", function (m) {
             try {
               var fields = dto.get(helpers);
             } catch (e) {
-              this.THROW(e);
+              setTimeout(this.getTHROW().curry(e), 0);
               return;
             }
-            var cont = this.getCONTINUE();
-            setTimeout(function () {
-              cont(fields);
-            }, 0);
+            setTimeout(this.getCONTINUE().curry(fields), 0);
           }).now();
         }
       }
