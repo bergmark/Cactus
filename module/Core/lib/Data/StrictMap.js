@@ -121,6 +121,7 @@ Module("Cactus.Data", function (m) {
        */
       removeKey : function (key) {
         this.__checkKeyExistence("removeKey", key);
+        A.remove(this._keys, key);
         delete this._map[key];
       },
       /**

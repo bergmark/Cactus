@@ -63,6 +63,7 @@ module.exports = (function () {
     removeKey : function () {
       var sh = new StrictMap({ x : 1 });
       sh.removeKey("x");
+      eql([], sh.keys());
       exception(/undefined key/i, sh.get.bind(sh, "x"));
 
       exception(/undefined key/i, sh.removeKey.bind(sh, "y"));
