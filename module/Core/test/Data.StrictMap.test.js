@@ -66,6 +66,10 @@ module.exports = (function () {
       exception(/undefined key/i, sh.get.bind(sh, "x"));
 
       exception(/undefined key/i, sh.removeKey.bind(sh, "y"));
+    },
+    keys : function () {
+      var sh = new StrictMap({ x : 1, y : 2 });
+      unorderedeql(["x", "y"], sh.keys());
     }
   };
 })();

@@ -6,9 +6,11 @@
  * An Error is also thrown if trying to define an already existing property.
  */
 Module("Cactus.Data", function (m) {
+  var A = Cactus.Addon.Array;
+
   Class("StrictMap", {
     has : {
-      keys : { init : function () { return []; } },
+      _keys : { init : function () { return []; } },
       _map : { init : function () { return {}; } },
       className : {
         init : "StrictMap"
@@ -73,8 +75,15 @@ Module("Cactus.Data", function (m) {
        */
       define : function (key, value) {
         this.__checkNonExistence("define", key);
-        this.keys.push(key);
+        this._keys.push(key);
         this._map[key] = value;
+      },
+      /**
+       * @return Array<string>
+       *   All defined keys
+       */
+      keys : function () {
+        return A.clone(this._keys);
       },
       /**
        * Checks key existance. You should only call this if you get the key from
@@ -121,8 +130,8 @@ Module("Cactus.Data", function (m) {
        */
       map : function (f) {
         var sm = new m.StrictMap();
-        for (var p in this.keys) if (this.keys.hasOwnProperty(p)) {
-          var key = this.keys[p];
+        for (var p in this._keys) if (this._keys.hasOwnProperty(p)) {
+          var key = this._keys[p];
           sm.define(key, f(this.get(key)));
         }
         return sm;
