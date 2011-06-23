@@ -1,5 +1,5 @@
 {
-  "name": "Cactus",
+  "name": "cactus",
   "description": "Misc utilities and data structures for node and web development",
   "version": "0.0.1",
   "homepage": "https://github.com/Raevel/Cactus",
@@ -8,12 +8,12 @@
     "url": "git://github.com/Raevel/Cactus.git"
   },
   "author": "Adam Bergmark <adam@edea.se> (http://www.edea.se)",
-  "main": "Cactus.js",
+  "main": "build/CactusNPM.js",
   "directories": {
-    "lib": "lib"
+    "lib": "build/lib"
   },
   "scripts": {
-    "test": "expresso -I . -r test.js -s"
+    "test": "./script/test"
   },
   "engines": {
     "node": ">=0.4.2"
