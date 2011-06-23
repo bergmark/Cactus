@@ -33,6 +33,7 @@ require('./lib/Data/Money');
 require('./lib/Util/IdentityMap');
 require('./lib/Util/CollectionAggregate');
 require('./lib/Util/ValueTransformer');
+require('./lib/Util/Validator');
 
 require('./lib/Application/DtoFactory');
 require('./lib/Application/Dto');
