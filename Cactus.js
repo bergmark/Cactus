@@ -6,6 +6,7 @@ require('./lib/Addon/Math');
 require('./lib/Addon/Object');
 require('./lib/Addon/String');
 
+require('./lib/Data/Clone');
 require('./lib/Data/Pair');
 require('./lib/Data/Collection');
 require('./lib/Data/Enumerable');
