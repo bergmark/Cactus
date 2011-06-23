@@ -509,8 +509,8 @@ Module("Cactus.Util", function (m) {
           }
           if (!f(options)) {
             valid = false;
-            var message = msg || "got " + options + ".";
-            this.errorMessage.add("", "Validation failed: " + message);
+            var message = msg || "Validation failed: got " + options + ".";
+            this.errorMessage.add("", message);
           }
         }
         throwError();

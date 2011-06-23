@@ -129,7 +129,7 @@ module.exports = {
       email : "",
       password : ""
     });
-    ({ name : ["Validation failed: At least 5 characters."] }).should.eql(dto.getErrors());
+    ({ name : ["At least 5 characters."] }).should.eql(dto.getErrors());
 
     // Validation of entire structure.
     var df = new DtoFactory({
@@ -204,7 +204,7 @@ module.exports = {
     dto.reversePopulate({ name : "x" }).then(function () {
       dto.get({ ok : true });
       assert.throws(dto.get.bind(dto, { ok : false }),
-                    /validation failed: bad/i);
+                    /bad/i);
       done();
     }).now();
   },

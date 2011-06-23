@@ -113,7 +113,7 @@ module.exports = (function () {
                   }).parse({});
                 });
     },
-    "validators" : function () {
+    validators : function () {
       var o = new TypeChecker({
         type : "number",
         validators : [{
@@ -124,7 +124,6 @@ module.exports = (function () {
       });
       o.parse(1);
       assert.throws(o.parse.bind(o,0), /TypeChecker: Error: Validation failed: got 0./);
-
 
       // Validation error message.
       o = new TypeChecker({
@@ -137,8 +136,12 @@ module.exports = (function () {
         }]
       });
       o.parse(1);
-      exception(/TypeChecker: Error: Validation failed: Expected positive number./,
+      exception(/TypeChecker: Error: Expected positive number./,
                 o.parse.bind(o, 0));
+
+      eql({
+        '' : ["Expected positive number."]
+      }, o.getErrors());
 
       // Multiple ordered validators.
       o = new TypeChecker({
@@ -247,7 +250,7 @@ module.exports = (function () {
           message : "false"
         }]
       });
-      assert.throws(o.parse.bind(o, 1), /Validation failed.+false/i);
+      assert.throws(o.parse.bind(o, 1), /false/i);
 
       // Errors for array validators.
       o = new TypeChecker({
@@ -280,7 +283,7 @@ module.exports = (function () {
         return true
       });
     },
-    validators : function () {
+    validators2 : function () {
       // Validators should run only if all other validations pass.
       var ran = false;
       var o = new TypeChecker({
@@ -302,7 +305,7 @@ module.exports = (function () {
       o.parse("x", false);
       assert.strictEqual(1, object.count(o.getErrors()));
 
-      assert.throws(o.parse.bind(o, -1), /Validation failed:.+send null or 0/i);
+      assert.throws(o.parse.bind(o, -1), /send null or 0/i);
 
       // Default value should be applied before validation as well.
       ran = false;
@@ -599,8 +602,8 @@ module.exports = (function () {
         type : "number"
       });
       eql({ a : 1, b : 1 }, o.parse({ a : 1, b : 1 }));
-      exception(/Error in property "b": Expected "number", but got false/,
-                o.parse.bind(o, { a : 1, b : false }));
+      o.parse({ a : 1, b : false }, false);
+      eql({ b : ['Expected "number", but got false (type "boolean")'] }, o.getErrors());
     },
     "T_Mixed" : function () {
       var o = new TypeChecker({
