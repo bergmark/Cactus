@@ -523,12 +523,25 @@ Module("Cactus.Util", function (m) {
         return this.errorMessage;
       },
       hasErrors : function () {
+        if (!this.errorMessage) {
+          throw new Error("TypeChecker:hasErrors: Nothing parsed.");
+        }
         return this.errorMessage.has();
       },
+      hasErrorsFor : function (propertyName) {
+        return propertyName in this.getErrors();
+      },
       getErrors : function () {
+        if (!this.hasErrors()) {
+          throw new Error("TypeChecker:getErrors: No errors exist.");
+        }
         return this.errorMessage.get();
       },
+      getErrorsFor : function (fieldName) {
+        return this.getErrors()[fieldName];
+      },
       getErrorMessages : function () {
+        this.getErrors();
         return this.errorMessage.getMessages();
       }
     }

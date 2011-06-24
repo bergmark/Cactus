@@ -229,9 +229,18 @@ module.exports = (function () {
     },
     errorHash : function () {
       var o = TypeChecker.simple("string");
+      exception(/Nothing parsed/i, o.hasErrors.bind(o));
+      exception(/Nothing parsed/i, o.getErrors.bind(o));
+
+      o.parse("x", false);
+      exception(/No errors exist/, o.getErrors.bind(o));
+
       o.parse(1, false);
+      ok(o.hasErrors());
       var errors = o.getErrors();
-      eql({ "" : ["Expected \"string\", but got 1 (type \"number\")"] }, o.getErrors());
+      ok(o.hasErrorsFor(""));
+      not(o.hasErrorsFor("foo"));
+      eql({ "" : ['Expected "string", but got 1 (type "number")'] }, o.getErrors());
 
       o = TypeChecker.simple({
         a : "number",
@@ -241,10 +250,15 @@ module.exports = (function () {
         a : "x",
         b : true
       }, false);
+      ok(o.hasErrors());
       eql({
         a : ['Expected "number", but got "x" (type "string")'],
         b : ['Expected "number", but got true (type "boolean")']
       }, o.getErrors());
+      ok(o.hasErrorsFor("a"));
+      ok(o.hasErrorsFor("b"));
+      eql(['Expected "number", but got "x" (type "string")'], o.getErrorsFor("a"));
+      eql(['Expected "number", but got true (type "boolean")'], o.getErrorsFor("b"));
 
       o = new TypeChecker({
         type : "number",
