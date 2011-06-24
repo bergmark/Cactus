@@ -123,7 +123,10 @@ module.exports = (function () {
         }]
       });
       o.parse(1);
-      assert.throws(o.parse.bind(o,0), /TypeChecker: Error: Validation failed: got 0./);
+      o.parse(0, false);
+      eql({
+        "" : ["Validation failed: got 0."]
+      }, o.getErrors());
 
       // Validation error message.
       o = new TypeChecker({
@@ -140,7 +143,7 @@ module.exports = (function () {
                 o.parse.bind(o, 0));
 
       eql({
-        '' : ["Expected positive number."]
+        "" : ["Expected positive number."]
       }, o.getErrors());
 
       // Multiple ordered validators.
@@ -250,7 +253,10 @@ module.exports = (function () {
           message : "false"
         }]
       });
-      assert.throws(o.parse.bind(o, 1), /false/i);
+      o.parse(1, false);
+      eql({
+        "" : ["false"]
+      }, o.getErrors());
 
       // Errors for array validators.
       o = new TypeChecker({
@@ -267,20 +273,23 @@ module.exports = (function () {
           }
         }
       });
-      assert.throws(o.parse.bind(o, { p : "" }), /Error #1.+Error #2/);
+      o.parse({ p : "" }, false);
+      eql({ p : ["Error #1.", "Error #2."] }, o.getErrors());
 
       // When Error is thrown, there should be a hash property with the error
       // messages as well.
       o = new TypeChecker({
         type : "string"
       });
+      o.parse(1, false);
+
       assert.throws(o.parse.bind(o, 1), function (e) {
         assert.ok(/expected "string".+got 1 \(type "number"\)/i.test(e.message));
         assert.ok("hash" in e, "Missing hash property");
         eql({
           "" : ['Expected "string", but got 1 (type "number")']
         }, e.hash);
-        return true
+        return true;
       });
     },
     validators2 : function () {
@@ -299,13 +308,22 @@ module.exports = (function () {
       });
 
       o.parse(0);
-      assert.throws(o.parse.bind(o, "x"), /expected "number".+got "x"/i);
+      o.parse("x", false);
+      eql({
+        "" : [
+          'Expected "number", but got "x" (type "string")',
+          'Only way to validate is to send null or 0.'
+        ]
+      }, o.getErrors());
 
       // Do not run validators if constraints fail.
       o.parse("x", false);
       assert.strictEqual(1, object.count(o.getErrors()));
 
-      assert.throws(o.parse.bind(o, -1), /send null or 0/i);
+      o.parse(-1, false);
+      eql({
+        "" : ["Only way to validate is to send null or 0."]
+      }, o.getErrors());
 
       // Default value should be applied before validation as well.
       ran = false;
@@ -319,28 +337,31 @@ module.exports = (function () {
       });
       o.parse(1);
       o.parse(0);
-      assert.throws(o.parse.bind(o,-1), /Expected natural number/i);
+      o.parse(-1, false);
+      eql({ "" : ["Expected natural number."] }, o.getErrors());
 
       o = new TypeChecker({
         type : "number",
         validators : ["positive"]
       });
       o.parse(1);
-      assert.throws(o.parse.bind(o, 0), /Expected positive number/i);
+      o.parse(0, false);
+      eql({ "" : ["Expected positive number."] }, o.getErrors());
 
       o = new TypeChecker({
         type : "number",
         validators : ["negative"]
       });
       o.parse(-1);
-      assert.throws(o.parse.bind(o, 0), /Expected negative number/i);
+      o.parse(0, false);
+      eql({ "" : ["Expected negative number."] }, o.getErrors());
 
       o = new TypeChecker({
         type : "number",
         validators : ["x"]
       });
-      assert.throws(o.parse.bind(o, 1),
-                   /Undefined built in validator "x"/i);
+      exception(/Undefined built in validator "x"/i, o.parse.bind(o, 1));
+
       o = new TypeChecker({
         type : {
           a : {
@@ -349,15 +370,15 @@ module.exports = (function () {
           }
         }
       });
-      assert.throws(o.parse.bind(o, { a : 1 }),
-                    /Undefined built in validator "x"/i);
+      exception(/Undefined built in validator "x"/i, o.parse.bind(o, { a : 1 }));
+
       o = new TypeChecker({
         type : "string",
         validators : ["non empty string"]
       });
       o.parse("x");
-      assert.throws(o.parse.bind(o, ""),
-                    /Expected non-empty string/i);
+      o.parse("", false);
+      eql({ "" : ["Expected non-empty string."] }, o.getErrors());
     },
     T_Array : function () {
       eql([{ type : "string" }], gettype(new TypeChecker.types.T_Array({ type : "string" })));
@@ -367,10 +388,8 @@ module.exports = (function () {
       });
       eql([1, 2], o.parse([1, 2]));
       eql([], o.parse([]));
-      exception(/Expected \[\{"type":"number"\}\], but got "a" \(type "string"\)/i,
-                o.parse.bind(o, "a"));
-      assert.throws(o.parse.bind(o, ["a"]),
-                    /error in property "0": expected "number", but got "a" \(type "string"\)/i);
+      exception(/Expected \[\{"type":"number"\}\], but got "a" \(type "string"\)/i, o.parse.bind(o, "a"));
+      exception(/error in property "0": expected "number", but got "a" \(type "string"\)/i, o.parse.bind(o, ["a"]));
       exception(/error in property "1": expected "number", but got true \(type "boolean"\)/i, o.parse.bind(o, [1, true]));
       exception(/error in property "0": expected "number", but got "a"[\s\S]+error in property "1": expected "number", but got true/i, o.parse.bind(o, ["a", true]));
 
@@ -450,8 +469,7 @@ module.exports = (function () {
       });
       eql(1, o.parse(1));
       eql("x", o.parse("x"));
-      assert.throws(o.parse.bind(o, true),
-                    /Expected a Union/i);
+      exception(/Expected a Union/, o.parse.bind(o, true));
       eql({ union : [
         { type : "string"},
         { type : "number" }
