@@ -75,6 +75,7 @@ Module("Cactus.Application", function (m) {
 
         this._defaults = {};
         var fieldTypeChecker = new TypeChecker({
+          validators : validators,
           type : O.map(definition, function (name, def) {
             var h = {
               type : def.type
@@ -96,8 +97,7 @@ Module("Cactus.Application", function (m) {
 
         return {
           _definition : definition,
-          _fieldTypeChecker : fieldTypeChecker,
-          _validators : validators
+          _fieldTypeChecker : fieldTypeChecker
         };
       },
       /**
@@ -132,25 +132,7 @@ Module("Cactus.Application", function (m) {
        * @param mixed helpers
        */
       parse : function (v, helpers) {
-        v = this._fieldTypeChecker.parse(v);
-        var me = this;
-        var newValidators = [];
-        for (var i = 0; i < this._validators.length; i++) {
-          (function () {
-            var validator = me._validators[i];
-            newValidators.push({
-              func : function (v) {
-                return validator.func(v, helpers);
-              },
-              message : validator.message
-            });
-          })();
-        }
-        var newTypeChecker = new TypeChecker({
-          type : "mixed",
-          validators : newValidators
-        });
-        return newTypeChecker.parse(v);
+        return this._fieldTypeChecker.parse(v, true, helpers);
       },
       /**
        * @param Dto dto
