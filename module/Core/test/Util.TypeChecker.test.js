@@ -261,6 +261,12 @@ module.exports = (function () {
       eql(['Expected "number", but got true (type "boolean")'], o.getErrorsFor("b"));
 
       o = new TypeChecker({
+        a : { type : "string" }
+      });
+      o.parse("x", false);
+      exception(/no errors for property "a"/i, o.getErrorsFor.bind(o, "a"));
+
+      o = new TypeChecker({
         type : "number",
         validators : [{
           func : Function.empty.returning(false),

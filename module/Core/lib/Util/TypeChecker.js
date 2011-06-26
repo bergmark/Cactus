@@ -537,8 +537,11 @@ Module("Cactus.Util", function (m) {
         }
         return this.errorMessage.get();
       },
-      getErrorsFor : function (fieldName) {
-        return this.getErrors()[fieldName];
+      getErrorsFor : function (propertyName) {
+        if (!this.hasErrorsFor(propertyName)) {
+          throw new Error('TypeChecker:getErrorsFor: No errors for property "%s"'.format(propertyName));
+        }
+        return this.getErrors()[propertyName];
       },
       getErrorMessages : function () {
         this.getErrors();

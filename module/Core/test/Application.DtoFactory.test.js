@@ -198,7 +198,7 @@ module.exports = {
     });
     eql(["At least 5 characters.", "only A-z and spaces."], dto.getErrorsFor("name"));
     eql(["Missing property"], dto.getErrorsFor("password"));
-    exception(/No errors for field "email"/, dto.getErrorsFor.bind(dto, "email"));
+    exception(/No errors for property "email"/, dto.getErrorsFor.bind(dto, "email"));
   },
   globalValidation : function (done) {
     var fh = new DtoFactory({
