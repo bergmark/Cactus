@@ -454,7 +454,7 @@ Module("Cactus.Util", function (m) {
           this.definition.type = new T_Hash(definition.type, allowUndefined);
         }
       },
-      parse : function (options, throwErrors) {
+      parse : function (options, throwErrors, helpers) {
         this.errorMessage = new ErrorMessage();
         var subTypeChecker = [];
         var validationMessage = this.definition.validationMessage || "";
@@ -507,7 +507,7 @@ Module("Cactus.Util", function (m) {
             f = vs[i].func;
             msg = vs[i].message;
           }
-          if (!f(options)) {
+          if (!f(options, helpers)) {
             valid = false;
             var message = msg || "Validation failed: got " + options + ".";
             this.errorMessage.add("", message);

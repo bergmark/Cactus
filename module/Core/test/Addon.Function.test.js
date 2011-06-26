@@ -154,6 +154,8 @@ module.exports = {
       assert.strictEqual(6, b);
     }).returning(4)(5, 6);
     assert.ok(called);
+
+    not(Function.empty.returning(false)(1, 2, 3));
   },
 
   // Make sure that returning passes all arguments it gets through

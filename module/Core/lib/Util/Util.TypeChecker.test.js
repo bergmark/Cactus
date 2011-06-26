@@ -263,7 +263,7 @@ module.exports = (function () {
       o = new TypeChecker({
         type : "number",
         validators : [{
-          func : Function.empty.returning(false),
+          func : Function.returning(false),
           message : "false"
         }]
       });
@@ -278,10 +278,10 @@ module.exports = (function () {
           p : {
             type : "string",
             validators : [{
-              func : Function.empty.returning(false),
+              func : Function.returning(false),
               message : "Error #1."
             }, {
-              func : Function.empty.returning(false),
+              func : Function.returning(false),
               message : "Error #2."
             }]
           }
@@ -542,7 +542,7 @@ module.exports = (function () {
       o.parse(new F());
       o.parse(new G());
       var H = function () {};
-      H.prototype.toString = Function.empty.returning("my H");
+      H.prototype.toString = Function.returning("my H");
       exception(/Expected an instance of "anonymous type", but got value <1>/,
                 o.parse.bind(o, 1));
       exception(/Expected an instance of "anonymous type", but got value <my H> \(type "anonymous type"\)/i,
@@ -674,20 +674,20 @@ module.exports = (function () {
       // required or defaultValue or defaultValueFunc
     },
     helpers : function () {
-      var tc = new TypeChecker({
-        type : "number",
-        validators : [{
-          func : function (o, helpers) {
-            return !!helpers;
-          },
-          message : "helpers == false"
-        }]
-      });
-      tc.parse(1, true, true);
-      tc.parse(1, false, false);
-      eql({
-        "" : ["helpers == false"]
-      }, tc.getErrors());
+      //var tc = new TypeChecker({
+      //  type : "number",
+      //  validators : [{
+      //    func : function (o, helpers) {
+      //      return !!helpers;
+      //    },
+      //    message : "helpers == false"
+      //  }]
+      //});
+      //tc.parse(1, true, true);
+      //tc.parse(1, false, true);
+      //eql({
+      //  "" : ["helpers == false"]
+      //}, tc.getErrors());
     },
     "recursive definition" : function () {
       var o = new TypeChecker({
