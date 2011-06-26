@@ -6,7 +6,7 @@ Module("Cactus.Application", function (m) {
   var array = Cactus.Addon.Array;
   var C = Cactus.Data.Collection;
   var TypeChecker = Cactus.Util.TypeChecker;
-  var o = Cactus.Addon.Object;
+  var O = Cactus.Addon.Object;
   Class("Dto", {
     trait : JooseX.CPS,
     has : {
@@ -33,6 +33,13 @@ Module("Cactus.Application", function (m) {
         for (var fieldName in data) {
           this._values[fieldName] = data[fieldName];
         }
+      },
+      /**
+       * @return boolean
+       *   Whether any fields have been populated in the DTO.
+       */
+      isPopulated : function () {
+        return !O.isEmpty(this._values);
       },
       /**
        * @param string fieldName
@@ -109,7 +116,7 @@ Module("Cactus.Application", function (m) {
           helpers = helpers || {};
           var me = this;
           var cont = this.CONT;
-          o.map(values, function (name, value) {
+          O.map(values, function (name, value) {
             cont.and(function () {
               me._dtoFactory.outTransformCont(name, value, helpers).thenRun(function (transformedValue) {
                 this.CONT.CONTINUE([name, transformedValue]);

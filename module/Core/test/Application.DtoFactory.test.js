@@ -69,6 +69,16 @@ module.exports = {
     assert.strictEqual("pass", gwd("passwordConfirmation", "bar"));
     assert.strictEqual("baz", gwd("password", "baz"));
   },
+  isPopulated : function () {
+    var dto = fh.newDto();
+    not(dto.isPopulated());
+    dto.populate({ name : "x" });
+    ok(dto.isPopulated());
+
+    // Defaults don't count as populating.
+    dto = fh.newDto({ name : "y" });
+    not(dto.isPopulated());
+  },
   "dto with defaults" : function () {
     var dto = fh.newDto({
       name : "default name",
