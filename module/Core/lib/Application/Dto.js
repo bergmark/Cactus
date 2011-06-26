@@ -61,7 +61,7 @@ Module("Cactus.Application", function (m) {
        */
       isValid : function () {
         var o = this._dtoFactory._fieldTypeChecker;
-         o.parse(this._values, false);
+        o.parse(this._values, false);
         return !o.hasErrors();
       },
       /**
@@ -71,6 +71,17 @@ Module("Cactus.Application", function (m) {
         var o = this._dtoFactory._fieldTypeChecker;
         o.parse(this._values, false);
         return o.getErrors();
+      },
+      /**
+       * @param string fieldName
+       * @return Array
+       */
+      getErrorsFor : function (fieldName) {
+        var errors = this.getErrors();
+        if (!(fieldName in errors)) {
+          throw new Error('Dto:getErrorsFor: No errors for field "%s"'.format(fieldName));
+        }
+        return errors[fieldName];
       },
       /**
        * Retrieves all dto values, but only if all fields validate. If you only

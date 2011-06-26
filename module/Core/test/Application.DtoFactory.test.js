@@ -189,6 +189,16 @@ module.exports = {
         this.CONTINUE();
       }).now();
     }).thenRun(done);
+
+    // Errors for specific fields.
+    dto = fh.newDto();
+    dto.populate({
+      name : "!",
+      email : "a@example.com"
+    });
+    eql(["At least 5 characters.", "only A-z and spaces."], dto.getErrorsFor("name"));
+    eql(["Missing property"], dto.getErrorsFor("password"));
+    exception(/No errors for field "email"/, dto.getErrorsFor.bind(dto, "email"));
   },
   globalValidation : function (done) {
     var fh = new DtoFactory({
