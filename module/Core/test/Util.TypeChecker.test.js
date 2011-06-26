@@ -264,7 +264,7 @@ module.exports = (function () {
         a : { type : "string" }
       });
       o.parse("x", false);
-      exception(/no errors for property "a"/i, o.getErrorsFor.bind(o, "a"));
+      eql([], o.getErrorsFor("a"));
 
       o = new TypeChecker({
         type : "number",
