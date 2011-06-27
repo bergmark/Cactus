@@ -24,6 +24,7 @@ require('./lib/Data/Tree');
 require('./lib/Data/Dictionary');
 require('./lib/Data/FlushDictionary');
 require('./lib/Data/StrictFlushDictionary');
+require('./lib/Data/StrictFlushMap');
 
 require('./lib/Dev/Assertion');
 
