@@ -8,6 +8,7 @@ Module("Cactus.Util", function (m) {
   var JSON = Cactus.Util.JSON;
   var object = Cactus.Addon.Object;
   var StrictMap = Cactus.Data.StrictMap;
+  var Validator = Cactus.Util.Validator;
 
   var builtInValidators = new StrictMap({
     natural : {
@@ -433,7 +434,23 @@ Module("Cactus.Util", function (m) {
           this.definition.required = true;
         }
 
-        this.definition.validators = definition.validators || [];
+        this.definition.validators = [];
+        var _validators = definition.validators || [];
+        for (var i = 0; i < _validators.length; i++) {
+          var validator;
+          if (typeof _validators[i] === "string") {
+            if (typeof _validators[i] === "string" && !builtInValidators.has(_validators[i])) {
+              throw new Error('TypeChecker:BUILD: undefined built in validator "%s"'.format(_validators[i]));
+            }
+            validator = new Validator(builtInValidators.get(_validators[i]));
+          } else {
+            validator = new Validator({
+              func : _validators[i].func,
+              message : _validators[i].message
+            });
+          }
+          this.definition.validators.push(validator);
+        }
 
         if (definition.union) {
           this.definition.type = new T_Union(definition.union);
@@ -493,23 +510,10 @@ Module("Cactus.Util", function (m) {
         var valid = true;
         var messages = [];
         for (var i = 0; i < vs.length; i++) {
-          var f;
-          var msg;
-          if (typeof vs[i] === "string") {
-            if (typeof vs[i] === "string" && !builtInValidators.has(vs[i])) {
-              throw new Error('TypeChecker:BUILD: undefined built in validator "%s"'.format(vs[i]));
-            }
-
-            var validator = builtInValidators.get(vs[i]);
-            f = validator.func;
-            msg = validator.message;
-          } else {
-            f = vs[i].func;
-            msg = vs[i].message;
-          }
-          if (!f(options, helpers)) {
+          var validator = vs[i];
+          if (!validator.isValid(options, helpers)) {
             valid = false;
-            var message = msg || "Validation failed: got " + options + ".";
+            var message = validator.getMessage() || "Validation failed: got " + options + ".";
             this.errorMessage.add("", message);
           }
         }

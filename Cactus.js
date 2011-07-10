@@ -31,6 +31,7 @@ require('./lib/Dev/Assertion');
 require('./lib/Util/JSON');
 require('./lib/Util/EventSubscription');
 require('./lib/Util/EventPool');
+require('./lib/Util/Validator');
 require('./lib/Util/TypeChecker');
 
 require('./lib/Data/KeyValueCoding');
@@ -45,7 +46,6 @@ require('./lib/Data/Money');
 require('./lib/Util/IdentityMap');
 require('./lib/Util/CollectionAggregate');
 require('./lib/Util/ValueTransformer');
-require('./lib/Util/Validator');
 
 require('./lib/Application/DtoFactory');
 require('./lib/Application/Dto');

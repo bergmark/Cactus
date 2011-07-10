@@ -376,11 +376,12 @@ module.exports = (function () {
       o.parse(0, false);
       eql({ "" : ["Expected negative number."] }, o.getErrors());
 
-      o = new TypeChecker({
-        type : "number",
-        validators : ["x"]
+      exception(/Undefined built in validator "x"/i, function () {
+        new TypeChecker({
+          type : "number",
+          validators : ["x"]
+        });
       });
-      exception(/Undefined built in validator "x"/i, o.parse.bind(o, 1));
 
       o = new TypeChecker({
         type : {
