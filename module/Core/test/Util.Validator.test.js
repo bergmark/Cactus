@@ -2,11 +2,31 @@ var Validator = Cactus.Util.Validator;
 module.exports = {
   initial : function () {
     var v = new Validator({
-      func : Function.returning(true),
+      func : Function.empty.returning(true),
       message : "msg"
     });
     ok(v.isValid(null));
     equal("msg", v.getMessage());
+  },
+  "isValid bool returns" : function () {
+    var v = new Validator({
+      func : function (v) {
+        return v;
+      },
+      message : "isValid"
+    });
+    equal(true, v.isValid(1));
+    equal(false, v.isValid(0));
+  },
+  "isValid helpers" : function () {
+    var v = new Validator({
+      func : function (v, helpers) {
+        return helpers;
+      },
+      message : "helpers"
+    });
+    ok(v.isValid(null, true));
+    not(v.isValid(null, false));
   },
   cloning : function () {
     var v = new Validator({

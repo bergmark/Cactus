@@ -23,10 +23,11 @@ Module("Cactus.Util", function (m) {
     methods : {
       /**
        * @param mixed val
+       * @param optional mixed helpers
        * @return boolean
        */
-      isValid : function (val) {
-        return this.func(val);
+      isValid : function (val, helpers) {
+        return !!this.func(val, helpers);
       }
     }
   });
