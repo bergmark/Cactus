@@ -216,7 +216,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * @param natural index
        * @return natural
        */
-      _convertIndexToComponent : function (index) {
+      _fromPagerIndex : function (index) {
         return index + this.componentIndexRange.getStart();
       },
       /**
@@ -237,7 +237,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        */
       swap : function (indexA, indexB) {
         // Fetch the indexes on the component and swap them.
-        this.getComponent().swap (this._convertIndexToComponent (indexA), this._convertIndexToComponent (indexB));
+        this.getComponent().swap (this._fromPagerIndex (indexA), this._fromPagerIndex (indexB));
       },
       /**
        * Adds an object to a specific index inside the page, elements to the
