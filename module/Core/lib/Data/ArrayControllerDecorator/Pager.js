@@ -100,6 +100,11 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
           this.onRearranged();
         }
       },
+      /**
+       * Called by constructor and setPage.
+       *
+       * @param natural page
+       */
       _setPage : function (page) {
         // the page can always be zero since zero is used if the list is
         // empty.
@@ -113,9 +118,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * onRearranged if necessary.
        *
        * @param natural page
-       *   The number of the page to show.
-       * @throws Error
-       *   If the specified page is out of bounds.
+       *   The number of the page to show, must be a valid page.
        */
       setPage : function (page) {
         var oldPage = this.getPage();
