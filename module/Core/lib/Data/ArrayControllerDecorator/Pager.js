@@ -170,9 +170,9 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * all indices on the component whose objects are on the current page.
        */
       _setComponentIndexRange : function () {
-          var start = this.getPage() * this.getObjectsPerPage();
-          var end   = start + this.getObjectsPerPage() - 1;
-          this.componentIndexRange = new Range (start, end);
+        var start = this.getPage() * this.getObjectsPerPage();
+        var end   = start + this.getObjectsPerPage() - 1;
+        this.componentIndexRange = new Range (start, end);
       },
       /**
        * Sets the pageCount and the componentIndexRange and finally retrieves
@@ -181,9 +181,9 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * this is necessary.
        */
       _setObjects : function () {
-          this._setPageCount();
-          this._setComponentIndexRange();
-          this.objects = this.component.getRange(this.componentIndexRange);
+        this._setPageCount();
+        this._setComponentIndexRange();
+        this.objects = this.component.getRange(this.componentIndexRange);
       },
       /**
        * Checks if a given index on the component is inside the current page.
@@ -284,9 +284,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
         this._setObjects();
         // If the last object was shifted out of the page we need
         // to send an onRemove event.
-        if (pageFullBeforeAdd &&
-            lastObject !== this.objects[this.getObjectsPerPage() - 1]) {
-
+        if (pageFullBeforeAdd && lastObject !== this.objects[this.getObjectsPerPage() - 1]) {
           this.onRemoved (lastObject, this.objects.length - 1);
         }
         this.onAdded (this._fromComponentIndex (index));
