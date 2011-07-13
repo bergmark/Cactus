@@ -186,7 +186,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * @param natural componentIndex
        * @return boolean
        */
-      _indexIsInsidePage : function (componentIndex) {
+      _isIndexInCurrentPage : function (componentIndex) {
         return this.componentIndexRange.includes (componentIndex);
       },
       /**
@@ -417,7 +417,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * @param mixed newObject
        */
       onReplacedTriggered : function (component, index, oldObject, newObject) {
-        if (!this._indexIsInsidePage (index)) {
+        if (!this._isIndexInCurrentPage (index)) {
           return;
         }
 
