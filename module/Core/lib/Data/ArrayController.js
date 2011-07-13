@@ -75,10 +75,16 @@ Module("Cactus.Data", function (m) {
       onReplaced : Function.empty,
       /**
        * Triggers when the last element is removed from the AC.
+       *
+       * This is a complementary event, consistency can be maintained
+       * without subscribing to it
        */
       onEmptied : Function.empty,
       /**
        * Triggers when first element is added to the AC.
+       *
+       * This is a complementary event, consistency can be maintained
+       * without subscribing to it
        */
       onFilled : Function.empty,
 
