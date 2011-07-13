@@ -57,14 +57,13 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        */
       BUILD : function (component, objectsPerPage, page) {
         return O.copy(this.SUPER(component), {
-          _objectsPerPage : objectsPerPage || 10,
+          objectsPerPage : objectsPerPage || 10,
           _page : page || 0
         });
       },
       initialize : function (args) {
         this.SUPER();
-        this.setObjectsPerPage(args._objectsPerPage);
-        this.setPage(args._page);
+        this._setPage(args._page);
         this._setObjects();
       },
       // Events.
@@ -101,6 +100,14 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
           this.onRearranged();
         }
       },
+      _setPage : function (page) {
+        // the page can always be zero since zero is used if the list is
+        // empty.
+        if (page !== 0 && (page < 0 || page >= this.getPageCount())) {
+          throw new Error ("Specified page (" + page + ") is out of bounds");
+        }
+        this.page = page;
+      },
       /**
        * Changes the active page. Sends out onPageChanged and
        * onRearranged if necessary.
@@ -111,21 +118,16 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        *   If the specified page is out of bounds.
        */
       setPage : function (page) {
-        // the page can always be zero since zero is used if the list is
-        // empty.
-        if (page !== 0 && (page < 0 || page >= this.getPageCount())) {
-          throw new Error ("Specified page (" + page + ") is out of bounds");
-        }
+        var oldPage = this.getPage();
         // No need to change the page if the the new page matches the active
         // one.
-        if (page === this.getPage()) {
+        if (page === oldPage) {
           return;
         }
+        this._setPage(page);
 
-        var oldPage = this.getPage();
-        this.page = page;
         this._setObjects();
-        this.onPageChanged (this.getPage(), oldPage);
+        this.onPageChanged(this.getPage(), oldPage);
         this.onRearranged();
       },
       /**
