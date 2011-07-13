@@ -196,7 +196,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * @return boolean
        *   Whether the page is full.
        */
-      _pageIsFull : function () {
+      _isCurrentPageFull : function () {
         return this.objects.length === this.getObjectsPerPage();
       },
       /**
@@ -270,7 +270,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
           return;
         }
 
-        var pageFullBeforeAdd = this._pageIsFull();
+        var pageFullBeforeAdd = this._isCurrentPageFull();
 
         // The object is added to the current page or preceeding
         // pages, so we need to add it to the correct position and
