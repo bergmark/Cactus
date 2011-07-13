@@ -5,9 +5,9 @@
  * enable the presentation lots of data, a little bit at a time.
  *
  * Assume we have an ArrayController containing 50 items. We can create a
- * paginator with new PaginatonDecorator (component, 10); in order to create
+ * paginator with new PaginatonDecorator(component, 10); in order to create
  * 5 pages, each containing 10 items. We can then change pages by calling
- * setPage (n) where n is 0..4. In this case the paginator sends out an
+ * setPage(n) where n is 0..4. In this case the paginator sends out an
  * onRearranged event since only new objects will be shown. The paginator
  * allows a client programmer to not worry about which page is active and he can
  * choose to display only the data currently "in" the paginator.
@@ -22,7 +22,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
   var ArrayController = Cactus.Data.ArrayController;
   var ArrayControllerDecorator = m;
   var Range = Cactus.Data.Range;
-  var Collection = Cactus.Data.Collection;
+  var C = Cactus.Data.Collection;
   var A = Cactus.Addon.Array;
   Class("Pager", {
     isa : ArrayControllerDecorator,
@@ -109,7 +109,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
         // the page can always be zero since zero is used if the list is
         // empty.
         if (page !== 0 && (page < 0 || page >= this.getPageCount())) {
-          throw new Error ("Specified page (" + page + ") is out of bounds");
+          throw new Error("Specified page (" + page + ") is out of bounds");
         }
         this.page = page;
       },
@@ -162,7 +162,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
           // previous one.
           this.setPage(this.pageCount - 1);
         }
-        this.onPageCountUpdated (this.pageCount, oldPageCount);
+        this.onPageCountUpdated(this.pageCount, oldPageCount);
         return true;
       },
       /**
@@ -172,7 +172,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
       _setComponentIndexRange : function () {
         var start = this.getPage() * this.getObjectsPerPage();
         var end   = start + this.getObjectsPerPage() - 1;
-        this.componentIndexRange = new Range (start, end);
+        this.componentIndexRange = new Range(start, end);
       },
       /**
        * Sets the pageCount and the componentIndexRange and finally retrieves
@@ -192,7 +192,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * @return boolean
        */
       _isIndexInCurrentPage : function (componentIndex) {
-        return this.componentIndexRange.includes (componentIndex);
+        return this.componentIndexRange.includes(componentIndex);
       },
       /**
        * Checks if the current page is full, which it always will be unless
@@ -231,7 +231,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * @return boolean
        */
       _isComponentIndexInPage : function (componentIndex) {
-        var index = this._fromComponentIndex (componentIndex);
+        var index = this._fromComponentIndex(componentIndex);
         return index >= 0 && index < this.getObjectsPerPage();
       },
       /**
@@ -242,7 +242,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        */
       swap : function (indexA, indexB) {
         // Fetch the indexes on the component and swap them.
-        this.getComponent().swap (this._fromPagerIndex (indexA), this._fromPagerIndex (indexB));
+        this.getComponent().swap(this._fromPagerIndex(indexA), this._fromPagerIndex(indexB));
       },
       /**
        * Adds an object to a specific index inside the page, elements to the
@@ -252,11 +252,11 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * @param mixed object
        */
       addAtIndex : function (index, object) {
-        if (!this.hasIndex (index)) {
-          throw new Error ("Invalid index supplied");
+        if (!this.hasIndex(index)) {
+          throw new Error("Invalid index supplied");
         }
 
-        this.getComponent().addAtIndex (this._fromComponentIndex (index), object);
+        this.getComponent().addAtIndex(this._fromComponentIndex(index), object);
       },
       /**
        * Triggered when an object is added on the component. The method makes
@@ -280,14 +280,14 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
         // The object is added to the current page or preceeding
         // pages, so we need to add it to the correct position and
         // shift the succeeding elements one step to the right.
-        var lastObject = this.objects.length === 0 ? null : Collection.last (this.objects);
+        var lastObject = this.objects.length === 0 ? null : C.last(this.objects);
         this._setObjects();
         // If the last object was shifted out of the page we need
         // to send an onRemove event.
         if (pageFullBeforeAdd && lastObject !== this.objects[this.getObjectsPerPage() - 1]) {
-          this.onRemoved (lastObject, this.objects.length - 1);
+          this.onRemoved(lastObject, this.objects.length - 1);
         }
-        this.onAdded (this._fromComponentIndex (index));
+        this.onAdded(this._fromComponentIndex(index));
       },
       /**
        * Triggered when an object is removed from the component.
@@ -326,23 +326,23 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
           return;
         }
 
-        function canAddObjectToEnd () {
+        function canAddObjectToEnd() {
           // Since the component has removed the object already, the last
           // element of componentIndexRange on the component will be an
           // element not on the current page, so here we check that such
           // an element exists (it won't if the current page is the last
           // one.)
-          return component.hasIndex (that.componentIndexRange.getEnd());
+          return component.hasIndex(that.componentIndexRange.getEnd());
         }
-        function addToEnd () {
-          that.objects.push(component.get (that.componentIndexRange.getEnd()));
+        function addToEnd() {
+          that.objects.push(component.get(that.componentIndexRange.getEnd()));
           that.onAdded(that.objects.length - 1);
         }
 
         // 2.
         if (componentIndex < this.componentIndexRange.getStart()) {
           var removedObject = this.objects.shift();
-          this.onRemoved (removedObject, 0);
+          this.onRemoved(removedObject, 0);
           if (canAddObjectToEnd()) {
             addToEnd();
           }
@@ -352,13 +352,13 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
 
         // 3.
         if (pageCountChanged && isLastPage & pageChanged) {
-          this.onRemoved (object, index);
+          this.onRemoved(object, index);
           return;
         }
 
         // 4.
-        var index = A.remove (this.objects, object);
-        this.onRemoved (object, index);
+        var index = A.remove(this.objects, object);
+        this.onRemoved(object, index);
         if (canAddObjectToEnd()) {
           addToEnd();
         }
@@ -380,14 +380,14 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        *    the other one.
        */
 
-        var indexAInPage = this._isComponentIndexInPage (indexA);
-        var indexBInPage = this._isComponentIndexInPage (indexB);
-        var indexAOnDecorator = this._fromComponentIndex (indexA);
-        var indexBOnDecorator = this._fromComponentIndex (indexB);
+        var indexAInPage = this._isComponentIndexInPage(indexA);
+        var indexBInPage = this._isComponentIndexInPage(indexB);
+        var indexAOnDecorator = this._fromComponentIndex(indexA);
+        var indexBOnDecorator = this._fromComponentIndex(indexB);
         // Indexes are shifted here because the component has already
         // swapped the elements.
-        var objectA = this.getComponent().get (indexB);
-        var objectB = this.getComponent().get (indexA);
+        var objectA = this.getComponent().get(indexB);
+        var objectB = this.getComponent().get(indexA);
 
         // 1.
         if (!indexAInPage && !indexBInPage) {
@@ -396,8 +396,8 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
 
         // 2.
         if (indexAInPage && indexBInPage) {
-          var tmp = this.get (indexAOnDecorator);
-          this.objects [indexAOnDecorator] = this.get (indexBOnDecorator);
+          var tmp = this.get(indexAOnDecorator);
+          this.objects [indexAOnDecorator] = this.get(indexBOnDecorator);
           this.objects [indexBOnDecorator] = tmp;
           this.onSwapped(Math.min(indexAOnDecorator, indexBOnDecorator),
                          Math.max(indexAOnDecorator, indexBOnDecorator));
@@ -406,9 +406,9 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
 
         // 3.
         if (indexAInPage) {
-          ArrayController.prototype.replace.call (this, objectA, objectB);
+          ArrayController.prototype.replace.call(this, objectA, objectB);
         } else {
-          ArrayController.prototype.replace.call (this, objectB, objectA);
+          ArrayController.prototype.replace.call(this, objectB, objectA);
         }
       },
       /**
@@ -420,11 +420,11 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * @param mixed newObject
        */
       onReplacedTriggered : function (component, index, oldObject, newObject) {
-        if (!this._isIndexInCurrentPage (index)) {
+        if (!this._isIndexInCurrentPage(index)) {
           return;
         }
 
-        ArrayController.prototype.replace.call (this, oldObject, newObject);
+        ArrayController.prototype.replace.call(this, oldObject, newObject);
       }
     }
   });
