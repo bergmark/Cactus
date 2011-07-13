@@ -206,7 +206,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * @param natural componentIndex
        * @return natural
        */
-      _convertIndex : function (componentIndex) {
+      _fromComponentIndex : function (componentIndex) {
         return componentIndex - this.componentIndexRange.getStart();
       },
       /**
@@ -226,7 +226,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
        * @return boolean
        */
       _isComponentIndexInPage : function (componentIndex) {
-        var index = this._convertIndex (componentIndex);
+        var index = this._fromComponentIndex (componentIndex);
         return index >= 0 && index < this.getObjectsPerPage();
       },
       /**
@@ -251,7 +251,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
           throw new Error ("Invalid index supplied");
         }
 
-        this.getComponent().addAtIndex (this._convertIndex (index), object);
+        this.getComponent().addAtIndex (this._fromComponentIndex (index), object);
       },
       /**
        * Triggered when an object is added on the component. The method makes
@@ -284,7 +284,7 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
 
           this.onRemoved (lastObject, this.objects.length - 1);
         }
-        this.onAdded (this._convertIndex (index));
+        this.onAdded (this._fromComponentIndex (index));
       },
       /**
        * Triggered when an object is removed from the component.
@@ -379,8 +379,8 @@ Module("Cactus.Data.ArrayControllerDecorator", function (m) {
 
         var indexAInPage = this._isComponentIndexInPage (indexA);
         var indexBInPage = this._isComponentIndexInPage (indexB);
-        var indexAOnDecorator = this._convertIndex (indexA);
-        var indexBOnDecorator = this._convertIndex (indexB);
+        var indexAOnDecorator = this._fromComponentIndex (indexA);
+        var indexBOnDecorator = this._fromComponentIndex (indexB);
         // Indexes are shifted here because the component has already
         // swapped the elements.
         var objectA = this.getComponent().get (indexB);
