@@ -29,6 +29,10 @@
       equal(2, p.get(1));
     },
 
+    "invalid page in constructor" : function () {
+      exception(/Specified page.+out of bounds/, function () { new Pager([], 1, 10); });
+    },
+
     // Changing pages.
     "changing pages" : function () {
       var o = setup();
