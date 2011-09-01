@@ -5,7 +5,7 @@
 Module("Cactus.Addon", function (m) {
   var math = {
     /**
-     * Given three numbers, returns the one middle one.
+     * Given three numbers, returns the middle one.
      *
      * @param number a
      * @param number b

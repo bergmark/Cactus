@@ -120,7 +120,7 @@ Module("Cactus.Data", function (m) {
      */
     last : function (collection) {
       if (!collection.length) {
-        throw Error("Collection:last: Collection is empty.");
+        throw new Error("Collection:last: Collection is empty.");
       }
       return collection[collection.length - 1];
     },
