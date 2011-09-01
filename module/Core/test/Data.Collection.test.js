@@ -66,6 +66,15 @@ module.exports = (function () {
       assert.throws(function () { Coll.last([]); });
     },
 
+    nthLast : function () {
+      var a = ["a", "b", "c"];
+      equal("c", Coll.nthLast(a, 0));
+      equal("a", Coll.nthLast(a, 2));
+      exception(/Offset out of bounds: -1/, Coll.nthLast.bind(Coll, a, -1));
+      exception(/Offset out of bounds: 3/, Coll.nthLast.bind(Coll, a, 3));
+      exception(/Offset out of bounds: 0/, Coll.nthLast.bind(Coll, [], 0));
+    },
+
     "isCollection" : function () {
       var glob = null;
       glob = typeof window !== "undefined" ? window : null;

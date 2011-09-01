@@ -109,20 +109,28 @@ Module("Cactus.Data", function (m) {
       return intersection;
     },
     /**
-     * Gets the last element out of a collection.
-     *
      * @param collection collection
-     *   The collection to retrieve the value from.
      * @return mixed
-     *   The last element.
-     * @throws Error
-     *   If the array is empty
+     *   The last element in the collection.
      */
     last : function (collection) {
       if (!collection.length) {
         throw new Error("Collection:last: Collection is empty.");
       }
       return collection[collection.length - 1];
+    },
+    /**
+     * @param collection collection
+     * @param natural offset
+     *   0 will return the last element, collection.length - 1 will the last.
+     * @return mixed
+     */
+    nthLast : function (collection, offset) {
+      var index = collection.length - 1 - offset;
+      if (index < 0 || index >= collection.length) {
+        throw new Error("Collection:nthLast: Offset out of bounds: " + offset);
+      }
+      return collection[index];
     },
     /**
      * Checks if a collection can be iterated through using
